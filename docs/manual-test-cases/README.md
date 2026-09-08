@@ -35,9 +35,18 @@ The `.md` files here are hand-maintained manual cases for the core flows — Log
 (split across nine files), Forgot Password, Home Page, Bank Transfer, B2B Transactions,
 Bill Items, Manage Accounts, Transaction Operations, PoS Products.
 
-`../../data/ManualTestCases.xlsx` is the spreadsheet rendering of those markdown files and is
-consumed by some specs under `BusinessTestCases/`. **If you edit a `.md` file here, that xlsx
-needs regenerating** — they are not automatically in sync.
+**The markdown is the source of truth.** `../../data/ManualTestCases.xlsx` is a rendering of it —
+20 documents, 1,510 cases. After editing any `.md` file here, regenerate it:
+
+```bash
+npm run build:manual-testcases
+```
+
+`scripts/build-manual-testcases.mjs` reads every `## Section` heading and the test-case table
+beneath it. A table is only picked up when its header row starts `| ID | Title |`, which keeps
+reference tables (endpoint lists, ticket indexes) out of the output. Column order and presence
+vary between documents — `ManageAccounts.md` has a `Jira` column and no `Steps` — so columns are
+matched by name, not position. Add a new `.md` file and it is picked up automatically.
 
 ## Where the by-feature suite comes from
 
