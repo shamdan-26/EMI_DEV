@@ -56,8 +56,7 @@ test.describe('Login — OTP Flow', () => {
         );
     });
 
-    test('should display the OTP dialog after submitting valid credentials', async ({ page }) => {
-        await page.pause();
+    test('should display the OTP dialog after submitting valid credentials', async () => {
         await expect(otp.heading).toBeVisible();
     });
 
