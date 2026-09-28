@@ -1,8 +1,21 @@
 import { test, expect } from '@playwright/test';
-import { goToVerificationStep, goToContractStep, selectRandomOption, VALID_IBAN, VALID_VAT_NUMBER, TEST_FILE_BUFFER } from '../RegistrationHelper';
+import {
+    goToVerificationStep,
+    goToContractStep,
+    selectRandomOption,
+    getFullRegistrationDetailByMobileFromSql,
+    getActivationNotificationFromMongo,
+    VALID_IBAN,
+    VALID_VAT_NUMBER,
+    TEST_FILE_BUFFER,
+} from '../RegistrationHelper';
 import { RegistrationVerificationPage } from '../../pageElements/Registration/RegistrationVerificationPage';
 import { RegistrationProductsPage } from '../../pageElements/Registration/RegistrationProductsPage';
 import { RegistrationContractPage } from '../../pageElements/Registration/RegistrationContractPage';
+import { AdminOtpConfigPage, createAdminContext } from '../../pageElements/Shared/AdminOtpConfigPage';
+import { AdminBusinessAccountsPage } from '../../pageElements/UserManagement/AdminBusinessAccountsPage';
+import { closeSqlPool } from '../../../support/sqlServerClient';
+import { closeMongoClient } from '../../../support/mongoClient';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Full registration journey — one continuous run through every step reachable
@@ -23,6 +36,11 @@ import { RegistrationContractPage } from '../../pageElements/Registration/Regist
 // ─────────────────────────────────────────────────────────────────────────────
 test.describe('Registration – Full E2E Happy Path (UI)', () => {
     test.describe.configure({ mode: 'serial' });
+
+    test.afterAll(async () => {
+        await closeSqlPool();
+        await closeMongoClient();
+    });
 
     test('should complete Business Info, Financial & Business, and Verification & Uploads, then reach NAFATH or Products after Sign Up', async ({ page, context }) => {
         test.setTimeout(180_000);
@@ -67,13 +85,11 @@ test.describe('Registration – Full E2E Happy Path (UI)', () => {
             products.productCards.first().waitFor({ state: 'visible', timeout: 30000 }).then(() => 'products' as const),
         ]).catch(() => 'neither' as const);
 
-        test.skip(
-            landedOn === 'neither',
+        expect(
+            landedOn,
             'Neither NAFATH nor Products appeared after Sign Up — verify whether the IBAN proof / VAT certificate ' +
             'uploads are mandatory for submission to succeed in this environment before treating this as a regression.'
-        );
-
-        expect(landedOn).not.toBe('neither');
+        ).not.toBe('neither');
     });
 
     // ─────────────────────────────────────────────────────────────────────────
@@ -96,7 +112,7 @@ test.describe('Registration – Full E2E Happy Path (UI)', () => {
         const context = await browser.newContext();
         const page = await context.newPage();
 
-        await goToContractStep(page);
+        const mobile = await goToContractStep(page);
         const contract = new RegistrationContractPage(page);
 
         await expect(contract.agreeCheckbox).toBeVisible({ timeout: 15000 });
@@ -104,18 +120,79 @@ test.describe('Registration – Full E2E Happy Path (UI)', () => {
         await expect(contract.submitButton).toBeEnabled({ timeout: 10000 });
         await contract.submitButton.click();
 
-        const completed = await page.getByText(/pending|review|success|thank you|congratulations/i).first()
+        // Confirmed live 2026-09-27: this environment renders the post-submission
+        // confirmation in Arabic — "تم استلام طلب التسجيل" ("Registration request
+        // received") heading, "حسابك جاهز." ("Your account is ready.") body, and a
+        // "سجل الدخول إلى حسابك" ("Log in to your account") button — not any of the
+        // English guesses this previously matched on alone (which is why this test
+        // read as failing/skippable before, despite registration actually
+        // succeeding). Kept as a fallback in case an English-locale run ever hits
+        // this same screen.
+        const completed = await page.getByText(/تم استلام طلب التسجيل|حسابك جاهز|pending|review|success|thank you|congratulations/i).first()
             .waitFor({ state: 'visible', timeout: 30000 })
             .then(() => true)
             .catch(() => false);
 
-        test.skip(
-            !completed,
+        expect(
+            completed,
             'No recognizable post-submission confirmation state appeared — verify the actual completion UI in ' +
             'this environment before treating this as a regression.'
-        );
+        ).toBe(true);
 
-        expect(completed).toBe(true);
+        // DB-level proof, not just a UI confirmation screen: the account this
+        // run's identity (`mobile`) produced is actually provisioned in
+        // emi_profile, and carries the contract/product flags a completed
+        // submission is supposed to set. Schema confirmed live 2026-09-27 —
+        // see getFullRegistrationDetailByMobileFromSql's own header comment.
+        // DB-level proof, not just a UI confirmation screen: the account this
+        // run's identity (`mobile`) produced is actually provisioned in
+        // emi_profile, and carries the contract/product flags a completed
+        // submission is supposed to set. Schema confirmed live 2026-09-27 —
+        // see getFullRegistrationDetailByMobileFromSql's own header comment.
+        const detail = await getFullRegistrationDetailByMobileFromSql(mobile);
+        expect(detail, `no emi_profile.profiles row exists for ${mobile} after a completed registration`).not.toBeNull();
+        expect(detail!.is_active, 'the provisioned profile is Active').toBe(true);
+        expect(detail!.is_approved, 'the provisioned profile is Approved').toBe(true);
+        expect(detail!.is_contract_accepted, 'business_profile_registration_requests.is_contract_accepted').toBe(true);
+        expect(detail!.is_product_assigned, 'business_profile_registration_requests.is_product_assigned').toBe(true);
+        expect(detail!.crn, 'a CRN was recorded for this registration').not.toBeNull();
+
+        // The app's own confirmation screen tells the user to check their
+        // email for login credentials — this proves that notification was
+        // actually dispatched (not just that the UI showed a success screen).
+        // Doesn't assert `isSuccessfullySent` — confirmed live 2026-09-27 that
+        // this dev environment's outbound SMTP can't reach smtp.gmail.com,
+        // which is an infra fact independent of the registration flow itself
+        // (see getActivationNotificationFromMongo's header comment). Logged
+        // instead, so a real regression here is visible without making this
+        // test flaky on infrastructure this suite can't fix.
+        const notification = await getActivationNotificationFromMongo(detail!.profile_code);
+        expect(notification, `no "User Activation" notification recorded for ${detail!.profile_code}`).not.toBeNull();
+        expect(notification!.recipient).toBe(detail!.email);
+        if (!notification!.isSuccessfullySent) {
+            console.warn(
+                `[RegistrationE2EHappyPath] Activation email for ${detail!.profile_code} was not delivered: ` +
+                `${notification!.errorMessage ?? '(no errorMessage recorded)'}`,
+            );
+        }
+
+        // Admin-side proof that the newly created account is actually
+        // discoverable by the ops/support team, not just present in the DB.
+        // Manage Users → Accounts → Business, filtered by Company Number
+        // (RegistrationFullDetail.tenant_number) — NOT Mobile Number, whose
+        // filter is confirmed broken on this screen (see
+        // AdminBusinessAccountsPage.ts's header comment). A separate admin
+        // browser context/session, since the admin SPA is a different app
+        // from the merchant portal the rest of this test drives.
+        expect(detail!.tenant_number, 'a Company Number (tenant_number) was assigned to the new account').toBeTruthy();
+        const adminContext = await createAdminContext(browser);
+        const adminPage = await adminContext.newPage();
+        await new AdminOtpConfigPage(adminPage).login();
+        const businessAccounts = new AdminBusinessAccountsPage(adminPage);
+        await businessAccounts.gotoViaSidebar();
+        await businessAccounts.expectAccountListed(detail!.tenant_number);
+        await adminContext.close();
+
         await context.close();
     });
 });

@@ -14,6 +14,8 @@ import { RegistrationNafathPage } from '../pageElements/Registration/Registratio
 import { RegistrationContractPage } from '../pageElements/Registration/RegistrationContractPage';
 import registrationDefaults from '../../data/registrationDefaults.json';
 import registrationAssets from '../../data/registrationAssets.json';
+import { getSqlPool } from '../../support/sqlServerClient';
+import { getMongoDb } from '../../support/mongoClient';
 
 const BASE_URL = process.env['BASE_URL'] ?? 'https://uat.majdpay.com';
 export const LOGIN_URL    = `${BASE_URL}/business/auth/login`;
@@ -780,6 +782,23 @@ export async function fillVerificationForm(page: Page): Promise<void> {
  * destination. Other callers (which specifically need the Products panel) leave
  * this false.
  */
+/**
+ * The mobile number of whichever CITIZEN_ASSETS entry `goToProductsStep`
+ * most recently succeeded with — set on every loop iteration, not just on
+ * return, so it's already correct by the time any of that function's several
+ * `return true` points fires. Exposed as a side-channel (`lastReachedAssetMobile`)
+ * rather than added to `goToProductsStep`'s own return value: that value is a
+ * bare boolean asserted directly (`expect(reachedProducts).toBe(true)`) by six
+ * other call sites across this suite, so widening it to an object would break
+ * every one of them. A caller that needs to know which identity was actually
+ * used (e.g. to look its record up afterward in the database) reads this
+ * immediately after `goToProductsStep`/`goToContractStep` resolves.
+ */
+let lastReachedAssetMobile: string | null = null;
+export function lastReachedCitizenAssetMobile(): string | null {
+    return lastReachedAssetMobile;
+}
+
 export async function goToProductsStep(page: Page, maxAttempts = 10, landOnContractOk = false): Promise<boolean> {
     const products = new RegistrationProductsPage(page);
     // Scoped to products.productCards (.mp-product-card), not products.formSubTitle
@@ -804,6 +823,7 @@ export async function goToProductsStep(page: Page, maxAttempts = 10, landOnContr
         // reuse its own previously-discovered fast path and had to burn a full
         // fresh registration attempt (risking a real NAFATH dead end) every time.
         const asset = nextCitizenAsset(landOnContractOk ? ['products', 'contract'] : 'products');
+        lastReachedAssetMobile = asset.mobile;
         console.log(`[goToProductsStep] attempt ${attempt}/${maxAttempts} — mobile ${asset.mobile} (used=${(asset as { used?: unknown }).used ?? 'unused'})`);
         await goToInfoStep(page, asset.mobile);
 
@@ -961,11 +981,22 @@ export async function goToProductsStep(page: Page, maxAttempts = 10, landOnContr
  * unchecked (see RegistrationProductsPage's skipSetupLaterButton comment).
  * Throws if Products was never reached (goToProductsStep exhausted its
  * attempts) rather than silently landing nowhere.
+ *
+ * Returns the mobile number of the identity that actually got there — every
+ * existing caller was a bare `await goToContractStep(page);` with the prior
+ * `Promise<void>` return discarded, so returning this instead is not a
+ * breaking change. Lets a caller look up that identity's own record
+ * afterward (e.g. in emi_profile's SQL tables) without having to guess which
+ * of the CITIZEN_ASSETS pool's ~2000 entries goToProductsStep landed on.
  */
-export async function goToContractStep(page: Page): Promise<void> {
+export async function goToContractStep(page: Page): Promise<string> {
     const reachedProducts = await goToProductsStep(page, 10, true);
     if (!reachedProducts) {
         throw new Error('Could not reach the Products step, so the Contract step is unreachable.');
+    }
+    const mobile = lastReachedCitizenAssetMobile();
+    if (!mobile) {
+        throw new Error('goToProductsStep reported success but recorded no identity — lastReachedCitizenAssetMobile() was never set.');
     }
 
     const contractPage = new RegistrationContractPage(page);
@@ -1000,6 +1031,7 @@ export async function goToContractStep(page: Page): Promise<void> {
     console.log('[goToContractStep] waiting for contract agreementHeading to render');
     await contractPage.waitForLoad();
     console.log('[goToContractStep] contract page loaded');
+    return mobile;
 }
 
 /**
@@ -1108,4 +1140,178 @@ export async function selectRandomOption(page: Page, dropdownLocator: Locator) {
         const count = await items.count();
         await items.nth(Math.floor(Math.random() * count)).click();
     }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// SQL Server (emi_profile.*) — direct DB assertions for the account a
+// registration run actually produced, independent of what the UI itself goes
+// on to render. Schema and table names confirmed live 2026-09-27 by
+// cross-referencing a real completed registration (goToContractStep + Contract
+// submission) against these exact tables, not guessed. See
+// support/sqlServerClient.ts for the connection itself and TopupHelper.ts for
+// the identical pattern this mirrors on the Topup side.
+//
+// `business_profile_registration_requests.created_at` is NOT when a given run
+// used that identity — CITIZEN_ASSETS is a shared, reused pool (confirmed
+// live: a row completed by today's run still carried a `created_at` from
+// three months earlier), so every query below orders by `last_modified_at`
+// instead, which does update on reuse.
+
+export interface RegistrationProfileRow {
+    id: string;
+    created_at: string;
+    email: string;
+    mobile_number: string;
+    tenant_number: string;
+    profile_code: string;
+    identity_number: string;
+    is_active: boolean;
+    is_approved: boolean;
+    is_blocked: boolean;
+    is_email_verified: boolean;
+    is_test_user: boolean;
+}
+
+/** Reads the `profiles` row for a mobile number straight from emi_profile — the actual provisioned account, not the in-progress registration request. */
+export async function getRegistrationProfileByMobileFromSql(mobileNumber: string): Promise<RegistrationProfileRow | null> {
+    const pool = await getSqlPool();
+    const result = await pool.request()
+        .input('mobile', mobileNumber)
+        .query(`
+            USE [emi_profile];
+            SELECT TOP 1 id, created_at, email, mobile_number, tenant_number, profile_code, identity_number,
+                   is_active, is_approved, is_blocked, is_email_verified, is_test_user
+            FROM profiles
+            WHERE mobile_number = @mobile
+            ORDER BY created_at DESC;
+        `);
+    return (result.recordset[0] as RegistrationProfileRow) ?? null;
+}
+
+export interface BusinessProfileRegistrationRequestRow {
+    id: string;
+    created_at: string;
+    last_modified_at: string;
+    mobile_number: string;
+    email: string | null;
+    crn: string | null;
+    profile_code: string;
+    is_completed_form: boolean;
+    is_mobile_owner_ship_verified: boolean;
+    is_wathiq_info_completed: boolean;
+    is_get_nafath_status_completed: boolean;
+    is_product_assigned: boolean;
+    is_contract_accepted: boolean;
+}
+
+/** Reads the `business_profile_registration_requests` row for a mobile number, most-recently-modified first (see header comment on why not `created_at`). */
+export async function getBusinessRegistrationRequestByMobileFromSql(mobileNumber: string): Promise<BusinessProfileRegistrationRequestRow | null> {
+    const pool = await getSqlPool();
+    const result = await pool.request()
+        .input('mobile', mobileNumber)
+        .query(`
+            USE [emi_profile];
+            SELECT TOP 1 id, created_at, last_modified_at, mobile_number, email, crn, profile_code,
+                   is_completed_form, is_mobile_owner_ship_verified, is_wathiq_info_completed,
+                   is_get_nafath_status_completed, is_product_assigned, is_contract_accepted
+            FROM business_profile_registration_requests
+            WHERE mobile_number = @mobile
+            ORDER BY last_modified_at DESC;
+        `);
+    return (result.recordset[0] as BusinessProfileRegistrationRequestRow) ?? null;
+}
+
+export interface RegistrationFullDetail {
+    id: string;
+    created_at: string;
+    email: string;
+    mobile_number: string;
+    tenant_number: string;
+    profile_code: string;
+    is_active: boolean;
+    is_approved: boolean;
+    identity_number: string;
+    crn: string | null;
+    is_contract_accepted: boolean | null;
+    is_product_assigned: boolean | null;
+    iban: string | null;
+    vat_number: string | null;
+    unified_number: string | null;
+    company_title: string | null;
+    city: string | null;
+}
+
+/**
+ * One-shot cross-table read of everything a completed registration produces:
+ * the provisioned `profiles` row joined to its originating
+ * `business_profile_registration_requests` (by mobile), then that request's
+ * own `business_profiles` (by CRN) and `company_address` (by
+ * company_address_id). Confirmed live 2026-09-27 against a real
+ * goToContractStep + Contract-submission run's own account. Returns null if
+ * no `profiles` row exists yet for this mobile (registration never reached
+ * the point of provisioning an actual account) — the joined columns are
+ * individually nullable beyond that, since a profile can exist before its
+ * business-side rows are fully populated.
+ */
+export async function getFullRegistrationDetailByMobileFromSql(mobileNumber: string): Promise<RegistrationFullDetail | null> {
+    const pool = await getSqlPool();
+    const result = await pool.request()
+        .input('mobile', mobileNumber)
+        .query(`
+            USE [emi_profile];
+            SELECT TOP 1 p.id, p.created_at, p.email, p.mobile_number, p.tenant_number, p.profile_code,
+                   p.is_active, p.is_approved, p.identity_number,
+                   bprr.crn, bprr.is_contract_accepted, bprr.is_product_assigned,
+                   bp.iban, bp.vat_number, bp.unified_number,
+                   ca.title AS company_title, ca.city
+            FROM profiles p
+            LEFT JOIN business_profile_registration_requests bprr ON bprr.mobile_number = p.mobile_number
+            LEFT JOIN business_profiles bp ON bp.crn = bprr.crn
+            LEFT JOIN company_address ca ON ca.id = bp.company_address_id
+            WHERE p.mobile_number = @mobile
+            ORDER BY p.created_at DESC;
+        `);
+    return (result.recordset[0] as RegistrationFullDetail) ?? null;
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Mongo (notifications-log.notifications) — the actual dispatch record for the
+// "User Activation" email a completed registration sends, independent of
+// what the app's own confirmation screen claims. Schema and collection name
+// confirmed live 2026-09-27 against the notification a real completed
+// registration produced.
+//
+// Confirmed live the same day: `isSuccessfullySent` was `false` with
+// `errorMessage` "Mail server connection failed... Couldn't connect to host,
+// port: smtp.gmail.com, 587" — this dev environment's outbound SMTP is not
+// reachable, so the UI's own "حسابك جاهز... راجع بريدك الإلكتروني" ("Your
+// account is ready... check your email") confirmation is not actually backed
+// by a delivered email here. That's an environment/infra fact, not something
+// a registration-flow bug fix could address, so callers should assert the
+// notification record EXISTS (proves the app attempted the handoff) without
+// hard-asserting `isSuccessfullySent` — do that comparison explicitly at the
+// call site instead, with its own environment-aware message, if a given test
+// wants to track whether it's since started working.
+
+export interface RegistrationActivationNotification {
+    _id: string;
+    userId: string;
+    subject: string;
+    recipient: string;
+    message: string;
+    notificationType: string;
+    isSuccessfullySent: boolean;
+    errorMessage?: string;
+    createdAt: string;
+}
+
+/** Reads the most recent "User Activation" notification for a profile code straight from notifications-log.notifications. */
+export async function getActivationNotificationFromMongo(profileCode: string): Promise<RegistrationActivationNotification | null> {
+    const db = await getMongoDb('notifications-log');
+    const doc = await db.collection('notifications')
+        .find({ userId: profileCode, subject: 'User Activation' })
+        .sort({ createdAt: -1 })
+        .limit(1)
+        .next();
+    return doc as RegistrationActivationNotification | null;
 }
