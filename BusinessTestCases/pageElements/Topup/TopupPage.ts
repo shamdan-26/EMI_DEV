@@ -65,10 +65,15 @@ export class TopupPage {
         this.balanceCardLabel      = page.locator('.mp-bal-label');
         this.balanceAmount         = page.locator('.mp-bal-amount');
         this.balanceWalletCode     = page.locator('.mp-bal-code');
-        this.balanceQrButton       = page.locator('button[aria-label="generate QR Code"]');
-        this.balanceSettingsButton = page.locator('button[aria-label="wallet settings"]');
+        // Bilingual: dev/UAT loads this in Arabic by default (same reason
+        // BankTransferPage.ts's equivalents are bilingual) — the aria-label
+        // itself is localized, not just the visible text, so an English-only
+        // exact match resolves zero elements once the account's language is
+        // Arabic. Confirmed against a live dev run on 2026-09-13.
+        this.balanceQrButton       = page.getByRole('button', { name: /generate QR Code|إنشاء رمز QR/i });
+        this.balanceSettingsButton = page.getByRole('button', { name: /wallet settings|إعدادات المحفظة/i });
 
-        this.paymentMethodsLabel  = page.getByText('Payment Methods', { exact: false }).first();
+        this.paymentMethodsLabel  = page.getByText(/Payment Methods|طرق الدفع/i).first();
         this.madaOption   = page.getByRole('radio', { name: /mada/i }).or(page.locator('label', { hasText: /mada/i })).first();
         this.visaOption   = page.getByRole('radio', { name: /visa/i }).or(page.locator('label', { hasText: /visa/i })).first();
         this.masterOption = page.getByRole('radio', { name: /master/i }).or(page.locator('label', { hasText: /master/i })).first();
@@ -81,7 +86,12 @@ export class TopupPage {
         this.quickAmountLabel   = page.locator('.mp-amount-quick-label');
         this.presetAmountChips  = page.locator('.mp-amount-chip');
 
-        this.disclaimerText = page.getByText(/disclaimer:\s*top up is powered by hyper pay/i);
+        // Confirmed against a live dev run on 2026-09-13: the real copy reads
+        // "Disclaimer: We at MJD Pay do not store any of your card
+        // information." — it names the MJD Pay brand, not a "Hyper Pay"
+        // gateway, in either language. A CSS-class selector (rather than a
+        // text regex) keeps this locator itself language-independent.
+        this.disclaimerText = page.locator('.mp-amount-disclaimer, [class*="disclaimer" i]').first();
         this.proceedButton  = page.getByTestId('topup-proceed-btn')
             .or(page.locator('button.mp-btn-cta, button:has-text("Proceed")')).first();
 
@@ -98,12 +108,26 @@ export class TopupPage {
 
         // Card fields live inside the Hyperpay popup window once opened —
         // resolved against `activePage`, defaulted to the main page.
-        this.cardNumberInput = this.page.frameLocator("iframe[placeholder='Card Number']")
-            .locator("input[placeholder='Card Number']");
-        this.expiryDateInput = this.page.locator("input[placeholder='MM / YY']");
-        this.cardHolderInput = this.page.locator("input[placeholder='Card holder']");
-        this.cvvInput = this.page.frameLocator("iframe[placeholder='CVV']").locator("input[placeholder='CVV']");
-        this.payNowButton = this.page.getByRole('button', { name: /pay now/i });
+        //
+        // The card-number/CVV PCI iframes and the plain page-level fields all
+        // render in ARABIC by default on dev (same reason the rest of this
+        // page object's text locators are bilingual) — confirmed live
+        // 2026-09-20: the iframes' own `placeholder` attribute reads "رقم
+        // البطاقة"/"رمز التحقق (CVV)", not the English "Card Number"/"CVV"
+        // this locator previously hardcoded, so the frameLocator never
+        // resolved. Scoped by the iframe's `name` attribute instead — stable
+        // and language-independent, unlike `placeholder`. Each iframe also
+        // hosts a hidden `EndToEndIdentity`-style input alongside the visible
+        // field (confirmed live 2026-09-20 — a bare `input` selector hit a
+        // strict-mode violation matching both), so hidden inputs are excluded
+        // explicitly rather than assuming exactly one match.
+        this.cardNumberInput = this.page.frameLocator("iframe[name='card.number']").locator('input:not([type="hidden"])');
+        this.expiryDateInput = this.page.locator("input[placeholder='MM / YY']")
+            .or(this.page.locator("input[placeholder='شهر / سنة']"));
+        this.cardHolderInput = this.page.locator("input[placeholder='Card holder']")
+            .or(this.page.locator("input[placeholder='اسم حامل البطاقة']"));
+        this.cvvInput = this.page.frameLocator("iframe[name='card.cvv']").locator('input:not([type="hidden"])');
+        this.payNowButton = this.page.getByRole('button', { name: /pay now|إدفع الأن/i });
         this.hyperpayIframe = this.page.locator('iframe.wpwl-target');
         this.hyperpaySubmitButton = this.page.frameLocator('iframe.wpwl-target').locator('form input[value="Pay"]');
         this.cardSchemeSubmitButton = this.page.frameLocator('iframe[name^="card_"]')
@@ -113,11 +137,13 @@ export class TopupPage {
     /** Scopes gateway-popup locators (card fields, Pay Now, submit) to `popup` until reset. */
     setActivePage(popup: Page): void {
         this.activePage = popup;
-        this.cardNumberInput = popup.frameLocator("iframe[placeholder='Card Number']").locator("input[placeholder='Card Number']");
-        this.expiryDateInput = popup.locator("input[placeholder='MM / YY']");
-        this.cardHolderInput = popup.locator("input[placeholder='Card holder']");
-        this.cvvInput = popup.frameLocator("iframe[placeholder='CVV']").locator("input[placeholder='CVV']");
-        this.payNowButton = popup.getByRole('button', { name: /pay now/i });
+        this.cardNumberInput = popup.frameLocator("iframe[name='card.number']").locator('input:not([type="hidden"])');
+        this.expiryDateInput = popup.locator("input[placeholder='MM / YY']")
+            .or(popup.locator("input[placeholder='شهر / سنة']"));
+        this.cardHolderInput = popup.locator("input[placeholder='Card holder']")
+            .or(popup.locator("input[placeholder='اسم حامل البطاقة']"));
+        this.cvvInput = popup.frameLocator("iframe[name='card.cvv']").locator('input:not([type="hidden"])');
+        this.payNowButton = popup.getByRole('button', { name: /pay now|إدفع الأن/i });
         this.hyperpayIframe = popup.locator('iframe.wpwl-target');
         this.hyperpaySubmitButton = popup.frameLocator('iframe.wpwl-target').locator('form input[value="Pay"]');
         this.cardSchemeSubmitButton = popup.frameLocator('iframe[name^="card_"]')
@@ -192,23 +218,30 @@ export class TopupPage {
     }
 
     // ---------- Summary step (Transaction Type / Payment Method / Original Amount / Commission / VAT / Total) ----------
-    private summaryRow(label: string): Locator {
+    // The Topup flow loads in Arabic by default on dev/UAT (same reason
+    // BankTransferPage.ts's equivalent summary rows are bilingual), so the row
+    // label is localized. Callers pass a bilingual RegExp; a plain string is
+    // still accepted and anchored/exact-matched as before.
+    private summaryRow(label: string | RegExp): Locator {
+        const labelPattern = label instanceof RegExp
+            ? label
+            : new RegExp(`^\\s*${label}\\s*$`, 'i');
         return this.page.locator('.mp-sum-row').filter({
-            has: this.page.locator('span', { hasText: new RegExp(`^\\s*${label}\\s*$`, 'i') }),
+            has: this.page.locator('span', { hasText: labelPattern }),
         });
     }
 
-    async getSummaryText(label: string): Promise<string> {
+    async getSummaryText(label: string | RegExp): Promise<string> {
         const row = this.summaryRow(label);
         await expect(row).toBeVisible({ timeout: 15000 });
         return (await row.locator('span').last().innerText()).trim();
     }
 
-    async getSummaryMoney(label: string): Promise<number> {
+    async getSummaryMoney(label: string | RegExp): Promise<number> {
         const row = this.summaryRow(label);
         const moneyAmount = row.locator('.money-amount');
         await expect(moneyAmount).toBeVisible({ timeout: 15000 });
-        return parseFloat((await moneyAmount.innerText()).trim());
+        return parseFloat((await moneyAmount.innerText()).trim().replace(/,/g, ''));
     }
 
     /**
@@ -220,7 +253,9 @@ export class TopupPage {
         let previous = Number.NaN;
         let stableCount = 0;
         for (let attempt = 0; attempt < maxAttempts; attempt++) {
-            const current = await this.getSummaryMoney('Total amount to be sent');
+            const current = await this.getSummaryMoney(
+                /^\s*(Total amount to be sent|إجمالي المبلغ المراد استلامه)\s*$/i,
+            );
             stableCount = current === previous ? stableCount + 1 : 1;
             previous = current;
             if (stableCount >= 3) return;
@@ -240,10 +275,16 @@ export class TopupPage {
         await this.summaryNextButton.click();
     }
 
-    /** Clicks Next and waits for the Hyperpay popup window to open, scoping card-field locators to it. */
+    /**
+     * Clicks Next and waits for the Hyperpay popup window to open, scoping card-field locators to it.
+     * Bounded to 20s so a stalled payment-initiation call (backend/gateway outage) fails fast with a
+     * clear message instead of hanging until the outer test timeout force-closes the context.
+     */
     async clickSummaryNextAndCapturePopup(): Promise<Page> {
         const [popup] = await Promise.all([
-            this.page.context().waitForEvent('page'),
+            this.page.context().waitForEvent('page', { timeout: 20000 }).catch(() => {
+                throw new Error('Payment gateway popup did not open within 20s after clicking Next — likely a backend/gateway outage, not a test issue.');
+            }),
             this.clickSummaryNextButton(),
         ]);
         this.setActivePage(popup);
@@ -286,7 +327,15 @@ export class TopupPage {
         await this.cardSchemeSubmitButton.click();
     }
 
-    /** Selects a return code (2=failed, 3=pending, 4=limit exceeded, 5=too many tries) on the UAT gateway simulator. */
+    /**
+     * Selects a return code on the UAT gateway simulator's dropdown
+     * (`select[name="returnCode"]`). Confirmed live 2026-09-22 — the full
+     * option list: 1=Success, 2=User canceled, 3=Pending, 4=Error, limit
+     * exceeded, 5=Error, too many tries. 2 surfaces as the app's generic
+     * "Payment Failed" screen (`assertFailedPopup`); 3 surfaces as its own
+     * distinct "Payment Pending Confirmation" screen (`assertPendingPopup`).
+     * 4/5 not yet confirmed which screen they map to.
+     */
     async selectGatewayReturnCode(value: string) {
         await this.activePage.waitForTimeout(3000);
         const dropdown = this.activePage.frameLocator('iframe[name^="card_"]').last().locator('select[name="returnCode"]');
@@ -300,13 +349,20 @@ export class TopupPage {
     }
 
     async assertFailedPopup() {
-        const title = this.page.getByRole('heading', { name: /payment failed/i }).or(this.page.getByText(/payment failed/i));
+        // Confirmed live 2026-09-22: dev renders "فشلت الدفعة" ("Payment
+        // Failed") — the app's default Arabic, not the English this locator
+        // previously hardcoded.
+        const title = this.page.getByRole('heading', { name: /payment failed|فشلت الدفعة/i })
+            .or(this.page.getByText(/payment failed|فشلت الدفعة/i));
         await expect(title.first()).toBeVisible({ timeout: 15000 });
     }
 
     async assertPendingPopup() {
-        const title = this.page.getByRole('heading', { name: /payment pending confirmation/i })
-            .or(this.page.getByText(/payment pending confirmation/i));
+        // Confirmed live 2026-09-22: dev renders "الدفعة قيد التأكيد"
+        // ("Payment Pending Confirmation") — the app's default Arabic, not
+        // the English this locator previously hardcoded.
+        const title = this.page.getByRole('heading', { name: /payment pending confirmation|الدفعة قيد التأكيد/i })
+            .or(this.page.getByText(/payment pending confirmation|الدفعة قيد التأكيد/i));
         await expect(title.first()).toBeVisible({ timeout: 15000 });
     }
 
@@ -340,6 +396,18 @@ export class TopupPage {
     async checkBalanceAfterTopup(amount: string) {
         const actual = await this.balanceAfterRetry();
         const expected = this.balanceBeforeTopupVar + parseFloat(amount.replace(/[^\d.]/g, ''));
+        expect(Math.round(actual * 100) / 100).toBe(Math.round(expected * 100) / 100);
+    }
+
+    /**
+     * Same as `checkBalanceAfterTopup`, but for a top-up that has an active
+     * commission deducted before crediting the wallet — TU-CM13 ("Credited
+     * amount is net of commission"), the only Core Scenario case where the
+     * gross top-up amount isn't what lands in the balance.
+     */
+    async checkBalanceAfterTopupNetOfCommission(amount: string, commission: number) {
+        const actual = await this.balanceAfterRetry();
+        const expected = this.balanceBeforeTopupVar + parseFloat(amount.replace(/[^\d.]/g, '')) - commission;
         expect(Math.round(actual * 100) / 100).toBe(Math.round(expected * 100) / 100);
     }
 

@@ -1,4 +1,5 @@
 import { type Page, type Locator, type Browser, type BrowserContext, expect } from '@playwright/test';
+import { OtpPage } from './OtpPage';
 
 /**
  * Admin Portal → System Configurations → OTP  ("OTP Configuration" screen).
@@ -30,6 +31,12 @@ export const ADMIN_OTP_CONFIG_URL = `${BASE_URL}/admin/main/configuration/otp`;
 
 export const ADMIN_MOBILE   = process.env['ADMIN_MOBILE']   ?? '+966510202020';
 export const ADMIN_PASSWORD = process.env['ADMIN_PASSWORD'] ?? 'Aa#1234567';
+// Confirmed live 2026-09-22: this admin account now goes through a 6-box OTP
+// step after Login is clicked (it previously didn't — see login()'s comment).
+// Same dev-environment all-zeros bypass CLAUDE.md documents for the merchant
+// login's 8-digit OTP, confirmed separately for Topup's 6-digit transaction
+// OTP (TopupNegative.spec.ts) — this is the 6-digit form of the same bypass.
+export const ADMIN_OTP_CODE = process.env['ADMIN_OTP_CODE'] ?? '000000';
 
 /** OTP operation codes as they appear in the name field id suffix. */
 export const OTP_OPERATION = {
@@ -124,15 +131,33 @@ export class AdminOtpConfigPage {
         }
     }
 
+    /**
+     * Navigates to `url` with the HTTP cache disabled first (a genuine hard
+     * refresh — Ctrl+Shift+R, not just `page.goto`/`page.reload`, which are
+     * both still allowed to serve a cached bundle). The admin SPA occasionally
+     * hangs on a blank bootstrap on dev; a stale cached JS bundle is one
+     * plausible cause (it's also exactly how a login flow could silently miss
+     * a newly-added step like the OTP screen this class's `login()` now
+     * handles — see its own comment). Relies on CDP (`newCDPSession`), which
+     * is only available on Chromium — safe here since playwright.config.ts's
+     * one project is `msedge`.
+     */
+    private async hardRefresh(url: string): Promise<void> {
+        const client = await this.page.context().newCDPSession(this.page);
+        await client.send('Network.setCacheDisabled', { cacheDisabled: true });
+        await this.page.goto(url, { waitUntil: 'domcontentloaded' });
+    }
+
     /** Logs into the admin SPA and lands on the authenticated shell. */
     async login(mobile: string = ADMIN_MOBILE, password: string = ADMIN_PASSWORD): Promise<void> {
         // `domcontentloaded` (not `networkidle`) — the page keeps analytics
         // beacons in flight, so idle can be slow/never; wait on the fields.
         // The admin SPA occasionally hangs on a blank bootstrap on dev — one
-        // reload recovers it, so try the nav twice before giving up.
+        // reload recovers it, so try the nav twice before giving up. Each
+        // attempt is a hard refresh (see `hardRefresh`), not a plain `goto`.
         let formReady = false;
         for (let attempt = 1; attempt <= 2 && !formReady; attempt++) {
-            await this.page.goto(ADMIN_LOGIN_URL, { waitUntil: 'domcontentloaded' });
+            await this.hardRefresh(ADMIN_LOGIN_URL);
             formReady = await this.usernameInput.waitFor({ state: 'visible', timeout: 30000 })
                 .then(() => true)
                 .catch(() => false);
@@ -178,6 +203,22 @@ export class AdminOtpConfigPage {
         }
         if (response && response.status() >= 400) {
             throw new Error(`Admin login for ${mobile} failed — /auth/signin returned ${response.status()}.`);
+        }
+
+        // This account started requiring a 6-box OTP step after Login is
+        // clicked (confirmed live 2026-09-22 — previously it didn't, and this
+        // method had no OTP handling at all, which just hung until the
+        // "reach the admin shell" timeout below with the OTP screen sitting
+        // unfilled). Reuses the same widget/fill pattern as every other OTP
+        // screen in the app (see OtpPage.ts) since this one's boxes share the
+        // identical "One time password input" accessible name.
+        const otp = new OtpPage(this.page);
+        const otpShown = await otp.inputs.first()
+            .waitFor({ state: 'visible', timeout: 10000 })
+            .then(() => true)
+            .catch(() => false);
+        if (otpShown) {
+            await otp.fillAndVerify(ADMIN_OTP_CODE);
         }
 
         const landed = await this.page
