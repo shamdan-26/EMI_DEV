@@ -4,6 +4,7 @@ import {
     loginToTopup,
     gotoTopupScreen,
     reachCardEntryPopup,
+    reachOtpScreen,
     getLatestTopupTransactionLogFromSql,
     getTopupTransactionLogHistoryFromSql,
     decodeJwtProfileCode,
@@ -105,15 +106,8 @@ test.describe('Topup – Negative', () => {
      * must not open — without depending on it.
      */
     test('an incorrect OTP is rejected and the flow does not advance to the gateway popup', async () => {
-        const { page, topup, otp } = session;
-        const data = findTopupCase('VISA');
-        await topup.selectPaymentMethod('visa');
-        await topup.enterAmount(data.amount);
-        await topup.clickProceedButton();
-        await topup.waitForSummaryToSettle();
-
-        await topup.clickSummaryNextButton();
-        await expect(otp.inputs.first()).toBeVisible({ timeout: 15000 });
+        const { page, otp } = session;
+        await reachOtpScreen(session, 'visa', findTopupCase('VISA'));
         await otp.fillAndVerify('194857');
 
         const popup = await page.context().waitForEvent('page', { timeout: 8000 }).catch(() => null);

@@ -1,14 +1,16 @@
-import type { Browser, Page } from '@playwright/test';
+import { test, type Browser, type Page } from '@playwright/test';
 import { COMMISSION_CATEGORY, ACCOUNT_TYPE, apiEntryToFormValues, type CommissionFormValues, type AdminCommissionManagementPage } from '../pageElements/CommissionManagement/AdminCommissionManagementPage';
 import { loginToCommissionManagement, randomCommissionValues } from '../CommissionManagement/CommissionManagementHelper';
 import { LoginPage } from '../pageElements/Shared/LoginPage';
 import { OtpPage } from '../pageElements/Shared/OtpPage';
 import { HomepageQuickActionsPage } from '../pageElements/Shared/HomepageQuickActionsPage';
+import { AppShellPage } from '../pageElements/Shared/AppShellPage';
 import { TopupPage } from '../pageElements/Topup/TopupPage';
 import { getOtpFromDb } from '../Login/LoginHelper';
 import { getMongoDb } from '../../support/mongoClient';
 import { getSqlPool } from '../../support/sqlServerClient';
 import topupData from '../../data/topupData.json';
+import testAccounts from '../../data/testAccounts.json';
 
 export const BASE_URL  = process.env['BASE_URL'] ?? 'https://uat.majdpay.com';
 export const LOGIN_URL = `${BASE_URL}/business/auth/login`;
@@ -41,6 +43,23 @@ export const LOGIN_COMPANY = 'Q9557';
 export const LOGIN_MOBILE = '597389429';
 export const LOGIN_PASSWORD = process.env['LOGIN_PASSWORD'] ?? '';
 
+export interface TopupAccount { company: string; mobile: string; password?: string }
+
+/**
+ * Account for the UI specs under Topup/ui/: company J7264 / mobile 500021788. The Biller
+ * wallet accumulates every successful top-up and eventually hits
+ * COLLECTION_DESTINATION_WALLET_LIMITATION_EXCEEDED, so UI testing runs on this account
+ * instead. Functional specs keep the Biller account (they assert BILLER wallet type and
+ * Biller-scoped commission). Password is the shared test default (data/testAccounts.json).
+ * The wallet-code prefix depends on the account type — assert on the generic pattern.
+ */
+export const TOPUP_UI_ACCOUNT: TopupAccount = {
+    company:  'J7264',
+    mobile:   '500021788',
+    password: testAccounts.defaultPassword,
+};
+
+
 export interface TopupCase {
     testName: string;
     companyNumber: string;
@@ -69,28 +88,50 @@ export interface TopupSession {
     otp: OtpPage;
     quickActions: HomepageQuickActionsPage;
     topup: TopupPage;
+    shell: AppShellPage;
+    /** Mobile of the logged-in account — OTPs are fetched for this number. */
+    mobile: string;
 }
 
 /** Logs into the Biller account and returns ready-to-use page objects — the standard beforeAll for every Core Scenarios file. */
-export async function loginToTopup(browser: Browser): Promise<TopupSession> {
+export async function loginToTopup(browser: Browser, account: TopupAccount = { company: LOGIN_COMPANY, mobile: LOGIN_MOBILE }): Promise<TopupSession> {
     const page = await browser.newPage();
     const loginPage = new LoginPage(page);
     const otp = new OtpPage(page);
     const quickActions = new HomepageQuickActionsPage(page);
     const topup = new TopupPage(page);
+    const shell = new AppShellPage(page);
 
-    await loginPage.goto(LOGIN_URL);
-    await loginPage.fillAndSubmit(LOGIN_COMPANY, LOGIN_MOBILE, LOGIN_PASSWORD);
-    if (await otp.isVisible()) {
-        await otp.fillAndVerify(await getOtpFromDb(LOGIN_MOBILE));
+    // Up to two attempts: dev's /auth/signin intermittently returns 404, and the
+    // OTP screen can appear a moment AFTER submit — so wait for either the OTP
+    // screen or the post-login page rather than checking for the OTP once.
+    for (let attempt = 1; attempt <= 2; attempt++) {
+        await loginPage.goto(LOGIN_URL);
+        await loginPage.fillAndSubmit(account.company, account.mobile, account.password ?? LOGIN_PASSWORD);
+        const next = await Promise.race([
+            otp.inputs.first().waitFor({ state: 'visible', timeout: 20000 }).then(() => 'otp' as const),
+            page.waitForURL(url => !url.pathname.includes('/auth/'), { timeout: 20000 }).then(() => 'home' as const),
+        ]).catch(() => 'none' as const);
+        if (next === 'otp') {
+            await otp.fillAndVerify(await getOtpFromDb(account.mobile));
+        }
+        if (next !== 'none' || attempt === 2) break;
     }
     await page.waitForURL(url => !url.pathname.includes('/auth/'), { timeout: 30000 });
 
-    return { page, loginPage, otp, quickActions, topup };
+    return { page, loginPage, otp, quickActions, topup, shell, mobile: account.mobile };
 }
 
 /** Navigates fresh to the Topup amount-entry screen — the standard beforeEach for every Core Scenarios file. */
 export async function gotoTopupScreen(session: TopupSession): Promise<void> {
+    // A previous test that failed/skipped before its own `popup.close()` leaves
+    // the gateway window open in this shared context — close any extra window
+    // and point the page object back at the main page before starting fresh.
+    for (const stray of session.page.context().pages()) {
+        if (stray !== session.page) await stray.close().catch(() => { /* already closed */ });
+    }
+    session.topup.resetActivePage();
+
     await session.page.goto(HOME_URL);
     await session.page.waitForLoadState('domcontentloaded');
     await session.quickActions.quickActionTopupCard.click();
@@ -98,11 +139,25 @@ export async function gotoTopupScreen(session: TopupSession): Promise<void> {
 }
 
 /**
+ * Clicks Summary Next and reports whether the top-up OTP screen appeared. The
+ * OTP is an admin-configurable operation (operationCode 102), so it may be
+ * switched off — in that case the gateway popup opens straight after Next.
+ */
+export async function clickSummaryNextAndDetectOtp(topup: TopupPage, otp: OtpPage): Promise<boolean> {
+    await topup.clickSummaryNextButton();
+    return otp.inputs.first()
+        .waitFor({ state: 'visible', timeout: 15000 })
+        .then(() => true)
+        .catch(() => false);
+}
+
+/**
  * Amount -> Proceed -> Summary -> Next (sends OTP) -> OTP screen visible,
  * left unfilled. Shared setup for tests that interact with the OTP screen
  * itself (input/button state, resend/cancel behavior, countdown) rather than
  * completing the flow past it — see `reachCardEntryPopup` for the
- * full-completion equivalent.
+ * full-completion equivalent. Skips the calling test when the top-up OTP is
+ * disabled, since there is no OTP screen to test.
  */
 export async function reachOtpScreen(session: TopupSession, method: 'mada' | 'visa' | 'master', data: TopupCase): Promise<void> {
     const { topup, otp } = session;
@@ -110,14 +165,14 @@ export async function reachOtpScreen(session: TopupSession, method: 'mada' | 'vi
     await topup.enterAmount(data.amount);
     await topup.clickProceedButton();
     await topup.waitForSummaryToSettle();
-    await topup.clickSummaryNextButton();
-    await otp.inputs.first().waitFor({ state: 'visible', timeout: 15000 });
+    const otpShown = await clickSummaryNextAndDetectOtp(topup, otp);
+    test.skip(!otpShown, 'Top-up OTP is disabled (operationCode 102) — no OTP screen to test.');
 }
 
 /**
- * Amount -> Proceed -> Summary -> Next (sends OTP) -> OTP verify -> gateway
- * popup opens. Shared by every file whose scenario needs to reach the
- * card-entry popup (Happy Path, Security, and any future case that needs it).
+ * Amount -> Proceed -> Summary -> Next -> (OTP verify, if the top-up OTP is
+ * enabled) -> gateway popup opens. Shared by every file whose scenario needs
+ * to reach the card-entry popup.
  */
 export async function reachCardEntryPopup(session: TopupSession, method: 'mada' | 'visa' | 'master', data: TopupCase): Promise<Page> {
     const { page, topup, otp } = session;
@@ -126,24 +181,72 @@ export async function reachCardEntryPopup(session: TopupSession, method: 'mada' 
     await topup.clickProceedButton();
     await topup.waitForSummaryToSettle();
 
-    // Start listening for the gateway popup BEFORE triggering the OTP
-    // send — it only opens once OTP verification below succeeds and the
-    // app redirects back to this page, which can take a few seconds.
+    // Start listening for the gateway popup BEFORE triggering Next — it opens
+    // right after Next when OTP is off, or after OTP verification when on.
     const popupPromise = page.context().waitForEvent('page', { timeout: 20000 });
+    popupPromise.catch(() => { /* handled below — avoid an unhandled rejection if OTP verification takes long */ });
 
-    await topup.clickSummaryNextButton();
-    await otp.inputs.first().waitFor({ state: 'visible', timeout: 15000 });
-    await otp.fillAndVerify(await getOtpFromDb(LOGIN_MOBILE));
+    // Capture a rejected payment-initiation call so a backend refusal (e.g. the
+    // wallet's COLLECTION_DESTINATION_WALLET_LIMITATION_EXCEEDED once enough
+    // top-ups have accumulated) is reported as such, not as a "gateway outage".
+    let initiationFailure = '';
+    const onResponse = async (res: import('@playwright/test').Response) => {
+        if (res.request().method() === 'POST' && res.url().endsWith('/api/v1/payments') && res.status() >= 400) {
+            const body = await res.text().catch(() => '');
+            const code = /"messageCode":"([^"]+)"/.exec(body)?.[1] ?? '';
+            initiationFailure = `HTTP ${res.status()}${code ? ` ${code}` : ''}`;
+        }
+    };
+    page.on('response', onResponse);
+
+    if (await clickSummaryNextAndDetectOtp(topup, otp)) {
+        await otp.fillAndVerify(await getOtpFromDb(session.mobile));
+    }
 
     let popup: Page;
     try {
         popup = await popupPromise;
     } catch {
-        throw new Error('Payment gateway popup did not open within 20s after OTP verification — likely a backend/gateway outage, not a test issue.');
+        page.off('response', onResponse);
+        if (initiationFailure) {
+            throw new Error(`Payment initiation was rejected (${initiationFailure}) — the backend refused the top-up, so no gateway popup could open. For COLLECTION_DESTINATION_WALLET_LIMITATION_EXCEEDED the test wallet has reached its limit (see this file's header); it needs resetting, not a test fix.`);
+        }
+        throw new Error('Payment gateway popup did not open within 20s after Next / OTP verification — likely a backend/gateway outage, not a test issue.');
     }
+    page.off('response', onResponse);
     topup.setActivePage(popup);
     await popup.waitForLoadState('load');
     return popup;
+}
+
+/**
+ * Full card payment from the amount form through to the Payment Success
+ * screen: popup -> card details -> Pay Now -> (3DS / HyperPay submit) ->
+ * popup closes. Leaves the main page on the result screen with OK un-clicked.
+ */
+export async function completeCardPayment(session: TopupSession, method: 'mada' | 'visa' | 'master', data: TopupCase, gatewayReturnCode?: string): Promise<void> {
+    const { topup } = session;
+    const popup = await reachCardEntryPopup(session, method, data);
+    await topup.fillCardDetails(data.cardNumber, data.expiry, data.holder, data.cvv);
+    await topup.clickPayNowButton();
+    // Optional simulator result. VISA (HyperPay): 1=Success, 2=User canceled,
+    // 3=Pending, 4=limit exceeded, 5=too many tries — TopupPage.selectGatewayReturnCode.
+    // MADA/MASTER (3-D Secure): Y=Approve, N=Decline, D=Decoupled Fallback,
+    // U=Technical error, X=Cancel — TopupPage.select3dsOutcome.
+    if (gatewayReturnCode) {
+        if (method === 'mada' || method === 'master') {
+            await topup.select3dsOutcome(gatewayReturnCode as 'Y' | 'N' | 'D' | 'U' | 'X');
+        } else {
+            await topup.selectGatewayReturnCode(gatewayReturnCode);
+        }
+    }
+    if (method === 'mada' || method === 'master') {
+        await topup.clickCardSchemeSubmitButton();
+    } else if (await topup.isHyperpayScreenDisplayed()) {
+        await topup.clickHyperpaySubmitButton();
+    }
+    await popup.waitForEvent('close', { timeout: 30000 }).catch(() => null);
+    topup.resetActivePage();
 }
 
 /**

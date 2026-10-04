@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { findTopupCase, loginToTopup, gotoTopupScreen, type TopupSession } from '../TopupHelper';
+import { findTopupCase, loginToTopup, gotoTopupScreen, reachOtpScreen, clickSummaryNextAndDetectOtp, type TopupSession } from '../TopupHelper';
 
 // API / Contract — maps to docs/manual-test-cases/audit-additions.json
 // (TU-API-01) plus two additional cases extending its coverage: an
@@ -43,7 +43,7 @@ test.describe('Topup – API', () => {
      * renders — this only needs to prove the initiation call's contract, not
      * a completed charge.
      */
-    test('POST /api/v1/payments returns 201 and initiates the OTP for a valid card top-up', async () => {
+    test('POST /api/v1/payments returns 201 for a valid card top-up, and initiates the OTP when it is enabled', async () => {
         const { page, topup, otp } = session;
         const data = findTopupCase('VISA');
         await topup.selectPaymentMethod('visa');
@@ -56,15 +56,13 @@ test.describe('Topup – API', () => {
             { timeout: 15000 },
         );
 
-        await topup.clickSummaryNextButton();
+        const otpShown = await clickSummaryNextAndDetectOtp(topup, otp);
         const paymentsResponse = await paymentsResponsePromise;
 
         expect(paymentsResponse.status()).toBe(201);
-        // Confirms the call actually initiated OTP, not just that it
-        // returned 201 — the OTP screen renders right after.
-        await expect(otp.inputs.first()).toBeVisible({ timeout: 15000 });
-
-        await otp.cancelButton.click().catch(() => { /* best-effort cleanup — next test's beforeEach resets via HOME_URL anyway */ });
+        if (otpShown) {
+            await otp.cancelButton.click().catch(() => { /* best-effort cleanup — next test's beforeEach resets via HOME_URL anyway */ });
+        }
     });
 
     test('GET /api/v1/wallets/balance without an auth token is rejected', async ({ request }) => {
@@ -76,6 +74,19 @@ test.describe('Topup – API', () => {
         expect(res.status()).not.toBe(200);
     });
 
+    test('POST /api/v1/payments without an auth token does not return 201', async ({ request }) => {
+        const res = await request.post(`${GATEWAY_BASE}/api/v1/payments`, {
+            headers: { 'content-type': 'application/json' },
+            data: {},
+        });
+        expect(res.status()).not.toBe(201);
+    });
+
+    test('GET /api/v1/payments/summary/open without an auth token returns no summary data', async ({ request }) => {
+        const res = await request.get(`${GATEWAY_BASE}/api/v1/payments/summary/open`);
+        expect(res.status()).not.toBe(200);
+    });
+
     /**
      * "194857" is the same non-zero wrong code the Negative suite uses —
      * confirmed live 2026-09-22 that an all-zeros code is accepted on dev
@@ -83,14 +94,8 @@ test.describe('Topup – API', () => {
      * required to exercise this rejection path.
      */
     test('POST /api/v1/payments/verify with an incorrect OTP does not return 201', async () => {
-        const { page, topup, otp } = session;
-        const data = findTopupCase('VISA');
-        await topup.selectPaymentMethod('visa');
-        await topup.enterAmount(data.amount);
-        await topup.clickProceedButton();
-        await topup.waitForSummaryToSettle();
-        await topup.clickSummaryNextButton();
-        await expect(otp.inputs.first()).toBeVisible({ timeout: 15000 });
+        const { page, otp } = session;
+        await reachOtpScreen(session, 'visa', findTopupCase('VISA'));
 
         const verifyResponsePromise = page.waitForResponse(
             resp => resp.request().method() === 'POST' && resp.url().endsWith('/api/v1/payments/verify'),

@@ -12,6 +12,7 @@ import {
     loginToTopup,
     gotoTopupScreen,
     findTopupCase,
+    clickSummaryNextAndDetectOtp,
     decodeJwtProfileCode,
     getLatestTopupTransactionFromSql,
     LOGIN_MOBILE,
@@ -484,9 +485,9 @@ test.describe('Topup – Commission', () => {
                 expect(summaryCommission).toBeCloseTo(expectedNetCommission, 2);
 
                 const popupPromise = page.context().waitForEvent('page', { timeout: 20000 });
-                await topup.clickSummaryNextButton();
-                await otp.inputs.first().waitFor({ state: 'visible', timeout: 15000 });
-                await otp.fillAndVerify(await getOtpFromDb(LOGIN_MOBILE));
+                if (await clickSummaryNextAndDetectOtp(topup, otp)) {
+                    await otp.fillAndVerify(await getOtpFromDb(LOGIN_MOBILE));
+                }
                 const popup = await popupPromise;
                 topup.setActivePage(popup);
                 await popup.waitForLoadState('load');

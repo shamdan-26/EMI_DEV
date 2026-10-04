@@ -26,6 +26,8 @@ export class TopupPage {
     readonly visaOption: Locator;
     readonly masterOption: Locator;
     readonly paymentMethodOptions: Locator;
+    readonly paymentMethodsGroup: Locator;
+    readonly paymentMethodLogos: Locator;
 
     // ---------- Amount field (shared app-amount-field — QA-DATA-TESTID-HANDOFF.md section 3) ----------
     readonly inputAmount: Locator;
@@ -38,11 +40,18 @@ export class TopupPage {
     readonly proceedButton: Locator;
 
     // ---------- Summary step — inline and modal variants (section 4.5) ----------
+    readonly summaryRows: Locator;
+    readonly summaryMoneyAmounts: Locator;
     readonly summaryCancelButton: Locator;
     readonly summaryNextButton: Locator;
 
     // ---------- Result ----------
     readonly resultOkButton: Locator;
+    readonly resultTitle: Locator;
+    readonly resultDescription: Locator;
+    readonly resultContainer: Locator;
+    readonly resultIcon: Locator;
+    readonly resultLiveRegion: Locator;
 
     // ---------- Payment gateway popup (third-party Hyperpay iframe — no app testids) ----------
     // Not readonly: setActivePage() re-resolves these against the popup window.
@@ -78,6 +87,8 @@ export class TopupPage {
         this.visaOption   = page.getByRole('radio', { name: /visa/i }).or(page.locator('label', { hasText: /visa/i })).first();
         this.masterOption = page.getByRole('radio', { name: /master/i }).or(page.locator('label', { hasText: /master/i })).first();
         this.paymentMethodOptions = page.getByRole('radio');
+        this.paymentMethodsGroup = page.getByRole('radiogroup');
+        this.paymentMethodLogos = page.getByRole('radio').locator('img');
 
         this.inputAmount        = page.getByTestId('amount-input')
             .or(page.locator('#input_set_amount'))
@@ -95,6 +106,9 @@ export class TopupPage {
         this.proceedButton  = page.getByTestId('topup-proceed-btn')
             .or(page.locator('button.mp-btn-cta, button:has-text("Proceed")')).first();
 
+        // No ids/testids on summary elements (confirmed) — rows are `.mp-sum-row`, amounts `.money-amount`.
+        this.summaryRows         = page.locator('.mp-sum-row');
+        this.summaryMoneyAmounts = page.locator('.mp-sum-row .money-amount');
         this.summaryCancelButton = page.getByTestId('topup-summary-cancel-btn')
             .or(page.getByTestId('topup-summary-modal-cancel-btn'))
             .or(page.locator('button.btn-outline-primary:has-text("Cancel")'))
@@ -104,7 +118,17 @@ export class TopupPage {
             .or(page.getByRole('button', { name: /^next$/i }))
             .or(page.locator('button:has-text("Next")'));
 
-        this.resultOkButton = page.getByTestId('topup-result-ok-btn');
+        // The result screen has no ids/testids (confirmed) — title/description
+        // by their `.mp-result-*` classes, OK by role + localized name.
+        this.resultOkButton = page.getByTestId('topup-result-ok-btn')
+            .or(page.locator('button.mp-btn-wide').filter({ hasText: /موافق|^\s*OK\s*$/i }))
+            .first();
+        this.resultTitle       = page.locator('.mp-result-title');
+        this.resultDescription = page.locator('.mp-result-desc');
+        this.resultContainer   = page.locator('section.mp-sec--center');
+        // Status class carries the outcome (`is-pending`, `is-success`, `is-failed` — all confirmed live 2026-10-04).
+        this.resultIcon        = page.locator('section.mp-sec--center .mp-status-ico');
+        this.resultLiveRegion  = page.locator('[aria-live="polite"]');
 
         // Card fields live inside the Hyperpay popup window once opened —
         // resolved against `activePage`, defaulted to the main page.
@@ -339,6 +363,20 @@ export class TopupPage {
     async selectGatewayReturnCode(value: string) {
         await this.activePage.waitForTimeout(3000);
         const dropdown = this.activePage.frameLocator('iframe[name^="card_"]').last().locator('select[name="returnCode"]');
+        await expect(dropdown).toBeVisible({ timeout: 20000 });
+        await dropdown.selectOption(value);
+    }
+
+    /**
+     * MADA/MASTER use a different simulator from VISA: a 3-D Secure page with a
+     * "Select authentication outcome" dropdown (`select#outcomeSelect`, name
+     * `transStatus`) inside the same `card_*` iframe, then Submit. Confirmed
+     * live 2026-10-04 — options: Y=Approve, N=Decline, D=Decoupled Fallback,
+     * U=Technical error, X=Cancel. Call this BEFORE `clickCardSchemeSubmitButton`.
+     */
+    async select3dsOutcome(value: 'Y' | 'N' | 'D' | 'U' | 'X') {
+        await this.activePage.waitForTimeout(3000);
+        const dropdown = this.activePage.frameLocator('iframe[name^="card_"]').last().locator('select#outcomeSelect');
         await expect(dropdown).toBeVisible({ timeout: 20000 });
         await dropdown.selectOption(value);
     }

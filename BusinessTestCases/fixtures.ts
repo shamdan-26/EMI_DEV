@@ -11,6 +11,7 @@ import { HomepageGreetingPage } from './pageElements/Homepage/HomepageGreetingPa
 import { HomepageHeaderPage } from './pageElements/Homepage/HomepageHeaderPage';
 import { HomepageQuickActionsPage } from './pageElements/Shared/HomepageQuickActionsPage';
 import { HomepageSidebarPage } from './pageElements/Shared/HomepageSidebarPage';
+import { AppShellPage } from './pageElements/Shared/AppShellPage';
 import { HomepageSubWalletsPage } from './pageElements/Homepage/HomepageSubWalletsPage';
 import { HomepageTransactionsPage } from './pageElements/Homepage/HomepageTransactionsPage';
 import { LoginPage } from './pageElements/Shared/LoginPage';
@@ -49,6 +50,7 @@ type PageObjectFixtures = {
     homepageHeader: HomepageHeaderPage;
     homepageQuickActions: HomepageQuickActionsPage;
     homepageSidebar: HomepageSidebarPage;
+    appShell: AppShellPage;
     homepageSubWallets: HomepageSubWalletsPage;
     homepageTransactions: HomepageTransactionsPage;
     loginPage: LoginPage;
@@ -79,6 +81,7 @@ export const test = base.extend<PageObjectFixtures>({
     homepageHeader: async ({ page }, use) => { await use(new HomepageHeaderPage(page)); },
     homepageQuickActions: async ({ page }, use) => { await use(new HomepageQuickActionsPage(page)); },
     homepageSidebar: async ({ page }, use) => { await use(new HomepageSidebarPage(page)); },
+    appShell: async ({ page }, use) => { await use(new AppShellPage(page)); },
     homepageSubWallets: async ({ page }, use) => { await use(new HomepageSubWalletsPage(page)); },
     homepageTransactions: async ({ page }, use) => { await use(new HomepageTransactionsPage(page)); },
     loginPage: async ({ page }, use) => { await use(new LoginPage(page)); },

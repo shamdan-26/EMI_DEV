@@ -6,7 +6,7 @@ import { findTopupCase, loginToTopup, gotoTopupScreen, reachOtpScreen, type Topu
 // docs/manual-test-cases/Topup.md section G (TUP-24, TUP-25, TUP-26, TUP-27,
 // TUP-29) — all flagged there as "not yet documented"/gaps. TUP-22 (screen
 // content) and TUP-28 (incorrect OTP rejected) are already covered by
-// ui/TopupUI.spec.ts and functional/TopupNegative.spec.ts respectively.
+// ui/TopupOtpUI.spec.ts and functional/TopupNegative.spec.ts respectively.
 //
 // Unlike Login's own OTP widget, Topup's auto-submits the moment its 6th
 // digit is entered (see pageElements/Shared/OtpPage.ts's header comment on

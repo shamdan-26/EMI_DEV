@@ -5,7 +5,7 @@ import { HomepageSidebarPage } from '../../pageElements/Shared/HomepageSidebarPa
 // Navigation — the two entry points that land on Topup. Maps to
 // docs/manual-test-cases/Topup.md section A (TUP-01, TUP-02); TUP-03/TUP-04
 // (title/subtitle, direct-URL-without-auth) are already covered by
-// ui/TopupUI.spec.ts and functional/TopupSecurity.spec.ts respectively.
+// ui/TopupFormUI.spec.ts and functional/TopupSecurity.spec.ts respectively.
 //
 // Every other Topup file's own `beforeEach` (`gotoTopupScreen`) already
 // clicks the homepage quick-action card to reach the form, so TUP-02 is

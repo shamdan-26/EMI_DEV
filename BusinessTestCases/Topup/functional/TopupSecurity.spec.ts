@@ -1,5 +1,5 @@
 import { test, expect, type Request } from '@playwright/test';
-import { findTopupCase, loginToTopup, gotoTopupScreen, reachCardEntryPopup, BASE_URL, type TopupSession } from '../TopupHelper';
+import { findTopupCase, loginToTopup, gotoTopupScreen, reachCardEntryPopup, reachOtpScreen, BASE_URL, type TopupSession } from '../TopupHelper';
 
 // Security — maps to docs/manual-test-cases/Topup.md section H (TUP-35).
 //
@@ -129,7 +129,7 @@ test.describe('Topup – Security', () => {
      * already uses.
      */
     test('each fresh payment initiation gets its own idempotency key', async () => {
-        const { page, topup, otp } = session;
+        const { page, otp } = session;
         const data = findTopupCase('VISA');
 
         async function initiateAndCaptureIdempotencyKey(): Promise<string> {
@@ -141,12 +141,7 @@ test.describe('Topup – Security', () => {
             };
             page.on('request', handler);
             try {
-                await topup.selectPaymentMethod('visa');
-                await topup.enterAmount(data.amount);
-                await topup.clickProceedButton();
-                await topup.waitForSummaryToSettle();
-                await topup.clickSummaryNextButton();
-                await expect(otp.inputs.first()).toBeVisible({ timeout: 15000 });
+                await reachOtpScreen(session, 'visa', data);
             } finally {
                 page.off('request', handler);
             }
