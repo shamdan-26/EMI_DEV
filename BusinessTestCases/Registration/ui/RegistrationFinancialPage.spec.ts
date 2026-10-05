@@ -10,7 +10,7 @@ import { RegistrationFinancialPage } from '../../pageElements/Registration/Regis
 // fields, opens a dropdown overlay, or navigates away stays in the stateful
 // describe block below with its own fresh registration per test.
 // ─────────────────────────────────────────────────────────────────────────────
-test.describe('Registration – Financial & Business Step (Tab 2 of 3) — read-only', () => {
+test.describe('Registration – Financial & Business Step (Tab 2 of 3) — read-only', { tag: ['@registration', '@ui'], annotation: [{ type: 'feature', description: 'Registration' }, { type: 'layer', description: 'ui' }] }, () => {
     test.describe.configure({ mode: 'serial' });
 
     let page: Page;
@@ -52,7 +52,7 @@ test.describe('Registration – Financial & Business Step (Tab 2 of 3) — read-
         await expect(financial.themeToggle).toBeVisible();
     });
 
-    test('should show the Financial & Business step fields on arrival', async () => {
+    test('should show the Financial & Business step fields on arrival', { annotation: [{ type: 'testcase', description: "RF-06: Show the Financial & Business step fields on arrival" }] }, async () => {
         await expect(page.getByRole('textbox', { name: /monthly expected number|العدد الشهري المتوقع للفواتير/i })).toBeVisible();
         await expect(page.getByRole('textbox', { name: /monthly expected sum|إجمالي الفواتير الصادرة/i })).toBeVisible();
         await expect(page.getByRole('textbox', { name: /monthly withdrawal|السحب الشهري/i })).toBeVisible();
@@ -66,15 +66,15 @@ test.describe('Registration – Financial & Business Step (Tab 2 of 3) — read-
 
     // ── Step indicator ────────────────────────────────────────────────────────
 
-    test('should show the Financial & Business tab as active', async () => {
+    test('should show the Financial & Business tab as active', { annotation: [{ type: 'testcase', description: "RF-07: Show the Financial & Business tab as active" }] }, async () => {
         await expect(page.locator('#register-form-title.form-title')).toContainText(/financial|البيانات المالية/i);
     });
 
-    test('should mark the Financial & Business inner tab as active (is-active)', async () => {
+    test('should mark the Financial & Business inner tab as active (is-active)', { annotation: [{ type: 'testcase', description: "RF-08: Mark the Financial & Business inner tab as active (is-active)" }] }, async () => {
         await expect(page.locator('.mp-stepbar .mp-step.is-active')).toBeVisible();
     });
 
-    test('should display all four step indicators', async () => {
+    test('should display all four step indicators', { annotation: [{ type: 'testcase', description: "RF-09: Display all four step indicators" }] }, async () => {
         await expect(page.getByText(/business info|بيانات النشاط/i).first()).toBeVisible();
         await expect(page.getByText(/nafath|نَفاذ|نفاذ/i).first()).toBeVisible();
         await expect(page.getByText(/products|المنتجات/i).first()).toBeVisible();
@@ -83,11 +83,11 @@ test.describe('Registration – Financial & Business Step (Tab 2 of 3) — read-
 
     // ── Monthly Expected Number of Bills ──────────────────────────────────────
 
-    test('should display the Monthly Expected Number Of Bills label', async () => {
+    test('should display the Monthly Expected Number Of Bills label', { annotation: [{ type: 'testcase', description: "RF-10: Display the Monthly Expected Number Of Bills label" }] }, async () => {
         await expect(page.getByText(/monthly expected number of bills|العدد الشهري المتوقع للفواتير/i).first()).toBeVisible();
     });
 
-    test('should display the Monthly Expected Number Of Bills field', async () => {
+    test('should display the Monthly Expected Number Of Bills field', { annotation: [{ type: 'testcase', description: "RF-11: Display the Monthly Expected Number Of Bills field" }] }, async () => {
         await expect(page.getByRole('textbox', { name: /monthly expected number|العدد الشهري المتوقع للفواتير/i })).toBeVisible();
     });
 
@@ -98,11 +98,11 @@ test.describe('Registration – Financial & Business Step (Tab 2 of 3) — read-
 
     // ── Monthly Expected Sum of Bills ─────────────────────────────────────────
 
-    test('should display the Monthly Expected Sum Of Bills label', async () => {
+    test('should display the Monthly Expected Sum Of Bills label', { annotation: [{ type: 'testcase', description: "RF-13: Display the Monthly Expected Sum Of Bills label" }] }, async () => {
         await expect(page.getByText(/monthly expected sum of bills|إجمالي الفواتير الصادرة/i).first()).toBeVisible();
     });
 
-    test('should display the Monthly Expected Sum Of Bills field', async () => {
+    test('should display the Monthly Expected Sum Of Bills field', { annotation: [{ type: 'testcase', description: "RF-14: Display the Monthly Expected Sum Of Bills field" }] }, async () => {
         await expect(page.getByRole('textbox', { name: /monthly expected sum|إجمالي الفواتير الصادرة/i })).toBeVisible();
     });
 
@@ -113,30 +113,30 @@ test.describe('Registration – Financial & Business Step (Tab 2 of 3) — read-
 
     // ── Expected Monthly Withdrawal ───────────────────────────────────────────
 
-    test('should display the Expected Monthly Withdrawal label', async () => {
+    test('should display the Expected Monthly Withdrawal label', { annotation: [{ type: 'testcase', description: "RF-16: Display the Expected Monthly Withdrawal label" }] }, async () => {
         await expect(page.getByText(/expected monthly withdrawal|السحب الشهري/i).first()).toBeVisible();
     });
 
-    test('should display the Expected Monthly Withdrawal field', async () => {
+    test('should display the Expected Monthly Withdrawal field', { annotation: [{ type: 'testcase', description: "RF-17: Display the Expected Monthly Withdrawal field" }] }, async () => {
         await expect(page.getByRole('textbox', { name: /monthly withdrawal|السحب الشهري/i })).toBeVisible();
     });
 
-    test('should show the correct placeholder for Expected Monthly Withdrawal', async () => {
+    test('should show the correct placeholder for Expected Monthly Withdrawal', { annotation: [{ type: 'testcase', description: "RF-18: Show the correct placeholder for Expected Monthly Withdrawal" }] }, async () => {
         await expect(page.getByRole('textbox', { name: /monthly withdrawal|السحب الشهري/i }))
             .toHaveAttribute('placeholder', /2000/i);
     });
 
     // ── Expected Monthly Deposit ──────────────────────────────────────────────
 
-    test('should display the Expected Monthly Deposit label', async () => {
+    test('should display the Expected Monthly Deposit label', { annotation: [{ type: 'testcase', description: "RF-19: Display the Expected Monthly Deposit label" }] }, async () => {
         await expect(page.getByText(/expected monthly deposit|الإيداع الشهري/i).first()).toBeVisible();
     });
 
-    test('should display the Expected Monthly Deposit field', async () => {
+    test('should display the Expected Monthly Deposit field', { annotation: [{ type: 'testcase', description: "RF-20: Display the Expected Monthly Deposit field" }] }, async () => {
         await expect(page.getByRole('textbox', { name: /monthly deposit|الإيداع الشهري/i })).toBeVisible();
     });
 
-    test('should show the correct placeholder for Expected Monthly Deposit', async () => {
+    test('should show the correct placeholder for Expected Monthly Deposit', { annotation: [{ type: 'testcase', description: "RF-21: Show the correct placeholder for Expected Monthly Deposit" }] }, async () => {
         await expect(page.getByRole('textbox', { name: /monthly deposit|الإيداع الشهري/i }))
             .toHaveAttribute('placeholder', /2000/i);
     });
@@ -147,15 +147,15 @@ test.describe('Registration – Financial & Business Step (Tab 2 of 3) — read-
     // internal sub-step "Next" (#btn_signup) is clicked, see the stateful
     // "should display the Banks dropdown label" test below.
 
-    test('should display the Industries dropdown label', async () => {
+    test('should display the Industries dropdown label', { annotation: [{ type: 'testcase', description: "RF-22: Display the Industries dropdown label" }] }, async () => {
         await expect(page.getByText(/industries|القطاعات/i).first()).toBeVisible();
     });
 
-    test('should display the Industries dropdown', async () => {
+    test('should display the Industries dropdown', { annotation: [{ type: 'testcase', description: "RF-23: Display the Industries dropdown" }] }, async () => {
         await expect(page.locator('#mat-select-value-0.mat-mdc-select-value')).toBeVisible();
     });
 
-    test('should show "Select Option" as the default for Industries', async () => {
+    test('should show "Select Option" as the default for Industries', { annotation: [{ type: 'testcase', description: "RF-24: Show \"Select Option\" as the default for Industries" }] }, async () => {
         // Matches the diacritic-independent prefix "اختر خيار" rather than the full
         // word with its trailing tanween fatha — the app renders that mark as
         // alef-then-diacritic ("خياراً"), while a literal "اختر خيارًا" in the regex
@@ -173,18 +173,18 @@ test.describe('Registration – Financial & Business Step (Tab 2 of 3) — read-
     // field earlier on the page is added/removed, which is exactly what broke
     // the previous hardcoded "-10" locator.
 
-    test('should display the Annual Income dropdown label', async () => {
+    test('should display the Annual Income dropdown label', { annotation: [{ type: 'testcase', description: "RF-25: Display the Annual Income dropdown label" }] }, async () => {
         await expect(
             page.locator('.floating-field-shell', { has: page.locator('[data-testid="register-annual-income"]') })
                 .locator('label.floating-field-label')
         ).toContainText(/annual income|الدخل السنوي/i);
     });
 
-    test('should display the Annual Income dropdown', async () => {
+    test('should display the Annual Income dropdown', { annotation: [{ type: 'testcase', description: "RF-26: Display the Annual Income dropdown" }] }, async () => {
         await expect(page.locator('[data-testid="register-annual-income"]')).toBeVisible();
     });
 
-    test('should show "Select Option" as the default for Annual Income', async () => {
+    test('should show "Select Option" as the default for Annual Income', { annotation: [{ type: 'testcase', description: "RF-27: Show \"Select Option\" as the default for Annual Income" }] }, async () => {
         // See the matching Industries test above for why this matches the
         // diacritic-independent prefix rather than the full word.
         await expect(page.locator('#mat-select-value-1 .mat-mdc-select-placeholder.mat-mdc-select-min-line.ng-star-inserted')).toContainText(/select option|اختر خيار/i);
@@ -200,7 +200,7 @@ test.describe('Registration – Financial & Business Step (Tab 2 of 3) — read-
         await expect(page.getByRole('button', { name: /next|التالي/i })).toBeVisible();
     });
 
-    test('should keep Next disabled when required fields are empty', async () => {
+    test('should keep Next disabled when required fields are empty', { annotation: [{ type: 'testcase', description: "RF-30: Keep Next disabled when required fields are empty" }] }, async () => {
         await expect(page.getByRole('button', { name: /next|التالي/i })).toBeDisabled();
     });
 
@@ -238,7 +238,7 @@ test.describe('Registration – Financial & Business Step (Tab 2 of 3) — read-
 // navigates away from the Financial step, so each needs its own fresh
 // registration to avoid interfering with the next test.
 // ─────────────────────────────────────────────────────────────────────────────
-test.describe('Registration – Financial & Business Step (Tab 2 of 3) — stateful', () => {
+test.describe('Registration – Financial & Business Step (Tab 2 of 3) — stateful', { tag: ['@registration', '@ui'], annotation: [{ type: 'feature', description: 'Registration' }, { type: 'layer', description: 'ui' }] }, () => {
     // Serial, not parallel: each test's beforeEach drives a full mobile->OTP->
     // Business Info registration against a small shared resident-asset pool.
     // Running these across workers was tried and reverted — concurrent
@@ -277,7 +277,7 @@ test.describe('Registration – Financial & Business Step (Tab 2 of 3) — state
         await expect(page.getByRole('textbox', { name: /monthly deposit|الإيداع الشهري/i })).toHaveValue('20000');
     });
 
-    test('should display the Banks dropdown label', async ({ page }) => {
+    test('should display the Banks dropdown label', { annotation: [{ type: 'testcase', description: "RF-39: Display the Banks dropdown label" }] }, async ({ page }) => {
         // Banks/Industries only render after Section 1 is completed and the
         // internal stepper "Next" (#btn_signup, class="mat-stepper-next ...") is
         // clicked — they are not present on arrival.
@@ -312,7 +312,7 @@ test.describe('Registration – Financial & Business Step (Tab 2 of 3) — state
         await expect(page.locator('mat-option').first()).toBeVisible({ timeout: 5000 });
     });
 
-    test('should open the Banks dropdown when clicked', async ({ page }) => {
+    test('should open the Banks dropdown when clicked', { annotation: [{ type: 'testcase', description: "RF-42: Open the Banks dropdown when clicked" }] }, async ({ page }) => {
         // Banks only renders after Section 1 is completed and the internal
         // stepper "Next" (#btn_signup) is clicked — same setup as "should display
         // the Banks dropdown label" above.
@@ -331,12 +331,12 @@ test.describe('Registration – Financial & Business Step (Tab 2 of 3) — state
         await expect(page.locator('mat-option').first()).toBeVisible({ timeout: 5000 });
     });
 
-    test('should return to Business Info tab when Back is clicked', async ({ page }) => {
+    test('should return to Business Info tab when Back is clicked', { annotation: [{ type: 'testcase', description: "RF-43: Return to Business Info tab when Back is clicked" }] }, async ({ page }) => {
         await page.getByRole('button', { name: /back|رجوع/i }).click();
         await expect(page.locator('.mp-step.is-active .mp-step-num')).toContainText('1', { timeout: 10000 });
     });
 
-    test('should proceed to Verification & Uploads tab when Next is clicked with valid data', async ({ page }) => {
+    test('should proceed to Verification & Uploads tab when Next is clicked with valid data', { annotation: [{ type: 'testcase', description: "RF-44: Proceed to Verification & Uploads tab when Next is clicked with valid data" }] }, async ({ page }) => {
         await page.getByRole('textbox', { name: /monthly expected number|العدد الشهري المتوقع للفواتير/i }).fill('1500');
         await page.getByRole('textbox', { name: /monthly expected sum|إجمالي الفواتير الصادرة/i }).fill('50000');
         await page.getByRole('textbox', { name: /monthly withdrawal|السحب الشهري/i }).fill('10000');
@@ -361,7 +361,7 @@ test.describe('Registration – Financial & Business Step (Tab 2 of 3) — state
 // RegistrationHelper.ts) once 5 dedicated-pool draws in a row turn out already
 // progressed, trading a bit of that isolation for a bounded worst-case runtime.
 // ─────────────────────────────────────────────────────────────────────────────
-test.describe('Registration – Financial & Business Step (Tab 2 of 3) — dedicated asset', () => {
+test.describe('Registration – Financial & Business Step (Tab 2 of 3) — dedicated asset', { tag: ['@registration', '@ui'], annotation: [{ type: 'feature', description: 'Registration' }, { type: 'layer', description: 'ui' }] }, () => {
     test.describe.configure({ mode: 'serial' });
 
     test.beforeEach(async ({ page }) => {

@@ -10,7 +10,7 @@ import { loginToTopup, gotoTopupScreen, type TopupSession, TOPUP_UI_ACCOUNT } fr
 
 const ARABIC_SCRIPT = /[؀-ۿ]/;
 
-test.describe('Topup – UI – Language and dark mode', () => {
+test.describe('Topup – UI – Language and dark mode', { tag: ['@topup', '@ui'], annotation: [{ type: 'feature', description: 'Topup' }, { type: 'layer', description: 'ui' }] }, () => {
     test.describe.configure({ mode: 'serial' });
     test.setTimeout(150000);
 

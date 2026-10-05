@@ -2,7 +2,7 @@ import { test, expect } from '../../fixtures';
 import { LOGIN_URL } from '../LoginHelper';
 import { LoginPage } from '../../pageElements/Shared/LoginPage';
 
-test.describe('Login Page', () => {
+test.describe('Login Page', { tag: ['@login', '@ui'], annotation: [{ type: 'feature', description: 'Login' }, { type: 'layer', description: 'ui' }] }, () => {
     test.describe.configure({ mode: 'serial' });
 
     let loginPage: LoginPage;
@@ -26,7 +26,7 @@ test.describe('Login Page', () => {
         await expect(loginPage.formBox).toBeVisible();
     });
 
-    test('should display the Login eyebrow text', async () => {
+    test('should display the Login eyebrow text', { annotation: [{ type: 'testcase', description: "LG-04: \"Login\" eyebrow text" }] }, async () => {
         await loginPage.useEnglish(); // UAT defaults to Arabic; assert English copy explicitly
         await expect(loginPage.formEyebrow).toHaveText('Login');
     });
@@ -159,7 +159,7 @@ test.describe('Login Page', () => {
         await expect(loginPage.loginButton).toBeVisible();
     });
 
-    test('should have the Log In button disabled on page load', async () => {
+    test('should have the Log In button disabled on page load', { annotation: [{ type: 'testcase', description: "LG-29: Log In button disabled on load" }] }, async () => {
         await expect(loginPage.loginButton).toBeDisabled();
     });
 

@@ -48,7 +48,7 @@ import { closeSqlPool } from '../../../support/sqlServerClient';
 // APP-platform row — a different row than the WEB one everything else here
 // uses, so it opens/closes its own short-lived admin session), snapshot
 // taken in beforeAll, restored in afterAll as a safety net.
-test.describe('Topup – Commission', () => {
+test.describe('Topup – Commission', { tag: ['@topup', '@functional'], annotation: [{ type: 'feature', description: 'Topup' }, { type: 'layer', description: 'functional' }] }, () => {
     test.describe.configure({ mode: 'serial' });
     test.setTimeout(150000);
 

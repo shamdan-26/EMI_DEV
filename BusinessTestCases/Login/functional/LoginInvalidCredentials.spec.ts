@@ -14,7 +14,7 @@ import { LoginPage } from '../../pageElements/Shared/LoginPage';
 // INVALID CREDENTIALS
 // ─────────────────────────────────────────────────────────────────────────────
 
-test.describe('Login — Invalid Credentials', () => {
+test.describe('Login — Invalid Credentials', { tag: ['@login', '@functional'], annotation: [{ type: 'feature', description: 'Login' }, { type: 'layer', description: 'functional' }] }, () => {
     test.describe.configure({ mode: 'serial' });
 
     let loginPage: LoginPage;
@@ -59,7 +59,7 @@ test.describe('Login — Invalid Credentials', () => {
 // ACCOUNT STATUS ERRORS
 // ─────────────────────────────────────────────────────────────────────────────
 
-test.describe('Login — Account Status Errors', () => {
+test.describe('Login — Account Status Errors', { tag: ['@login', '@functional'], annotation: [{ type: 'feature', description: 'Login' }, { type: 'layer', description: 'functional' }] }, () => {
     test.describe.configure({ mode: 'serial' });
 
     let loginPage: LoginPage;
@@ -120,7 +120,7 @@ test.describe('Login — Account Status Errors', () => {
 // EDGE CASES
 // ─────────────────────────────────────────────────────────────────────────────
 
-test.describe('Login — Edge Cases', () => {
+test.describe('Login — Edge Cases', { tag: ['@login', '@functional'], annotation: [{ type: 'feature', description: 'Login' }, { type: 'layer', description: 'functional' }] }, () => {
     test.describe.configure({ mode: 'serial' });
 
     let loginPage: LoginPage;

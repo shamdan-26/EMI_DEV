@@ -9,7 +9,7 @@ import {
 } from '../LoginHelper';
 import { LoginPage } from '../../pageElements/Shared/LoginPage';
 
-test.describe('Login — Security', () => {
+test.describe('Login — Security', { tag: ['@login', '@functional'], annotation: [{ type: 'feature', description: 'Login' }, { type: 'layer', description: 'functional' }] }, () => {
     test.describe.configure({ mode: 'serial' });
 
     let loginPage: LoginPage;

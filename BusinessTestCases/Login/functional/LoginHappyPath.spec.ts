@@ -8,7 +8,7 @@ import { OtpPage } from '../../pageElements/Shared/OtpPage';
 // are owned by ui/LoginValidationPopup.spec.ts — this file owns only what's
 // unique to the happy path: form state, dashboard landing, and logout.
 
-test.describe('Login — Happy Path (End-to-End)', () => {
+test.describe('Login — Happy Path (End-to-End)', { tag: ['@login', '@functional'], annotation: [{ type: 'feature', description: 'Login' }, { type: 'layer', description: 'functional' }] }, () => {
     test.describe.configure({ mode: 'serial' });
 
     let loginPage: LoginPage;

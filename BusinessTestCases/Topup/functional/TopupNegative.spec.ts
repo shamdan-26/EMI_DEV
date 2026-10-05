@@ -19,7 +19,7 @@ import { closeSqlPool } from '../../../support/sqlServerClient';
 // Split out from Happy Path / UI / Security / API — see TopupHelper.ts's
 // shared setup (loginToTopup/gotoTopupScreen/findTopupCase).
 
-test.describe('Topup – Negative', () => {
+test.describe('Topup – Negative', { tag: ['@topup', '@functional'], annotation: [{ type: 'feature', description: 'Topup' }, { type: 'layer', description: 'functional' }] }, () => {
     test.describe.configure({ mode: 'serial' });
     test.setTimeout(150000);
 
@@ -60,7 +60,7 @@ test.describe('Topup – Negative', () => {
      * truncation (vs. a visible max-amount message) is the intended design —
      * that's still an open product question, not something to assert on.
      */
-    test('a 9-digit amount is truncated rather than accepted in full', async () => {
+    test('a 9-digit amount is truncated rather than accepted in full', { annotation: [{ type: 'testcase', description: "TUP-13: **[Gap — not in `topupData.json`]** Long integer amount is capped" }] }, async () => {
         const { topup } = session;
         await topup.selectPaymentMethod('mada');
         await topup.enterAmount('999999999');
@@ -134,7 +134,7 @@ test.describe('Topup – Negative', () => {
      * "wallet-service skips events it has already processed" — see that
      * section for why a literal CDC-replay test isn't possible from here).
      */
-    test('a "User canceled" gateway result shows a failure result and leaves the balance unchanged', async () => {
+    test('a "User canceled" gateway result shows a failure result and leaves the balance unchanged', { annotation: [{ type: 'testcase', description: "TU-04: Declined/failed payment shows clear error" }] }, async () => {
         test.skip(true, 'VPN access to SQL Server/Mongo is currently unavailable — this test\'s DB assertions cannot run until that\'s restored.');
         const { page, topup } = session;
         const data = findTopupCase('VISA');

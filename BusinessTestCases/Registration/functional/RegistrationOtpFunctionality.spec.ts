@@ -1,7 +1,7 @@
 ﻿import { test, expect } from '@playwright/test';
 import { REGISTER_URL, generateFreshKSAMobile, fillOTP, getOtpFromDb } from '../RegistrationHelper';
 
-test.describe('Registration - OTP Functionality', () => {
+test.describe('Registration - OTP Functionality', { tag: ['@registration', '@functional'], annotation: [{ type: 'feature', description: 'Registration' }, { type: 'layer', description: 'functional' }] }, () => {
     test.describe.configure({ mode: 'serial' });
 
     let currentMobile: string;
@@ -31,11 +31,11 @@ test.describe('Registration - OTP Functionality', () => {
 
     // ── Verify button state ───────────────────────────────────────────────────
 
-    test('should have Verify button disabled when OTP inputs are empty', async ({ page }) => {
+    test('should have Verify button disabled when OTP inputs are empty', { annotation: [{ type: 'testcase', description: "RO-08: Have Verify button disabled when OTP inputs are empty" }] }, async ({ page }) => {
         await expect(page.getByRole('button', { name: /Verify|تحقق/i })).toBeDisabled();
     });
 
-    test('should keep Verify disabled when fewer than all OTP digits are entered', async ({ page }) => {
+    test('should keep Verify disabled when fewer than all OTP digits are entered', { annotation: [{ type: 'testcase', description: "RO-09: Keep Verify disabled when fewer than all OTP digits are entered" }] }, async ({ page }) => {
         const inputs = page.getByRole('textbox', { name: 'One time password input' });
         await inputs.first().waitFor({ state: 'visible', timeout: 10000 });
         const count  = await inputs.count();
@@ -45,7 +45,7 @@ test.describe('Registration - OTP Functionality', () => {
         await expect(page.getByRole('button', { name: /Verify|تحقق/i })).toBeDisabled();
     });
 
-    test('should enable Verify button when all OTP inputs are filled', async ({ page }) => {
+    test('should enable Verify button when all OTP inputs are filled', { annotation: [{ type: 'testcase', description: "RO-10: Enable Verify button when all OTP inputs are filled" }] }, async ({ page }) => {
         await fillOTP(page);
         // Button auto-submits on the last digit; assert it either became enabled
         // or the form already navigated forward (both prove the button was enabled).
@@ -58,13 +58,13 @@ test.describe('Registration - OTP Functionality', () => {
 
     // ── Input validation ──────────────────────────────────────────────────────
 
-    test('should not accept non-numeric characters in OTP inputs', async ({ page }) => {
+    test('should not accept non-numeric characters in OTP inputs', { annotation: [{ type: 'testcase', description: "RO-11: Not accept non-numeric characters in OTP inputs" }] }, async ({ page }) => {
         const input = page.getByRole('textbox', { name: 'One time password input' }).first();
         await input.pressSequentially('a');
         await expect(input).toHaveValue('');
     });
 
-    test('should auto-advance focus to the next input when a digit is entered', async ({ page }) => {
+    test('should auto-advance focus to the next input when a digit is entered', { annotation: [{ type: 'testcase', description: "RO-12: Auto-advance focus to the next input when a digit is entered" }] }, async ({ page }) => {
         const inputs = page.getByRole('textbox', { name: 'One time password input' });
         await inputs.nth(0).click();
         await inputs.nth(0).press('1');
@@ -73,7 +73,7 @@ test.describe('Registration - OTP Functionality', () => {
 
     // ── Resend button ─────────────────────────────────────────────────────────
 
-    test('should have Click to resend button disabled while countdown is active', async ({ page }) => {
+    test('should have Click to resend button disabled while countdown is active', { annotation: [{ type: 'testcase', description: "RO-13: Have Click to resend button disabled while countdown is active" }] }, async ({ page }) => {
         await expect(page.getByRole('button', { name: /Click to resend|انقر لإعادة الإرسال/i })).toBeDisabled();
         // Confirmed live: "تنتهي صلاحية الرمز خلال 02:55" ("the code's validity
         // ends within..."), not "ينتهي الرمز" — different verb conjugation
@@ -83,7 +83,7 @@ test.describe('Registration - OTP Functionality', () => {
         await expect(page.getByText(/code ends|expires in|(ت|ي)نتهي.*الرمز/i)).toBeVisible();
     });
 
-    test('should enable resend button after countdown expires', async ({ page }) => {
+    test('should enable resend button after countdown expires', { annotation: [{ type: 'testcase', description: "RO-14: Enable resend button after countdown expires" }] }, async ({ page }) => {
         const timerText = await page.getByText(/code ends|expires in|(ت|ي)نتهي.*الرمز/i).textContent();
         const match     = timerText?.match(/(\d+):(\d+)/);
         const parsedSeconds = match ? parseInt(match[1]) * 60 + parseInt(match[2]) : 90;
@@ -132,7 +132,7 @@ test.describe('Registration - OTP Functionality', () => {
 
     // ── OTP submission ────────────────────────────────────────────────────────
 
-    test('should remain on OTP popup after submitting wrong OTP', async ({ page }) => {
+    test('should remain on OTP popup after submitting wrong OTP', { annotation: [{ type: 'testcase', description: "RO-15: Remain on OTP popup after submitting wrong OTP" }] }, async ({ page }) => {
         const inputs = page.getByRole('textbox', { name: 'One time password input' });
         await inputs.first().waitFor({ state: 'visible', timeout: 10000 });
         const count  = await inputs.count();
@@ -146,7 +146,7 @@ test.describe('Registration - OTP Functionality', () => {
 
     // ── OTP success ───────────────────────────────────────────────────────────
 
-    test('should advance to the Business Info step after entering the correct OTP', async ({ page }) => {
+    test('should advance to the Business Info step after entering the correct OTP', { annotation: [{ type: 'testcase', description: "RO-16: Advance to the Business Info step after entering the correct OTP" }] }, async ({ page }) => {
         const otp = await getOtpFromDb(currentMobile);
         await fillOTP(page, otp);
         const verifyBtn = page.getByRole('button', { name: /Verify|تحقق/i });
@@ -158,12 +158,12 @@ test.describe('Registration - OTP Functionality', () => {
 
     // ── Cancel ────────────────────────────────────────────────────────────────
 
-    test('should close the OTP popup when Cancel is clicked', async ({ page }) => {
+    test('should close the OTP popup when Cancel is clicked', { annotation: [{ type: 'testcase', description: "RO-17: Close the OTP popup when Cancel is clicked" }] }, async ({ page }) => {
         await page.getByRole('button', { name: /Cancel|إلغاء/i }).click();
         await expect(page.getByRole('heading', { name: /Enter OTP|أدخل رمز التحقق/i })).not.toBeVisible();
     });
 
-    test('should return to the mobile number page when Cancel is clicked', async ({ page }) => {
+    test('should return to the mobile number page when Cancel is clicked', { annotation: [{ type: 'testcase', description: "RO-18: Return to the mobile number page when Cancel is clicked" }] }, async ({ page }) => {
         await page.getByRole('button', { name: /Cancel|إلغاء/i }).click();
         // Confirmed live: "أدخل رقم الجوال" (using الجوال, "mobile") — same word
         // this file's own mobile-field locator already uses (see line 13, 146),
@@ -173,7 +173,7 @@ test.describe('Registration - OTP Functionality', () => {
 
     // ── Cancel navigation ─────────────────────────────────────────────────────
 
-    test('should pre-fill the mobile number when returning via Cancel', async ({ page }) => {
+    test('should pre-fill the mobile number when returning via Cancel', { annotation: [{ type: 'testcase', description: "RO-19: Pre-fill the mobile number when returning via Cancel" }] }, async ({ page }) => {
         await page.getByRole('button', { name: /Cancel|إلغاء/i }).click();
         await expect(page.getByRole('textbox', { name: /mobile number|رقم الجوال/i }))
             .toHaveValue(currentMobile, { timeout: 10000 });

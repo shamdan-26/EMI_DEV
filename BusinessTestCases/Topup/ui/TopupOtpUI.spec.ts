@@ -6,7 +6,7 @@ import { findTopupCase, loginToTopup, gotoTopupScreen, reachOtpScreen, type Topu
 // guessed Arabic copy — the app renders Arabic by default on dev. Shared setup:
 // see TopupHelper.ts (loginToTopup / gotoTopupScreen / findTopupCase).
 
-test.describe('Topup – UI – OTP screen', () => {
+test.describe('Topup – UI – OTP screen', { tag: ['@topup', '@ui'], annotation: [{ type: 'feature', description: 'Topup' }, { type: 'layer', description: 'ui' }] }, () => {
     test.describe.configure({ mode: 'serial' });
     test.setTimeout(150000);
 
@@ -37,7 +37,7 @@ test.describe('Topup – UI – OTP screen', () => {
      * OTP boxes plus Resend/Cancel controls. Doesn't assert exact copy for
      * the same reason as the rest of this file.
      */
-    test('OTP screen shows 6 input boxes and Resend/Cancel controls', async () => {
+    test('OTP screen shows 6 input boxes and Resend/Cancel controls', { annotation: [{ type: 'testcase', description: "TUP-22: OTP screen content" }] }, async () => {
         const { otp } = session;
         await reachOtpScreen(session, 'visa', findTopupCase('VISA'));
 
@@ -89,7 +89,7 @@ test.describe('Topup – UI – OTP screen', () => {
         await otp.cancelButton.click().catch(() => { /* best-effort cleanup */ });
     });
 
-    test('Cancel on the OTP screen closes it and returns to the Topup flow', async () => {
+    test('Cancel on the OTP screen closes it and returns to the Topup flow', { annotation: [{ type: 'testcase', description: "TUP-29: Cancel aborts the top-up" }] }, async () => {
         const { page, topup, otp } = session;
         await reachOtpScreen(session, 'visa', findTopupCase('VISA'));
 

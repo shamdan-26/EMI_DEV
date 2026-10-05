@@ -18,7 +18,7 @@ import { RegistrationVerificationPage } from '../../pageElements/Registration/Re
 // spec's warning that this step's inner structure has drifted from what its
 // locators assume, they're left out here rather than asserted on unverified.
 // ─────────────────────────────────────────────────────────────────────────────
-test.describe('Registration – Verification & Uploads Step (Tab 3 of 3) — read-only', () => {
+test.describe('Registration – Verification & Uploads Step (Tab 3 of 3) — read-only', { tag: ['@registration', '@ui'], annotation: [{ type: 'feature', description: 'Registration' }, { type: 'layer', description: 'ui' }] }, () => {
     test.describe.configure({ mode: 'serial' });
 
     let page: Page;
@@ -62,15 +62,15 @@ test.describe('Registration – Verification & Uploads Step (Tab 3 of 3) — rea
 
     // ── Step indicator ────────────────────────────────────────────────────────
 
-    test('should show the Verification & Uploads step title', async () => {
+    test('should show the Verification & Uploads step title', { annotation: [{ type: 'testcase', description: "RVU-06: Show the Verification & Uploads step title" }] }, async () => {
         await expect(verification.formTitle).toContainText(/verification|uploads|التحقق|المستندات/i);
     });
 
-    test('should keep outer step 1 (Business Info) active while on Verification & Uploads', async () => {
+    test('should keep outer step 1 (Business Info) active while on Verification & Uploads', { annotation: [{ type: 'testcase', description: "RVU-07: Keep outer step 1 (Business Info) active while on Verification & Uploads" }] }, async () => {
         await expect(page.locator('.mp-step.is-active .mp-step-meta .mp-step-num')).toContainText('1');
     });
 
-    test('should display all four outer step indicators', async () => {
+    test('should display all four outer step indicators', { annotation: [{ type: 'testcase', description: "RVU-08: Display all four outer step indicators" }] }, async () => {
         await expect(page.getByText(/business info|بيانات النشاط/i).first()).toBeVisible();
         await expect(page.getByText(/nafath|نَفاذ|نفاذ/i).first()).toBeVisible();
         await expect(page.getByText(/products|المنتجات/i).first()).toBeVisible();
@@ -93,7 +93,7 @@ test.describe('Registration – Verification & Uploads Step (Tab 3 of 3) — rea
 
     // ── IBAN Proof upload ─────────────────────────────────────────────────────
 
-    test('should display the IBAN Proof upload label', async () => {
+    test('should display the IBAN Proof upload label', { annotation: [{ type: 'testcase', description: "RVU-12: Display the IBAN Proof upload label" }] }, async () => {
         await expect(verification.ibanProofLabel).toBeVisible();
     });
 
@@ -101,7 +101,7 @@ test.describe('Registration – Verification & Uploads Step (Tab 3 of 3) — rea
         await expect(verification.ibanUploadPrompt).toBeVisible();
     });
 
-    test('should display the IBAN proof upload helper text', async () => {
+    test('should display the IBAN proof upload helper text', { annotation: [{ type: 'testcase', description: "RVU-14: Display the IBAN proof upload helper text" }] }, async () => {
         // Confirmed live: the .file-size div combines all three hints (letter
         // type, accepted file types, max size) in one node, e.g.
         // "خطاب بنكي أو ترويسة كشف حساب · PDF، JPG · بحد أقصى 5 ميجابايت" — this
@@ -133,15 +133,15 @@ test.describe('Registration – Verification & Uploads Step (Tab 3 of 3) — rea
 
     // ── VAT Certificate upload ────────────────────────────────────────────────
 
-    test('should display the VAT Certificate upload label', async () => {
+    test('should display the VAT Certificate upload label', { annotation: [{ type: 'testcase', description: "RVU-20: Display the VAT Certificate upload label" }] }, async () => {
         await expect(verification.vatCertLabel).toBeVisible();
     });
 
-    test('should display the "Click to upload" prompt for VAT certificate', async () => {
+    test('should display the "Click to upload" prompt for VAT certificate', { annotation: [{ type: 'testcase', description: "RVU-21: Display the \"Click to upload\" prompt for VAT certificate" }] }, async () => {
         await expect(verification.vatUploadPrompt).toBeVisible();
     });
 
-    test('should display the VAT certificate upload helper text', async () => {
+    test('should display the VAT certificate upload helper text', { annotation: [{ type: 'testcase', description: "RVU-22: Display the VAT certificate upload helper text" }] }, async () => {
         await expect(verification.vatUploadHelperText).toBeVisible();
     });
 

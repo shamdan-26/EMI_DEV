@@ -14,7 +14,7 @@ import { findTopupCase, loginToTopup, gotoTopupScreen, reachOtpScreen, clickSumm
 
 const GATEWAY_BASE = process.env['API_BASE_URL'] ?? 'https://gateway-dev.majdpay.com';
 
-test.describe('Topup – API', () => {
+test.describe('Topup – API', { tag: ['@topup', '@api'], annotation: [{ type: 'feature', description: 'Topup' }, { type: 'layer', description: 'api' }] }, () => {
     test.describe.configure({ mode: 'serial' });
     test.setTimeout(150000);
 

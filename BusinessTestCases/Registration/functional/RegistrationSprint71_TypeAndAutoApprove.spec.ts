@@ -12,7 +12,7 @@ import { RegistrationInfoPage } from '../../pageElements/Registration/Registrati
 // business/...) and are intentionally not covered here rather than guessed.
 // ─────────────────────────────────────────────────────────────────────────────
 
-test.describe('Registration — Fixed Merchant Sign-Up Mode (TC-REG-005, TC-REG-006)', () => {
+test.describe('Registration — Fixed Merchant Sign-Up Mode (TC-REG-005, TC-REG-006)', { tag: ['@registration', '@functional'], annotation: [{ type: 'feature', description: 'Registration' }, { type: 'layer', description: 'functional' }] }, () => {
     test.describe.configure({ mode: 'serial' });
 
     let page: Page;
@@ -33,20 +33,20 @@ test.describe('Registration — Fixed Merchant Sign-Up Mode (TC-REG-005, TC-REG-
         await page.close();
     });
 
-    test('TC-REG-005: should hide the "Sign Up As" profile-type selector and show a static "Signing up as Merchant" label', async () => {
+    test('TC-REG-005: should hide the "Sign Up As" profile-type selector and show a static "Signing up as Merchant" label', { annotation: [{ type: 'testcase', description: "RE-03: Hide the \"Sign Up As\" profile-type selector and show a static \"Signing up as Merchant\" label (TC-REG-005)" }] }, async () => {
         await expect(info.fixedMerchantLabel).toBeVisible({ timeout: 15000 });
         await expect(info.profileTypeGroup).not.toBeVisible();
     });
 
-    test('TC-REG-006: should not allow the profile type to be changed in fixed-Merchant mode', async () => {
+    test('TC-REG-006: should not allow the profile type to be changed in fixed-Merchant mode', { annotation: [{ type: 'testcase', description: "RE-04: Not allow the profile type to be changed in fixed-Merchant mode (TC-REG-006)" }] }, async () => {
         await expect(info.billerCard).not.toBeVisible();
         await expect(info.customerCard).not.toBeVisible();
         await expect(info.freelancerCard).not.toBeVisible();
     });
 });
 
-test.describe('Registration — Fixed Merchant mode disabled (control)', () => {
-    test('should show the normal profile-type selector when fixed-Merchant mode is off', async ({ browser }) => {
+test.describe('Registration — Fixed Merchant mode disabled (control)', { tag: ['@registration', '@functional'], annotation: [{ type: 'feature', description: 'Registration' }, { type: 'layer', description: 'functional' }] }, () => {
+    test('should show the normal profile-type selector when fixed-Merchant mode is off', { annotation: [{ type: 'testcase', description: "RE-05: Show the normal profile-type selector when fixed-Merchant mode is off" }] }, async ({ browser }) => {
         const context = await browser.newContext();
         const page = await context.newPage();
         const info = new RegistrationInfoPage(page);
@@ -70,7 +70,7 @@ test.describe('Registration — Fixed Merchant mode disabled (control)', () => {
 // are deterministic on the rare environment where NAFATH auto-bypasses.
 // ─────────────────────────────────────────────────────────────────────────────
 
-test.describe('Registration — Auto-Approval, Auto-Activation & Activation Email (TC-REG-001, TC-REG-002, TC-REG-007)', () => {
+test.describe('Registration — Auto-Approval, Auto-Activation & Activation Email (TC-REG-001, TC-REG-002, TC-REG-007)', { tag: ['@registration', '@functional'], annotation: [{ type: 'feature', description: 'Registration' }, { type: 'layer', description: 'functional' }] }, () => {
     let page: Page;
     let signUpReached = false;
 
@@ -113,18 +113,18 @@ test.describe('Registration — Auto-Approval, Auto-Activation & Activation Emai
     // live snapshot confirmed the real text. Confirm live before trusting
     // these three assertions.
 
-    test('TC-REG-001: should reflect automatic approval without a manual admin step', async () => {
+    test('TC-REG-001: should reflect automatic approval without a manual admin step', { annotation: [{ type: 'testcase', description: "RE-06: Reflect automatic approval without a manual admin step (TC-REG-001)" }] }, async () => {
         test.skip(!signUpReached, SKIP_MSG);
         await expect(page.getByText(/approved|active/i).first()).toBeVisible({ timeout: 20000 });
         await expect(page.getByText(/pending review|awaiting approval/i)).not.toBeVisible();
     });
 
-    test('TC-REG-002: should reflect the profile as immediately active for operations', async () => {
+    test('TC-REG-002: should reflect the profile as immediately active for operations', { annotation: [{ type: 'testcase', description: "RE-07: Reflect the profile as immediately active for operations (TC-REG-002)" }] }, async () => {
         test.skip(!signUpReached, SKIP_MSG);
         await expect(page.getByText(/active/i).first()).toBeVisible({ timeout: 20000 });
     });
 
-    test('TC-REG-007: should show confirmation that the activation email was sent', async () => {
+    test('TC-REG-007: should show confirmation that the activation email was sent', { annotation: [{ type: 'testcase', description: "RE-08: Show confirmation that the activation email was sent (TC-REG-007)" }] }, async () => {
         test.skip(!signUpReached, SKIP_MSG);
         await expect(page.getByText(/email.*sent|check your email|activation email/i).first()).toBeVisible({ timeout: 20000 });
     });

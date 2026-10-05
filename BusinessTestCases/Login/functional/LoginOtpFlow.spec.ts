@@ -28,7 +28,7 @@ async function submitWithSequentialPassword(page: Page, loginPage: LoginPage): P
 // OTP FLOW
 // ─────────────────────────────────────────────────────────────────────────────
 
-test.describe('Login — OTP Flow', () => {
+test.describe('Login — OTP Flow', { tag: ['@login', '@functional'], annotation: [{ type: 'feature', description: 'Login' }, { type: 'layer', description: 'functional' }] }, () => {
     test.describe.configure({ mode: 'serial' });
 
     let otp: OtpPage;
@@ -60,11 +60,11 @@ test.describe('Login — OTP Flow', () => {
         await expect(otp.heading).toBeVisible();
     });
 
-    test('should have Verify button disabled when OTP inputs are empty', async () => {
+    test('should have Verify button disabled when OTP inputs are empty', { annotation: [{ type: 'testcase', description: "LG-65: Verify button disabled when OTP empty" }] }, async () => {
         await expect(otp.verifyButton).toBeDisabled();
     });
 
-    test('should keep Verify button disabled when OTP inputs are partially filled', async () => {
+    test('should keep Verify button disabled when OTP inputs are partially filled', { annotation: [{ type: 'testcase', description: "LG-66: Verify button disabled when OTP partially filled" }] }, async () => {
         await otp.inputs.nth(0).fill('1');
         await otp.inputs.nth(1).fill('2');
         await expect(otp.verifyButton).toBeDisabled();
@@ -135,7 +135,7 @@ test.describe('Login — OTP Flow', () => {
 // describe owns only what's unique: the negative case, per-step checkmark/
 // spinner visuals, and the no-OTP direct-redirect path.
 
-test.describe('Login — Validation Card', () => {
+test.describe('Login — Validation Card', { tag: ['@login', '@functional'], annotation: [{ type: 'feature', description: 'Login' }, { type: 'layer', description: 'functional' }] }, () => {
     test.describe.configure({ mode: 'serial' });
 
     let loginPage: LoginPage;

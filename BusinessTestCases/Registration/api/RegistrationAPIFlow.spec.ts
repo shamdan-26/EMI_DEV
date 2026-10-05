@@ -52,7 +52,7 @@ const API_BASE = process.env['API_BASE_URL'] ?? 'https://gateway-dev.majdpay.com
 //  22.  GET  /emi-profile/api/v1/register/profile-registration-type
 // ─────────────────────────────────────────────────────────────────────────────
 
-test.describe('Registration – API Flow', () => {
+test.describe('Registration – API Flow', { tag: ['@registration', '@api'], annotation: [{ type: 'feature', description: 'Registration' }, { type: 'layer', description: 'api' }] }, () => {
   test.describe.configure({ mode: 'serial' });
 
   let sessionToken: string;
@@ -71,7 +71,7 @@ test.describe('Registration – API Flow', () => {
   // Iterates UAT_OTP_ASSETS until an unregistered mobile is found.
   // OTP may be disabled by environment config; a 200 response is sufficient.
 
-  test('API-01: POST /register/mobile/otp should return 200 for an unregistered mobile', async ({ request }) => {
+  test('API-01: POST /register/mobile/otp should return 200 for an unregistered mobile', { annotation: [{ type: 'testcase', description: "API-01: Send mobile OTP for an unregistered number" }] }, async ({ request }) => {
     let found = false;
     for (const asset of UAT_OTP_ASSETS) {
       const mobile = `+966${asset.mobile}`;
@@ -99,7 +99,7 @@ test.describe('Registration – API Flow', () => {
 
   // ── 2. Get OTP Settings ────────────────────────────────────────────────────
 
-  test('API-02: GET /otp-settings/q should return OTP config for REGISTRATION', async ({ request }) => {
+  test('API-02: GET /otp-settings/q should return OTP config for REGISTRATION', { annotation: [{ type: 'testcase', description: "API-02: Read the OTP settings for registration" }] }, async ({ request }) => {
     const res = await request.get(
       `${API_BASE}/otp/otp-settings/q?operationCode=REGISTRATION`
     );
@@ -116,7 +116,7 @@ test.describe('Registration – API Flow', () => {
   // ── 3. Verify OTP ──────────────────────────────────────────────────────────
   // Skipped when OTP is disabled by environment config (otpRequired:false).
 
-  test('API-03: POST /register/verify/otp should return 200 with sessionToken', async ({ request }) => {
+  test('API-03: POST /register/verify/otp should return 200 with sessionToken', { annotation: [{ type: 'testcase', description: "API-03: Verify the OTP" }] }, async ({ request }) => {
     test.skip(!otpRequired, 'OTP is disabled in this environment — sessionToken obtained from API-01');
 
     const rawOtp = await getOtpFromDb(mobileNumber.replace('+966', ''));
@@ -136,7 +136,7 @@ test.describe('Registration – API Flow', () => {
 
   // ── 4. Resend OTP (optional path) ──────────────────────────────────────────
 
-  test('API-04: POST /register/mobile/otp/resend should return 200', async ({ request }) => {
+  test('API-04: POST /register/mobile/otp/resend should return 200', { annotation: [{ type: 'testcase', description: "API-04: Resend the mobile OTP" }] }, async ({ request }) => {
     test.skip(!otpRequired, 'OTP is disabled in this environment — resend is not applicable');
 
     // Use the last asset in the list to avoid colliding with selectedAsset
@@ -170,7 +170,7 @@ test.describe('Registration – API Flow', () => {
   // not a bug — so we cycle to the next asset (redoing its OTP send/verify)
   // until we find a genuinely unregistered identity or exhaust the pool.
 
-  test('API-05: POST /register/profile-registration-type should return 201 for a fresh identity', async ({ request }) => {
+  test('API-05: POST /register/profile-registration-type should return 201 for a fresh identity', { annotation: [{ type: 'testcase', description: "API-05: Set the profile registration type" }] }, async ({ request }) => {
     const startIndex = UAT_OTP_ASSETS.indexOf(selectedAsset);
     let res;
     let body: Record<string, unknown> = {};
@@ -231,7 +231,7 @@ test.describe('Registration – API Flow', () => {
 
   // ── 6. Upload IBAN Proof ───────────────────────────────────────────────────
 
-  test('API-06: POST /file/attachment/upload?fileType=iban should return 200 with fileId', async ({ request }) => {
+  test('API-06: POST /file/attachment/upload?fileType=iban should return 200 with fileId', { annotation: [{ type: 'testcase', description: "API-06: Upload the IBAN proof file" }] }, async ({ request }) => {
     const res = await request.post(
       `${API_BASE}/file/attachment/upload?unifiedNumber=${selectedAsset.crn}&fileType=iban`,
       {
@@ -254,7 +254,7 @@ test.describe('Registration – API Flow', () => {
 
   // ── 7. Upload VAT Certificate ──────────────────────────────────────────────
 
-  test('API-07: POST /file/attachment/upload?fileType=vat should return 200 with fileId', async ({ request }) => {
+  test('API-07: POST /file/attachment/upload?fileType=vat should return 200 with fileId', { annotation: [{ type: 'testcase', description: "API-07: Upload the VAT certificate file" }] }, async ({ request }) => {
     const res = await request.post(
       `${API_BASE}/file/attachment/upload?unifiedNumber=${selectedAsset.crn}&fileType=vat`,
       {
@@ -277,7 +277,7 @@ test.describe('Registration – API Flow', () => {
 
   // ── 8. Submit Registration ─────────────────────────────────────────────────
 
-  test('API-08: POST /register should return 200 on full sign-up submission', async ({ request }) => {
+  test('API-08: POST /register should return 200 on full sign-up submission', { annotation: [{ type: 'testcase', description: "API-08: Submit the full registration" }] }, async ({ request }) => {
     const res = await request.post(`${API_BASE}/emi-profile/api/v1/register`, {
       data: {
         unifiedNumber:                selectedAsset.crn,
@@ -309,7 +309,7 @@ test.describe('Registration – API Flow', () => {
 
   // ── 9. NAFATH Initiation ───────────────────────────────────────────────────
 
-  test('API-09: POST /register/uri/status should initiate NAFATH and return a redirect URI', async ({ request }) => {
+  test('API-09: POST /register/uri/status should initiate NAFATH and return a redirect URI', { annotation: [{ type: 'testcase', description: "API-09: Initiate NAFATH" }] }, async ({ request }) => {
     const res = await request.post(
       `${API_BASE}/emi-profile/api/v1/register/uri/status`,
       {
@@ -328,7 +328,7 @@ test.describe('Registration – API Flow', () => {
 
   // ── 10. Get Available Products ─────────────────────────────────────────────
 
-  test('API-10: GET /products should return active products list', async ({ request }) => {
+  test('API-10: GET /products should return active products list', { annotation: [{ type: 'testcase', description: "API-10: List available products" }] }, async ({ request }) => {
     const res = await request.get(
       `${API_BASE}/emi-profile/api/v1/products`,
       {
@@ -347,7 +347,7 @@ test.describe('Registration – API Flow', () => {
 
   // ── 11. Assign Products ────────────────────────────────────────────────────
 
-  test('API-11: POST /register/products should assign selected products and return 200', async ({ request }) => {
+  test('API-11: POST /register/products should assign selected products and return 200', { annotation: [{ type: 'testcase', description: "API-11: Assign selected products" }] }, async ({ request }) => {
     const res = await request.post(
       `${API_BASE}/emi-profile/api/v1/register/products`,
       {
@@ -364,7 +364,7 @@ test.describe('Registration – API Flow', () => {
 
   // ── 12. Contract Preview ───────────────────────────────────────────────────
 
-  test('API-12: GET /contracts/preview should return contract preview', async ({ request }) => {
+  test('API-12: GET /contracts/preview should return contract preview', { annotation: [{ type: 'testcase', description: "API-12: Preview the contract" }] }, async ({ request }) => {
     const code = profileCode ?? selectedAsset.crn;
     const res  = await request.get(
       `${API_BASE}/emi-profile/api/v1/contracts/preview?profileCode=${code}`,
@@ -378,7 +378,7 @@ test.describe('Registration – API Flow', () => {
 
   // ── 13. Accept Contract ────────────────────────────────────────────────────
 
-  test('API-13: POST /register/contract/accept should return 200 and complete registration', async ({ request }) => {
+  test('API-13: POST /register/contract/accept should return 200 and complete registration', { annotation: [{ type: 'testcase', description: "API-13: Accept the contract" }] }, async ({ request }) => {
     const res = await request.post(
       `${API_BASE}/emi-profile/api/v1/register/contract/accept`,
       {
@@ -398,7 +398,7 @@ test.describe('Registration – API Flow', () => {
 
   // ── 14. Download Contract PDF ──────────────────────────────────────────────
 
-  test('API-14: GET /contracts/generate-file should return contract PDF', async ({ request }) => {
+  test('API-14: GET /contracts/generate-file should return contract PDF', { annotation: [{ type: 'testcase', description: "API-14: Download the contract PDF" }] }, async ({ request }) => {
     const code = profileCode ?? selectedAsset.crn;
     const res  = await request.get(
       `${API_BASE}/emi-profile/api/v1/contracts/generate-file?profileCode=${code}`,
@@ -418,7 +418,7 @@ test.describe('Registration – API Flow', () => {
   // by proving the freshly-registered identity genuinely cannot authenticate
   // yet — not just that the registration calls returned 200.
 
-  test('API-15: the just-registered account cannot sign in yet (Pending Manual KYB)', async ({ request }) => {
+  test('API-15: the just-registered account cannot sign in yet (Pending Manual KYB)', { annotation: [{ type: 'testcase', description: "API-15: The just-registered account cannot sign in yet" }] }, async ({ request }) => {
     const res = await request.post(`${API_BASE}/auth/signin`, {
       data: {
         username:     mobileNumber,
@@ -566,7 +566,7 @@ test.describe('Registration – API Flow', () => {
 // Lookup Endpoints
 // ─────────────────────────────────────────────────────────────────────────────
 
-test.describe('Registration – Lookup Endpoints', () => {
+test.describe('Registration – Lookup Endpoints', { tag: ['@registration', '@api'], annotation: [{ type: 'feature', description: 'Registration' }, { type: 'layer', description: 'api' }] }, () => {
 
   test('API-L1: GET /industries should return a list of industries', async ({ request }) => {
     const res = await request.get(`${API_BASE}/emi-profile/api/v1/industries`);

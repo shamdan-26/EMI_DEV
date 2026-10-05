@@ -12,7 +12,7 @@ import { HomepageSidebarPage } from '../../pageElements/Shared/HomepageSidebarPa
 // exercised implicitly hundreds of times over — but never asserted as its
 // own case, and the sidebar link (TUP-01) isn't exercised anywhere at all.
 
-test.describe('Topup – Navigation', () => {
+test.describe('Topup – Navigation', { tag: ['@topup', '@functional'], annotation: [{ type: 'feature', description: 'Topup' }, { type: 'layer', description: 'functional' }] }, () => {
     test.describe.configure({ mode: 'serial' });
     test.setTimeout(60000);
 
@@ -34,7 +34,7 @@ test.describe('Topup – Navigation', () => {
     });
 
     /** TUP-01 */
-    test('sidebar "Topup" link opens the Topup page', async () => {
+    test('sidebar "Topup" link opens the Topup page', { annotation: [{ type: 'testcase', description: "TUP-01: Sidebar link opens Topup" }] }, async () => {
         const { page, topup } = session;
         await sidebar.topupSidebarLink.click();
         await page.waitForURL(/\/transfer\/top-up/, { timeout: 15000 });
@@ -42,7 +42,7 @@ test.describe('Topup – Navigation', () => {
     });
 
     /** TUP-02 */
-    test('homepage quick action "Add money via card" opens the same Topup page', async () => {
+    test('homepage quick action "Add money via card" opens the same Topup page', { annotation: [{ type: 'testcase', description: "TUP-02: Homepage quick action opens Topup" }] }, async () => {
         const { page, topup, quickActions } = session;
         await quickActions.quickActionTopupCard.click();
         await page.waitForURL(/\/transfer\/top-up/, { timeout: 15000 });

@@ -77,10 +77,10 @@ function assertTokenPair(pair: unknown, label: string): void {
     expect(typed.expirationDuration, `${label}.expirationDuration looks like seconds, not milliseconds`).toBeGreaterThan(1000);
 }
 
-test.describe('Registration Session Refresh — Response Shapes (RSR-01, EMI-5995 / EMI-6059)', () => {
+test.describe('Registration Session Refresh — Response Shapes (RSR-01, EMI-5995 / EMI-6059)', { tag: ['@registration', '@api'], annotation: [{ type: 'feature', description: 'Registration' }, { type: 'layer', description: 'api' }] }, () => {
     test.describe.configure({ mode: 'serial' });
 
-    test('RSR-01: POST /register/mobile/otp returns nullable sessionToken and refreshToken objects', async ({ request }) => {
+    test('RSR-01: POST /register/mobile/otp returns nullable sessionToken and refreshToken objects', { annotation: [{ type: 'testcase', description: "RSR-01: Mobile OTP response shape" }] }, async ({ request }) => {
         const res = await request.post(`${API_BASE}${MOBILE_OTP_PATH}`, {
             headers: headers(),
             data: { mobileNumber: `5${String(Date.now()).slice(-8)}` },
@@ -104,7 +104,7 @@ test.describe('Registration Session Refresh — Response Shapes (RSR-01, EMI-599
         }
     });
 
-    test('RSR-02: POST /register/verify/otp returns both token pairs populated', async ({ request }) => {
+    test('RSR-02: POST /register/verify/otp returns both token pairs populated', { annotation: [{ type: 'testcase', description: "RSR-02: Verify-OTP response shape" }] }, async ({ request }) => {
         test.skip(!SESSION_TOKEN, NO_SESSION);
 
         const res = await request.post(`${API_BASE}${VERIFY_OTP_PATH}`, {
@@ -120,10 +120,10 @@ test.describe('Registration Session Refresh — Response Shapes (RSR-01, EMI-599
     });
 });
 
-test.describe('Registration Session Refresh — Refreshing (RSR-03, EMI-5995)', () => {
+test.describe('Registration Session Refresh — Refreshing (RSR-03, EMI-5995)', { tag: ['@registration', '@api'], annotation: [{ type: 'feature', description: 'Registration' }, { type: 'layer', description: 'api' }] }, () => {
     test.describe.configure({ mode: 'serial' });
 
-    test('RSR-03: a valid refresh token issues a new registration session token', async ({ request }) => {
+    test('RSR-03: a valid refresh token issues a new registration session token', { annotation: [{ type: 'testcase', description: "RSR-03: A valid refresh issues a new session token" }] }, async ({ request }) => {
         test.skip(!SESSION_TOKEN || !REFRESH_TOKEN, NO_SESSION);
 
         const res = await request.post(`${API_BASE}${SESSION_REFRESH_PATH}`, {
@@ -138,7 +138,7 @@ test.describe('Registration Session Refresh — Refreshing (RSR-03, EMI-5995)', 
         expect((body.sessionToken as TokenPair).token, 'refresh returned the same session token').not.toBe(SESSION_TOKEN);
     });
 
-    test('RSR-03b: the refresh token travels as a header, not in the body', async ({ request }) => {
+    test('RSR-03b: the refresh token travels as a header, not in the body', { annotation: [{ type: 'testcase', description: "RSR-03b: The refresh token must be a header, not a body field" }] }, async ({ request }) => {
         test.skip(!SESSION_TOKEN || !REFRESH_TOKEN, NO_SESSION);
 
         // EMI-6059 is explicit that refreshToken is a header. A body-only call
@@ -151,7 +151,7 @@ test.describe('Registration Session Refresh — Refreshing (RSR-03, EMI-5995)', 
         expect(res.status(), 'the refresh token was accepted from the body — the header contract has drifted').not.toBe(200);
     });
 
-    test('RSR-04: an invalid refresh token is rejected', async ({ request }) => {
+    test('RSR-04: an invalid refresh token is rejected', { annotation: [{ type: 'testcase', description: "RSR-04: An invalid refresh token is rejected" }] }, async ({ request }) => {
         test.skip(!SESSION_TOKEN, NO_SESSION);
 
         const res = await request.post(`${API_BASE}${SESSION_REFRESH_PATH}`, {
@@ -162,7 +162,7 @@ test.describe('Registration Session Refresh — Refreshing (RSR-03, EMI-5995)', 
         expect([400, 401, 403]).toContain(res.status());
     });
 
-    test('RSR-04b: refreshing without an active registration session is rejected', async ({ request }) => {
+    test('RSR-04b: refreshing without an active registration session is rejected', { annotation: [{ type: 'testcase', description: "RSR-04b: Refreshing without an active registration session is rejected" }] }, async ({ request }) => {
         test.skip(!REFRESH_TOKEN, NO_SESSION);
 
         // The endpoint requires BOTH — a refresh token alone must not mint a session.
@@ -174,7 +174,7 @@ test.describe('Registration Session Refresh — Refreshing (RSR-03, EMI-5995)', 
         expect([400, 401, 403]).toContain(res.status());
     });
 
-    test('RSR-05: a refreshed session continues the same registration, not a new one', async ({ request }) => {
+    test('RSR-05: a refreshed session continues the same registration, not a new one', { annotation: [{ type: 'testcase', description: "RSR-05: A refreshed session continues the same registration" }] }, async ({ request }) => {
         test.skip(!SESSION_TOKEN || !REFRESH_TOKEN, NO_SESSION);
 
         const before = await request.get(`${API_BASE}/api/v1/register/status`, {
@@ -200,10 +200,10 @@ test.describe('Registration Session Refresh — Refreshing (RSR-03, EMI-5995)', 
     });
 });
 
-test.describe('Registration Session Refresh — Isolation From Login (RSR-06, EMI-6059)', () => {
+test.describe('Registration Session Refresh — Isolation From Login (RSR-06, EMI-6059)', { tag: ['@registration', '@api'], annotation: [{ type: 'feature', description: 'Registration' }, { type: 'layer', description: 'api' }] }, () => {
     test.describe.configure({ mode: 'serial' });
 
-    test('RSR-06: a registration refresh token is not accepted by the login refresh endpoint', async ({ request }) => {
+    test('RSR-06: a registration refresh token is not accepted by the login refresh endpoint', { annotation: [{ type: 'testcase', description: "RSR-06: Registration refresh tokens are isolated from login" }] }, async ({ request }) => {
         test.skip(!REFRESH_TOKEN, NO_SESSION);
 
         // "The registration refresh mechanism runs in isolation from the
@@ -216,7 +216,7 @@ test.describe('Registration Session Refresh — Isolation From Login (RSR-06, EM
         expect(res.status(), 'a registration refresh token was accepted by the login refresh endpoint').not.toBe(200);
     });
 
-    test('RSR-06b: a registration session token is not accepted as a login access token', async ({ request }) => {
+    test('RSR-06b: a registration session token is not accepted as a login access token', { annotation: [{ type: 'testcase', description: "RSR-06b: A registration session token cannot authenticate a post-login API" }] }, async ({ request }) => {
         test.skip(!SESSION_TOKEN, NO_SESSION);
 
         const res = await request.get(`${API_BASE}/api/v1/transactions?page=0&size=1`, {
@@ -228,7 +228,7 @@ test.describe('Registration Session Refresh — Isolation From Login (RSR-06, EM
     });
 });
 
-test.describe('Registration Session Refresh — Contract Pinned (RSR-07, EMI-5995 / EMI-6059)', () => {
+test.describe('Registration Session Refresh — Contract Pinned (RSR-07, EMI-5995 / EMI-6059)', { tag: ['@registration', '@api'], annotation: [{ type: 'feature', description: 'Registration' }, { type: 'layer', description: 'api' }] }, () => {
     test('RSR-07: the endpoint paths and the millisecond unit are version-controlled', () => {
         // No network. This pins the three paths and the expirationDuration unit
         // from the EMI-6059 AC so a silent change shows up as a code diff

@@ -45,7 +45,7 @@ import { RegistrationProductsPage } from '../../pageElements/Registration/Regist
 // used throughout RegistrationVerificationUploads.spec.ts for the same reason.
 // ─────────────────────────────────────────────────────────────────────────────
 
-test.describe('Registration — Onboarding PoS Request Flow (TC-POS-026…028)', () => {
+test.describe('Registration — Onboarding PoS Request Flow (TC-POS-026…028)', { tag: ['@registration', '@functional'], annotation: [{ type: 'feature', description: 'Registration' }, { type: 'layer', description: 'functional' }] }, () => {
     test.describe.configure({ mode: 'serial' });
 
     let page: Page;
@@ -95,7 +95,7 @@ test.describe('Registration — Onboarding PoS Request Flow (TC-POS-026…028)',
 
     // ── Validation ────────────────────────────────────────────────────────
 
-    test.skip('TC-POS-026: should show a validation error for a zero device count', async () => {
+    test.skip('TC-POS-026: should show a validation error for a zero device count', { annotation: [{ type: 'testcase', description: "RP-61: Show a validation error for a zero device count (TC-POS-026)" }] }, async () => {
         requireFlow();
         await products.deviceCountInput.fill('0');
         await products.devicesDeliveryNextButton.click();
@@ -105,7 +105,7 @@ test.describe('Registration — Onboarding PoS Request Flow (TC-POS-026…028)',
         await products.deviceCountInput.fill('2');
     });
 
-    test('TC-POS-027: should show a validation error when split-group quantities do not sum to the total', async () => {
+    test('TC-POS-027: should show a validation error when split-group quantities do not sum to the total', { annotation: [{ type: 'testcase', description: "RP-62: Show a validation error when split-group quantities do not sum to the total (TC-POS-027)" }] }, async () => {
         requireFlow();
         await products.splitByDeviceDeliveryOption.click({ force: true });
         const groupInputs = page.getByRole('spinbutton').or(page.getByRole('textbox', { name: /quantity/i }));
@@ -120,7 +120,7 @@ test.describe('Registration — Onboarding PoS Request Flow (TC-POS-026…028)',
 
     // ── Mocked order submission ──────────────────────────────────────────
 
-    test('TC-POS-028: should send only one PoS order request when Next is clicked twice in quick succession', async () => {
+    test('TC-POS-028: should send only one PoS order request when Next is clicked twice in quick succession', { annotation: [{ type: 'testcase', description: "RP-63: Send only one PoS order request when Next is clicked twice in quick succession (TC-POS-028)" }] }, async () => {
         requireFlow();
         let submissions = 0;
         await page.unroute('**/emi-profile/api/v1/products/orders/pos').catch(() => {});
@@ -141,8 +141,8 @@ test.describe('Registration — Onboarding PoS Request Flow (TC-POS-026…028)',
 // advances past Devices & Delivery on success, leaving no "still on this form"
 // state to retry a failed submission against in the same shared session.
 // ─────────────────────────────────────────────────────────────────────────────
-test.describe('Registration — Onboarding PoS Request Flow: submission error handling', () => {
-    test('should surface an error and stay on Devices & Delivery when the PoS order request fails', async ({ browser }) => {
+test.describe('Registration — Onboarding PoS Request Flow: submission error handling', { tag: ['@registration', '@functional'], annotation: [{ type: 'feature', description: 'Registration' }, { type: 'layer', description: 'functional' }] }, () => {
+    test('should surface an error and stay on Devices & Delivery when the PoS order request fails', { annotation: [{ type: 'testcase', description: "RP-64: Surface an error and stay on Devices & Delivery when the PoS order request fails" }] }, async ({ browser }) => {
         test.setTimeout(600_000);
         const context = await browser.newContext();
         const page = await context.newPage();

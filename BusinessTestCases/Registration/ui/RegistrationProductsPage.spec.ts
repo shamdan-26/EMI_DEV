@@ -27,7 +27,7 @@ import { RegistrationProductsPage } from '../../pageElements/Registration/Regist
 // so there's no guarantee this file's beforeAll finishes (or even runs on the
 // same worker) before the other file's beforeAll starts.
 // ─────────────────────────────────────────────────────────────────────────────
-test.describe('Registration - Products Step UI (Page Elements)', () => {
+test.describe('Registration - Products Step UI (Page Elements)', { tag: ['@registration', '@ui'], annotation: [{ type: 'feature', description: 'Registration' }, { type: 'layer', description: 'ui' }] }, () => {
     test.describe.configure({ mode: 'serial' });
 
     let page: Page;
@@ -75,7 +75,7 @@ test.describe('Registration - Products Step UI (Page Elements)', () => {
 
     // ── Page headings ─────────────────────────────────────────────────────
 
-    test('should display the "Setup" eyebrow text', async () => {
+    test('should display the "Setup" eyebrow text', { annotation: [{ type: 'testcase', description: "RP-06: Display the \"Setup\" eyebrow text" }] }, async () => {
         // Correction: an earlier version of this test asserted "Create Account"
         // (إنشاء حساب) here, reasoning .form-eyebrow was shared across every
         // step — that was a misdiagnosis. The real cause of that failure was
@@ -88,11 +88,11 @@ test.describe('Registration - Products Step UI (Page Elements)', () => {
         await expect(products.formEyebrow).toContainText(/setup|إعداد/i);
     });
 
-    test('should display the "Products" title', async () => {
+    test('should display the "Products" title', { annotation: [{ type: 'testcase', description: "RP-07: Display the \"Products\" title" }] }, async () => {
         await expect(products.formTitle).toContainText(/products|المنتجات/i);
     });
 
-    test('should display the products-selection subtitle', async () => {
+    test('should display the products-selection subtitle', { annotation: [{ type: 'testcase', description: "RP-08: Display the products-selection subtitle" }] }, async () => {
         await expect(products.formSubTitle).toContainText(/choose the products|اختر المنتجات/i);
     });
 
@@ -105,26 +105,26 @@ test.describe('Registration - Products Step UI (Page Elements)', () => {
         await expect(products.outerStepBar.filter({ hasText: /contract|العقد/i })).toBeVisible();
     });
 
-    test('should show "Products" as the active outer step', async () => {
+    test('should show "Products" as the active outer step', { annotation: [{ type: 'testcase', description: "RP-10: Show \"Products\" as the active outer step" }] }, async () => {
         await expect(products.activeStep.first()).toContainText(/products|المنتجات/i);
     });
 
     // ── Product cards ─────────────────────────────────────────────────────
 
-    test('should display at least one product card', async () => {
+    test('should display at least one product card', { annotation: [{ type: 'testcase', description: "RP-11: Display at least one product card" }] }, async () => {
         await expect(products.productCards.first()).toBeVisible();
     });
 
-    test('should display the required Wallet card', async () => {
+    test('should display the required Wallet card', { annotation: [{ type: 'testcase', description: "RP-12: Display the required Wallet card" }] }, async () => {
         await expect(products.walletCard()).toBeVisible();
     });
 
-    test('should show a "Show more" link on the Wallet card', async () => {
+    test('should show a "Show more" link on the Wallet card', { annotation: [{ type: 'testcase', description: "RP-13: Show a \"Show more\" link on the Wallet card" }] }, async () => {
         const wallet = products.walletCard();
         await expect(products.showMoreLink(wallet)).toBeVisible();
     });
 
-    test('should show a price/billing label on every visible product card', async () => {
+    test('should show a price/billing label on every visible product card', { annotation: [{ type: 'testcase', description: "RP-14: Show a price/billing label on every visible product card" }] }, async () => {
         const count = await products.productCards.count();
         expect(count).toBeGreaterThan(0);
         for (let i = 0; i < count; i++) {
@@ -135,11 +135,11 @@ test.describe('Registration - Products Step UI (Page Elements)', () => {
 
     // ── Footer ────────────────────────────────────────────────────────────
 
-    test('should display the selection counter', async () => {
+    test('should display the selection counter', { annotation: [{ type: 'testcase', description: "RP-15: Display the selection counter" }] }, async () => {
         await expect(products.selectedCounter).toBeVisible();
     });
 
-    test('should show a non-zero count in the selection counter on arrival', async () => {
+    test('should show a non-zero count in the selection counter on arrival', { annotation: [{ type: 'testcase', description: "RP-16: Show a non-zero count in the selection counter on arrival" }] }, async () => {
         // Not hardcoding the exact "N Selected" text — RegistrationProductsFunctionality.spec.ts
         // confirms "1 Selected" live, but that's against a different environment/catalog than
         // this file's dev.majdpay.com target. A required, non-deselectable product (walletCard())
@@ -152,11 +152,11 @@ test.describe('Registration - Products Step UI (Page Elements)', () => {
         await expect(products.cancelButton).toBeVisible();
     });
 
-    test('should display the Continue button', async () => {
+    test('should display the Continue button', { annotation: [{ type: 'testcase', description: "RP-18: Display the Continue button" }] }, async () => {
         await expect(products.continueButton).toBeVisible();
     });
 
-    test('should have the Continue button enabled by default via the required product', async () => {
+    test('should have the Continue button enabled by default via the required product', { annotation: [{ type: 'testcase', description: "RP-19: Have the Continue button enabled by default via the required product" }] }, async () => {
         // Confirmed live in RegistrationProductsFunctionality.spec.ts: the mandatory
         // product is pre-selected and locked, so Continue starts enabled without any
         // interaction — this only re-asserts that basic arrival state, not the fuller

@@ -13,7 +13,7 @@ import { OtpPage } from '../../pageElements/Shared/OtpPage';
 // NAVIGATION
 // ─────────────────────────────────────────────────────────────────────────────
 
-test.describe('Login — Navigation', () => {
+test.describe('Login — Navigation', { tag: ['@login', '@functional'], annotation: [{ type: 'feature', description: 'Login' }, { type: 'layer', description: 'functional' }] }, () => {
     test.describe.configure({ mode: 'serial' });
 
     let loginPage: LoginPage;
@@ -51,7 +51,7 @@ test.describe('Login — Navigation', () => {
 // ALREADY AUTHENTICATED
 // ─────────────────────────────────────────────────────────────────────────────
 
-test.describe('Login — Already Authenticated', () => {
+test.describe('Login — Already Authenticated', { tag: ['@login', '@functional'], annotation: [{ type: 'feature', description: 'Login' }, { type: 'layer', description: 'functional' }] }, () => {
     test.describe.configure({ mode: 'serial' });
 
     // Establish a real authenticated session first — these tests assert what

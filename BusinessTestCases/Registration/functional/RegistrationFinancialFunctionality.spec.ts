@@ -10,7 +10,7 @@ import { RegistrationFinancialPage } from '../../pageElements/Registration/Regis
 import { RegistrationInfoPage } from '../../pageElements/Registration/RegistrationInfoPage';
 import { RegistrationVerificationPage } from '../../pageElements/Registration/RegistrationVerificationPage';
 
-test.describe('Registration - Financial & Business Functionality', () => {
+test.describe('Registration - Financial & Business Functionality', { tag: ['@registration', '@functional'], annotation: [{ type: 'feature', description: 'Registration' }, { type: 'layer', description: 'functional' }] }, () => {
     test.describe.configure({ mode: 'serial' });
     test.setTimeout(120_000);
 
@@ -72,28 +72,28 @@ test.describe('Registration - Financial & Business Functionality', () => {
 
     // ── Input validation – character filtering (all four fields) ─────────────
 
-    test('should not accept alphabetic characters in the Monthly Expected Number field', async () => {
+    test('should not accept alphabetic characters in the Monthly Expected Number field', { annotation: [{ type: 'testcase', description: "RF-50: Not accept alphabetic characters in the Monthly Expected Number field" }] }, async () => {
         const input = financialPage.monthlyBillsInput;
         await input.clear();
         await input.pressSequentially('abc');
         await expect(input).toHaveValue('');
     });
 
-    test('should not accept special characters in the Monthly Expected Sum field', async () => {
+    test('should not accept special characters in the Monthly Expected Sum field', { annotation: [{ type: 'testcase', description: "RF-51: Not accept special characters in the Monthly Expected Sum field" }] }, async () => {
         const input = financialPage.monthlyAmountInput;
         await input.clear();
         await input.pressSequentially('!@#');
         await expect(input).toHaveValue('');
     });
 
-    test('should not accept alphabetic characters in the Expected Monthly Withdrawal field', async () => {
+    test('should not accept alphabetic characters in the Expected Monthly Withdrawal field', { annotation: [{ type: 'testcase', description: "RF-52: Not accept alphabetic characters in the Expected Monthly Withdrawal field" }] }, async () => {
         const input = financialPage.monthlyWithdrawalInput;
         await input.clear();
         await input.pressSequentially('xyz');
         await expect(input).toHaveValue('');
     });
 
-    test('should not accept special characters in the Expected Monthly Deposit field', async () => {
+    test('should not accept special characters in the Expected Monthly Deposit field', { annotation: [{ type: 'testcase', description: "RF-53: Not accept special characters in the Expected Monthly Deposit field" }] }, async () => {
         const input = financialPage.monthlyDepositInput;
         await input.clear();
         await input.pressSequentially('$%^');
@@ -102,7 +102,7 @@ test.describe('Registration - Financial & Business Functionality', () => {
 
     // ── Boundary values ────────────────────────────────────────────────────────
 
-    test('should not retain a negative number in the Monthly Expected Number field', async () => {
+    test('should not retain a negative number in the Monthly Expected Number field', { annotation: [{ type: 'testcase', description: "RF-54: Not retain a negative number in the Monthly Expected Number field" }] }, async () => {
         const input = financialPage.monthlyBillsInput;
         await input.clear();
         await input.pressSequentially('-500');
@@ -110,7 +110,7 @@ test.describe('Registration - Financial & Business Functionality', () => {
         expect(/^-/.test(value)).toBe(false);
     });
 
-    test('should not retain a decimal point in the Monthly Expected Sum field', async () => {
+    test('should not retain a decimal point in the Monthly Expected Sum field', { annotation: [{ type: 'testcase', description: "RF-55: Not retain a decimal point in the Monthly Expected Sum field" }] }, async () => {
         const input = financialPage.monthlyAmountInput;
         await input.clear();
         await input.pressSequentially('12.5');
@@ -118,14 +118,14 @@ test.describe('Registration - Financial & Business Functionality', () => {
         expect(value).not.toContain('.');
     });
 
-    test('should handle a very large value (15 digits) in the Expected Monthly Withdrawal field without crashing', async () => {
+    test('should handle a very large value (15 digits) in the Expected Monthly Withdrawal field without crashing', { annotation: [{ type: 'testcase', description: "RF-56: Handle a very large value (15 digits) in the Expected Monthly Withdrawal field without crashing" }] }, async () => {
         const input = financialPage.monthlyWithdrawalInput;
         await input.clear();
         await input.fill('999999999999999');
         await expect(input).toBeVisible();
     });
 
-    test('should treat a zero value in the Expected Monthly Deposit field as valid input', async () => {
+    test('should treat a zero value in the Expected Monthly Deposit field as valid input', { annotation: [{ type: 'testcase', description: "RF-57: Treat a zero value in the Expected Monthly Deposit field as valid input" }] }, async () => {
         const input = financialPage.monthlyDepositInput;
         await input.fill('0');
         await expect(input).toHaveValue('0');
@@ -151,7 +151,7 @@ test.describe('Registration - Financial & Business Functionality', () => {
         expect(alertFired).toBe(false);
     });
 
-    test('should not accept a SQL injection pattern in the Expected Monthly Withdrawal field', async () => {
+    test('should not accept a SQL injection pattern in the Expected Monthly Withdrawal field', { annotation: [{ type: 'testcase', description: "RF-60: Not accept a SQL injection pattern in the Expected Monthly Withdrawal field" }] }, async () => {
         const input = financialPage.monthlyWithdrawalInput;
         await input.clear();
         await input.pressSequentially("1' OR '1'='1");
@@ -159,7 +159,7 @@ test.describe('Registration - Financial & Business Functionality', () => {
         expect(/[^0-9]/.test(value)).toBe(false);
     });
 
-    test('should not accept a SQL injection pattern in the Expected Monthly Deposit field', async () => {
+    test('should not accept a SQL injection pattern in the Expected Monthly Deposit field', { annotation: [{ type: 'testcase', description: "RF-61: Not accept a SQL injection pattern in the Expected Monthly Deposit field" }] }, async () => {
         const input = financialPage.monthlyDepositInput;
         await input.clear();
         await input.pressSequentially("1; DROP TABLE users;--");
@@ -169,20 +169,20 @@ test.describe('Registration - Financial & Business Functionality', () => {
 
     // Documented spec (EMI Validation confluence page): "Expected number of bills" and
     // "Expected sum of bills" must be > 0 and must not start with 0.
-    test.skip('should keep Next disabled when Monthly Expected Number Of Bills is 0', async () => {
+    test.skip('should keep Next disabled when Monthly Expected Number Of Bills is 0', { annotation: [{ type: 'testcase', description: "RF-62: Keep Next disabled when Monthly Expected Number Of Bills is 0" }] }, async () => {
         await fillFinancialForm(page);
         await financialPage.monthlyBillsInput.fill('0');
         await expect(financialPage.nextButton).toBeDisabled({ timeout: 5000 });
     });
 
-    test.skip('should keep Next disabled when Monthly Expected Sum Of Bills has a leading zero', async () => {
+    test.skip('should keep Next disabled when Monthly Expected Sum Of Bills has a leading zero', { annotation: [{ type: 'testcase', description: "RF-63: Keep Next disabled when Monthly Expected Sum Of Bills has a leading zero" }] }, async () => {
         await fillFinancialForm(page);
         await financialPage.monthlyAmountInput.fill('0500');
         await expect(financialPage.nextButton).toBeDisabled({ timeout: 5000 });
     });
 
     // Restore valid values before continuing with dropdown / navigation tests
-    test('should restore valid values to all four fields after boundary/security probing', async () => {
+    test('should restore valid values to all four fields after boundary/security probing', { annotation: [{ type: 'testcase', description: "RF-64: Restore valid values to all four fields after boundary/security probing" }] }, async () => {
         await financialPage.monthlyBillsInput.fill('1500');
         await financialPage.monthlyAmountInput.fill('50000');
         await financialPage.monthlyWithdrawalInput.fill('10000');
@@ -201,7 +201,7 @@ test.describe('Registration - Financial & Business Functionality', () => {
         await selectRandomOption(page, page.locator('#mat-select-value-0'));
     });
 
-    test('should reflect the selected industry in the Industries dropdown', async () => {
+    test('should reflect the selected industry in the Industries dropdown', { annotation: [{ type: 'testcase', description: "RF-66: Reflect the selected industry in the Industries dropdown" }] }, async () => {
         const dropdown = page.locator('#mat-select-value-0');
         const selected = await dropdown.textContent();
         expect(selected?.trim()).not.toMatch(/select option/i);
@@ -213,7 +213,7 @@ test.describe('Registration - Financial & Business Functionality', () => {
         await selectRandomOption(page, page.locator('#mat-select-value-1'));
     });
 
-    test('should reflect the selected income in the Annual Income dropdown', async () => {
+    test('should reflect the selected income in the Annual Income dropdown', { annotation: [{ type: 'testcase', description: "RF-68: Reflect the selected income in the Annual Income dropdown" }] }, async () => {
         const dropdown = page.locator('#mat-select-value-1');
         const selected = await dropdown.textContent();
         expect(selected?.trim()).not.toMatch(/select option/i);
@@ -228,7 +228,7 @@ test.describe('Registration - Financial & Business Functionality', () => {
     // actionability check propagates the ancestor's aria-disabled and treats
     // the input as not enabled — hence { force: true } to bypass that check.
 
-    test('should filter the Industries options when typing in the dropdown search field', async () => {
+    test('should filter the Industries options when typing in the dropdown search field', { annotation: [{ type: 'testcase', description: "RF-69: Filter the Industries options when typing in the dropdown search field" }] }, async () => {
         await page.locator('#mat-select-value-0').click();
         const searchInput = page.locator('#floating-select-search-input');
         await expect(searchInput).toBeVisible({ timeout: 5000 });
@@ -245,7 +245,7 @@ test.describe('Registration - Financial & Business Functionality', () => {
         await options.first().click();
     });
 
-    test('should filter the Annual Income options when typing in the dropdown search field', async () => {
+    test('should filter the Annual Income options when typing in the dropdown search field', { annotation: [{ type: 'testcase', description: "RF-70: Filter the Annual Income options when typing in the dropdown search field" }] }, async () => {
         await page.locator('#mat-select-value-1').click();
         const searchInput = page.locator('#floating-select-search-input');
         await expect(searchInput).toBeVisible({ timeout: 5000 });
@@ -264,7 +264,7 @@ test.describe('Registration - Financial & Business Functionality', () => {
 
     // ── Next button state — partial completion ────────────────────────────────
 
-    test('should keep Next disabled when only the numeric fields are filled and no dropdown is selected', async ({ browser }) => {
+    test('should keep Next disabled when only the numeric fields are filled and no dropdown is selected', { annotation: [{ type: 'testcase', description: "RF-71: Keep Next disabled when only the numeric fields are filled and no dropdown is selected" }] }, async ({ browser }) => {
         // This test draws its own identity via goToFinancialStep (default
         // credentials -> shared resident pool, up to 10 retry attempts) rather
         // than reusing the describe's shared page — same budget-starvation risk
@@ -283,23 +283,23 @@ test.describe('Registration - Financial & Business Functionality', () => {
         await context.close();
     });
 
-    test('should enable Next when all required fields and dropdowns are filled', async () => {
+    test('should enable Next when all required fields and dropdowns are filled', { annotation: [{ type: 'testcase', description: "RF-72: Enable Next when all required fields and dropdowns are filled" }] }, async () => {
         await fillFinancialForm(page);
         await expect(financialPage.nextButton).toBeEnabled({ timeout: 5000 });
     });
 
     // ── Back navigation ───────────────────────────────────────────────────────
 
-    test('should return to the Business Info step when Back is clicked', async () => {
+    test('should return to the Business Info step when Back is clicked', { annotation: [{ type: 'testcase', description: "RF-73: Return to the Business Info step when Back is clicked" }] }, async () => {
         await financialPage.backButton.click();
         await expect(infoPage.emailInput).toBeVisible({ timeout: 10000 });
     });
 
-    test('should preserve the email on Business Info step after navigating back', async () => {
+    test('should preserve the email on Business Info step after navigating back', { annotation: [{ type: 'testcase', description: "RF-74: Preserve the email on Business Info step after navigating back" }] }, async () => {
         await expect(infoPage.emailInput).toHaveValue(VALID_EMAIL);
     });
 
-    test('should allow re-advancing to Financial step after going back to Info step', async () => {
+    test('should allow re-advancing to Financial step after going back to Info step', { annotation: [{ type: 'testcase', description: "RF-75: Allow re-advancing to Financial step after going back to Info step" }] }, async () => {
         await expect(infoPage.nextButton).toBeEnabled({ timeout: 5000 });
         await infoPage.nextButton.click();
         await expect(financialPage.monthlyBillsInput).toBeVisible({ timeout: 10000 });
@@ -307,7 +307,7 @@ test.describe('Registration - Financial & Business Functionality', () => {
 
     // ── Forward navigation to Verification ───────────────────────────────────
 
-    test('should advance to Verification & Uploads step when Next is clicked with valid data', async () => {
+    test('should advance to Verification & Uploads step when Next is clicked with valid data', { annotation: [{ type: 'testcase', description: "RF-76: Advance to Verification & Uploads step when Next is clicked with valid data" }] }, async () => {
         await fillFinancialForm(page);
         await financialPage.nextButton.click();
         const verificationPage = new RegistrationVerificationPage(page);

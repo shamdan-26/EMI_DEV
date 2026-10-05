@@ -34,7 +34,7 @@ async function submitAndDetect(page: Page, loginPage: LoginPage): Promise<'card'
     return outcome === 'card' ? 'card' : 'bypassed';
 }
 
-test.describe('Login Validation Popup — UI', () => {
+test.describe('Login Validation Popup — UI', { tag: ['@login', '@ui'], annotation: [{ type: 'feature', description: 'Login' }, { type: 'layer', description: 'ui' }] }, () => {
     test.describe.configure({ mode: 'serial' });
 
     const SKIP_MSG = 'Device-verification popup is disabled in this environment — login goes straight to the dashboard';

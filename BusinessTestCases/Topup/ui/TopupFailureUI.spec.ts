@@ -12,7 +12,7 @@ import { findTopupCase, loginToTopup, gotoTopupScreen, completeCardPayment, HOME
 const FAILED_TITLE  = /فشلت الدفعة|payment failed/i;
 const SUCCESS_TITLE = /دفعة ناجحة|successful payment/i;
 
-test.describe('Topup – Payment Failed UI', () => {
+test.describe('Topup – Payment Failed UI', { tag: ['@topup', '@ui'], annotation: [{ type: 'feature', description: 'Topup' }, { type: 'layer', description: 'ui' }] }, () => {
     test.describe.configure({ mode: 'serial' });
     test.setTimeout(180000);
 
@@ -33,7 +33,7 @@ test.describe('Topup – Payment Failed UI', () => {
         await session.page.close();
     });
 
-    test('result title and description show the FAILURE copy, not success', async () => {
+    test('result title and description show the FAILURE copy, not success', { annotation: [{ type: 'testcase', description: "TUP-33: Declined payment leaves balance unchanged" }] }, async () => {
         const { topup } = session;
         await expect(topup.pageTitle).toHaveText(/شحن الرصيد|Top up/i);
         await expect(topup.resultTitle).toHaveText(FAILED_TITLE);

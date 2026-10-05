@@ -31,7 +31,7 @@ import { RegistrationContractPage } from '../../pageElements/Registration/Regist
 // would end the flow before Devices & Delivery, and this suite's single
 // browser session is shared serially across all of them).
 // ─────────────────────────────────────────────────────────────────────────────
-test.describe('Registration - Products Step: PoS Onboarding Setup (EMI-5783)', () => {
+test.describe('Registration - Products Step: PoS Onboarding Setup (EMI-5783)', { tag: ['@registration', '@ui'], annotation: [{ type: 'feature', description: 'Registration' }, { type: 'layer', description: 'ui' }] }, () => {
     test.describe.configure({ mode: 'serial' });
 
     let page: Page;
@@ -78,17 +78,17 @@ test.describe('Registration - Products Step: PoS Onboarding Setup (EMI-5783)', (
 
     // ── PoS card expansion ───────────────────────────────────────────────
 
-    test('should expand the PoS Terminals card inline without leaving the Products step', async () => {
+    test('should expand the PoS Terminals card inline without leaving the Products step', { annotation: [{ type: 'testcase', description: "RP-20: Expand the PoS Terminals card inline without leaving the Products step" }] }, async () => {
         requireFlow();
         await expect(products.activeStep.first()).toContainText(/products|المنتجات/i);
     });
 
-    test('should show "Request devices now" in the expanded card', async () => {
+    test('should show "Request devices now" in the expanded card', { annotation: [{ type: 'testcase', description: "RP-21: Show \"Request devices now\" in the expanded card" }] }, async () => {
         requireFlow();
         await expect(products.requestDevicesNowButton).toBeVisible();
     });
 
-    test('should show a Continue button in the expanded card', async () => {
+    test('should show a Continue button in the expanded card', { annotation: [{ type: 'testcase', description: "RP-22: Show a Continue button in the expanded card" }] }, async () => {
         requireFlow();
         await expect(products.skipSetupLaterButton).toBeVisible();
     });
@@ -102,7 +102,7 @@ test.describe('Registration - Products Step: PoS Onboarding Setup (EMI-5783)', (
     // no separate skip-then-reopen round trip to exercise here. Checking the box
     // before continuing is the only way to reach Devices & Delivery.
 
-    test('should reveal the Devices & Delivery fields after checking "Request devices now" and continuing', async () => {
+    test('should reveal the Devices & Delivery fields after checking "Request devices now" and continuing', { annotation: [{ type: 'testcase', description: "RP-23: Reveal the Devices & Delivery fields after checking \"Request devices now\" and continuing" }] }, async () => {
         requireFlow();
         await products.requestDevicesNowButton.click();
         await products.skipSetupLaterButton.click();
@@ -111,7 +111,7 @@ test.describe('Registration - Products Step: PoS Onboarding Setup (EMI-5783)', (
 
     // ── Devices & Delivery ───────────────────────────────────────────────
 
-    test('should show the Devices & Delivery fields', async () => {
+    test('should show the Devices & Delivery fields', { annotation: [{ type: 'testcase', description: "RP-24: Show the Devices & Delivery fields" }] }, async () => {
         requireFlow();
         await expect(products.deviceCountInput).toBeVisible();
         // Confirmed live: Wathiq and custom-map are two simultaneously visible
@@ -121,35 +121,35 @@ test.describe('Registration - Products Step: PoS Onboarding Setup (EMI-5783)', (
         await expect(products.customPinAddressOption).toBeVisible();
     });
 
-    test('should not show a wallet picker anywhere in the Devices & Delivery step', async () => {
+    test('should not show a wallet picker anywhere in the Devices & Delivery step', { annotation: [{ type: 'testcase', description: "RP-25: Not show a wallet picker anywhere in the Devices & Delivery step" }] }, async () => {
         requireFlow();
         await expect(products.walletPicker).not.toBeVisible();
     });
 
-    test('should display the delivery mode toggle', async () => {
+    test('should display the delivery mode toggle', { annotation: [{ type: 'testcase', description: "RP-26: Display the delivery mode toggle" }] }, async () => {
         requireFlow();
         await expect(products.deliveryModeToggle).toBeVisible();
     });
 
-    test('should display the Back button in Devices & Delivery', async () => {
+    test('should display the Back button in Devices & Delivery', { annotation: [{ type: 'testcase', description: "RP-27: Display the Back button in Devices & Delivery" }] }, async () => {
         requireFlow();
         await expect(products.devicesDeliveryBackButton).toBeVisible();
     });
 
     // ── Devices counter ──────────────────────────────────────────────────
 
-    test('should default the total-devices count to 1', async () => {
+    test('should default the total-devices count to 1', { annotation: [{ type: 'testcase', description: "RP-28: Default the total-devices count to 1" }] }, async () => {
         requireFlow();
         await expect(products.deviceCountInput).toHaveValue('1');
     });
 
-    test('should increment the total-devices count when the increase button is clicked', async () => {
+    test('should increment the total-devices count when the increase button is clicked', { annotation: [{ type: 'testcase', description: "RP-29: Increment the total-devices count when the increase button is clicked" }] }, async () => {
         requireFlow();
         await products.increaseDeviceCountButton.click();
         await expect(products.deviceCountInput).toHaveValue('2');
     });
 
-    test('should decrement the total-devices count when the decrease button is clicked, without going below the minimum', async () => {
+    test('should decrement the total-devices count when the decrease button is clicked, without going below the minimum', { annotation: [{ type: 'testcase', description: "RP-30: Decrement the total-devices count when the decrease button is clicked, without going below the minimum" }] }, async () => {
         requireFlow();
         await products.decreaseDeviceCountButton.click();
         await expect(products.deviceCountInput).toHaveValue('1');
@@ -161,7 +161,7 @@ test.describe('Registration - Products Step: PoS Onboarding Setup (EMI-5783)', (
         await expect(products.deviceCountInput).toHaveValue('1');
     });
 
-    test('should update the total-devices count when typed directly into the field', async () => {
+    test('should update the total-devices count when typed directly into the field', { annotation: [{ type: 'testcase', description: "RP-31: Update the total-devices count when typed directly into the field" }] }, async () => {
         requireFlow();
         await products.deviceCountInput.fill('2');
         await expect(products.deviceCountInput).toHaveValue('2');
@@ -169,12 +169,12 @@ test.describe('Registration - Products Step: PoS Onboarding Setup (EMI-5783)', (
 
     // ── Delivery type toggle ─────────────────────────────────────────────
 
-    test('should select "single location" delivery by default', async () => {
+    test('should select "single location" delivery by default', { annotation: [{ type: 'testcase', description: "RP-32: Select \"single location\" delivery by default" }] }, async () => {
         requireFlow();
         await expect(products.singleLocationDeliveryOption).toBeVisible();
     });
 
-    test('should switch to per-device delivery groups when "split by devices" is selected', async () => {
+    test('should switch to per-device delivery groups when "split by devices" is selected', { annotation: [{ type: 'testcase', description: "RP-33: Switch to per-device delivery groups when \"split by devices\" is selected" }] }, async () => {
         requireFlow();
         // Confirmed live: these are custom radios — a visually-hidden (sr-only)
         // <input type="radio"> with a styled <span> label sitting on top, so a
@@ -200,7 +200,7 @@ test.describe('Registration - Products Step: PoS Onboarding Setup (EMI-5783)', (
         }
     });
 
-    test('should display the Add Location Group button in split-by-device mode', async () => {
+    test('should display the Add Location Group button in split-by-device mode', { annotation: [{ type: 'testcase', description: "RP-34: Display the Add Location Group button in split-by-device mode" }] }, async () => {
         requireFlow();
         // Own toggle-into/restore-from split mode, same as the test above —
         // presence-only here (actually adding/removing a group, and the
@@ -216,13 +216,13 @@ test.describe('Registration - Products Step: PoS Onboarding Setup (EMI-5783)', (
 
     // ── Delivery groups / address radios ─────────────────────────────────
 
-    test('should select the Wathiq national address by default and show the resolved address', async () => {
+    test('should select the Wathiq national address by default and show the resolved address', { annotation: [{ type: 'testcase', description: "RP-35: Select the Wathiq national address by default and show the resolved address" }] }, async () => {
         requireFlow();
         await expect(products.wathiqAddressOption).toBeVisible();
         await expect(products.updateWathiqAddressButton).toBeVisible();
     });
 
-    test('should reveal a custom map location option when selected', async () => {
+    test('should reveal a custom map location option when selected', { annotation: [{ type: 'testcase', description: "RP-36: Reveal a custom map location option when selected" }] }, async () => {
         requireFlow();
         // Same sr-only-input/styled-span custom radio pattern as the delivery-mode
         // toggle above — force the click past the intercepting label span.
@@ -234,7 +234,7 @@ test.describe('Registration - Products Step: PoS Onboarding Setup (EMI-5783)', (
 
     // ── Contact fields ────────────────────────────────────────────────────
 
-    test('should accept a contact name', async () => {
+    test('should accept a contact name', { annotation: [{ type: 'testcase', description: "RP-37: Accept a contact name" }] }, async () => {
         requireFlow();
         // The Devices & Delivery panel doesn't reliably persist this far into
         // the serial suite (same observation the last test in this file already
@@ -254,7 +254,7 @@ test.describe('Registration - Products Step: PoS Onboarding Setup (EMI-5783)', (
         await expect(products.contactNameInput).toHaveValue('Test Contact');
     });
 
-    test('should accept a Saudi contact mobile number', async () => {
+    test('should accept a Saudi contact mobile number', { annotation: [{ type: 'testcase', description: "RP-38: Accept a Saudi contact mobile number" }] }, async () => {
         requireFlow();
         // Same re-navigation as the test above — don't assume the Devices &
         // Delivery panel is still open at this point in the serial suite.
@@ -278,7 +278,7 @@ test.describe('Registration - Products Step: PoS Onboarding Setup (EMI-5783)', (
         await expect(products.contactMobileInput).toHaveValue('512345678');
     });
 
-    test('should display the Contract step after completing Devices & Delivery', async () => {
+    test('should display the Contract step after completing Devices & Delivery', { annotation: [{ type: 'testcase', description: "RP-39: Display the Contract step after completing Devices & Delivery" }] }, async () => {
         requireFlow();
         // Confirmed live: an earlier test in this serial suite already checks
         // requestDevicesNowButton and clicks skipSetupLaterButton to reach Devices

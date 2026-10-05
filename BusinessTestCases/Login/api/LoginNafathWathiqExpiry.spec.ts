@@ -84,7 +84,7 @@ async function signIn(request: import('@playwright/test').APIRequestContext, com
 // NW-01–NW-08 — Document expiry blocks login (env-gated real accounts)
 // ─────────────────────────────────────────────────────────────────────────────
 
-test.describe('Login – NAFATH document (National ID/Iqama) expired', () => {
+test.describe('Login – NAFATH document (National ID/Iqama) expired', { tag: ['@login', '@api'], annotation: [{ type: 'feature', description: 'Login' }, { type: 'layer', description: 'api' }] }, () => {
     test.describe.configure({ mode: 'serial' });
 
     test('NW-01: should return 409 when NAFATH document data has expired', async ({ request }) => {
@@ -117,7 +117,7 @@ test.describe('Login – NAFATH document (National ID/Iqama) expired', () => {
     });
 });
 
-test.describe('Login – WATHIQ document (CRN) expired', () => {
+test.describe('Login – WATHIQ document (CRN) expired', { tag: ['@login', '@api'], annotation: [{ type: 'feature', description: 'Login' }, { type: 'layer', description: 'api' }] }, () => {
     test.describe.configure({ mode: 'serial' });
 
     test('NW-02: should return 409 when WATHIQ document data has expired', async ({ request }) => {
@@ -147,7 +147,7 @@ test.describe('Login – WATHIQ document (CRN) expired', () => {
     });
 });
 
-test.describe('Login – regression: unaffected account still logs in normally', () => {
+test.describe('Login – regression: unaffected account still logs in normally', { tag: ['@login', '@api'], annotation: [{ type: 'feature', description: 'Login' }, { type: 'layer', description: 'api' }] }, () => {
     test.describe.configure({ mode: 'serial' });
     test('NW-03: login should still succeed (200) for an account with no NAFATH/WATHIQ expiry', async ({ request }) => {
         const res = await signIn(request, VALID_COMPANY, VALID_MOBILE);
@@ -163,7 +163,7 @@ test.describe('Login – regression: unaffected account still logs in normally',
 // EMI-5836 comments) before un-skipping.
 // ─────────────────────────────────────────────────────────────────────────────
 
-test.describe('Login – NAFATH Redis TTL expired (document still valid)', () => {
+test.describe('Login – NAFATH Redis TTL expired (document still valid)', { tag: ['@login', '@api'], annotation: [{ type: 'feature', description: 'Login' }, { type: 'layer', description: 'api' }] }, () => {
     test.describe.configure({ mode: 'serial' });
     const PENDING = 'pending a way to seed a NAFATH Redis-TTL-only-expired state (no document expiry) — coordinate with BE, see EMI-5836';
 
@@ -180,7 +180,7 @@ test.describe('Login – NAFATH Redis TTL expired (document still valid)', () =>
     });
 });
 
-test.describe('Login – WATHIQ Redis TTL expired (auto-heal, should NOT block login)', () => {
+test.describe('Login – WATHIQ Redis TTL expired (auto-heal, should NOT block login)', { tag: ['@login', '@api'], annotation: [{ type: 'feature', description: 'Login' }, { type: 'layer', description: 'api' }] }, () => {
     test.describe.configure({ mode: 'serial' });
     const PENDING = 'pending a way to seed a WATHIQ Redis-TTL-only-expired state and trigger the TTL-monitoring job on demand — coordinate with BE, see EMI-5836';
 
@@ -204,7 +204,7 @@ test.describe('Login – WATHIQ Redis TTL expired (auto-heal, should NOT block l
 // 2026-07-26 comment before writing real requests here.
 // ─────────────────────────────────────────────────────────────────────────────
 
-test.describe('Login – NAFATH revalidation flow (Generate Random + Get Status)', () => {
+test.describe('Login – NAFATH revalidation flow (Generate Random + Get Status)', { tag: ['@login', '@api'], annotation: [{ type: 'feature', description: 'Login' }, { type: 'layer', description: 'api' }] }, () => {
     test.describe.configure({ mode: 'serial' });
     const PENDING = 'pending confirmed endpoint paths from the Emi Profile Service Swagger (profile-data-renewal-controller) and a dedicated blocked test account — see EMI-5836';
 
@@ -219,7 +219,7 @@ test.describe('Login – NAFATH revalidation flow (Generate Random + Get Status)
     });
 });
 
-test.describe('Login – WATHIQ revalidation flow (refresh CRN)', () => {
+test.describe('Login – WATHIQ revalidation flow (refresh CRN)', { tag: ['@login', '@api'], annotation: [{ type: 'feature', description: 'Login' }, { type: 'layer', description: 'api' }] }, () => {
     test.describe.configure({ mode: 'serial' });
     const PENDING = 'pending confirmed endpoint paths from the Emi Profile Service Swagger (profile-data-renewal-controller) and a dedicated blocked test account — see EMI-5836';
 
@@ -238,7 +238,7 @@ test.describe('Login – WATHIQ revalidation flow (refresh CRN)', () => {
 // directly — not observable from the login API response alone.
 // ─────────────────────────────────────────────────────────────────────────────
 
-test.describe('Login – deactivation scope (per Amer Majed Abdalrazeq\'s 2026-07-16 comment)', () => {
+test.describe('Login – deactivation scope (per Amer Majed Abdalrazeq\'s 2026-07-16 comment)', { tag: ['@login', '@api'], annotation: [{ type: 'feature', description: 'Login' }, { type: 'layer', description: 'api' }] }, () => {
     test.describe.configure({ mode: 'serial' });
     const PENDING = 'pending DB access to confirm which entity (user vs. profile) was deactivated — not observable from the login API response alone, see EMI-5836';
 
@@ -250,7 +250,7 @@ test.describe('Login – deactivation scope (per Amer Majed Abdalrazeq\'s 2026-0
         // comment thread that NAFATH is user-scoped, not business-scoped.
     });
 
-    test('NW-13: WATHIQ expiry should deactivate the PROFILE, not the user', async ({ request }) => {
+    test('NW-13: WATHIQ expiry should deactivate the PROFILE, not the user', { annotation: [{ type: 'testcase', description: "LG-144: WATHIQ expiry deactivates the profile, not the user" }] }, async ({ request }) => {
         test.skip(true, PENDING);
     });
 });
@@ -269,7 +269,7 @@ test.describe('Login – deactivation scope (per Amer Majed Abdalrazeq\'s 2026-0
 // identically when they are not configured.
 // ─────────────────────────────────────────────────────────────────────────────
 
-test.describe('Login – NAFATH / WATHIQ expiry message localisation (EMI-5969)', () => {
+test.describe('Login – NAFATH / WATHIQ expiry message localisation (EMI-5969)', { tag: ['@login', '@api'], annotation: [{ type: 'feature', description: 'Login' }, { type: 'layer', description: 'api' }] }, () => {
     test.describe.configure({ mode: 'serial' });
 
     const API_BASE = process.env['API_BASE_URL'] ?? 'https://gateway-dev.majdpay.com';

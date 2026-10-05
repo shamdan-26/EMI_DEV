@@ -6,7 +6,7 @@ import { loginToTopup, gotoTopupScreen, type TopupSession, TOPUP_UI_ACCOUNT } fr
 // guessed Arabic copy — the app renders Arabic by default on dev. Shared setup:
 // see TopupHelper.ts (loginToTopup / gotoTopupScreen / findTopupCase).
 
-test.describe('Topup – UI – Sidebar, header and profile menu', () => {
+test.describe('Topup – UI – Sidebar, header and profile menu', { tag: ['@topup', '@ui'], annotation: [{ type: 'feature', description: 'Topup' }, { type: 'layer', description: 'ui' }] }, () => {
     test.describe.configure({ mode: 'serial' });
     test.setTimeout(150000);
 
@@ -57,7 +57,7 @@ test.describe('Topup – UI – Sidebar, header and profile menu', () => {
         await expect.poll(width, { timeout: 5000 }).toBe(expanded);
     });
 
-    test('sidebar top-level links point to their expected routes', async () => {
+    test('sidebar top-level links point to their expected routes', { annotation: [{ type: 'testcase', description: "TUP-01: Sidebar link opens Topup" }] }, async () => {
         const { shell } = session;
         const expected: [typeof shell.homeLink, RegExp][] = [
             [shell.homeLink,         /\/business\/main\/home$/],
@@ -77,7 +77,7 @@ test.describe('Topup – UI – Sidebar, header and profile menu', () => {
         }
     });
 
-    test('Add Funds is the active (highlighted) sidebar entry on this screen', async () => {
+    test('Add Funds is the active (highlighted) sidebar entry on this screen', { annotation: [{ type: 'testcase', description: "TUP-01: Sidebar link opens Topup" }] }, async () => {
         const { shell, page } = session;
         await expect(shell.topupLink).toBeVisible();
         // Whole-token match: a bare /active/ also hits Material's

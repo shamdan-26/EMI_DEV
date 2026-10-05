@@ -47,7 +47,7 @@ function commonHeaders(): Record<string, string> {
 // API 1 — GET /devices/ip-address
 // ─────────────────────────────────────────────────────────────────────────────
 
-test.describe('Login – API 1: GET /devices/ip-address', () => {
+test.describe('Login – API 1: GET /devices/ip-address', { tag: ['@login', '@api'], annotation: [{ type: 'feature', description: 'Login' }, { type: 'layer', description: 'api' }] }, () => {
     test.describe.configure({ mode: 'serial' });
 
     test('API-01: should return 200', async ({ request }) => {
@@ -82,7 +82,7 @@ test.describe('Login – API 1: GET /devices/ip-address', () => {
 // API 2 — POST /devices/uuid
 // ─────────────────────────────────────────────────────────────────────────────
 
-test.describe('Login – API 2: POST /devices/uuid', () => {
+test.describe('Login – API 2: POST /devices/uuid', { tag: ['@login', '@api'], annotation: [{ type: 'feature', description: 'Login' }, { type: 'layer', description: 'api' }] }, () => {
     test.describe.configure({ mode: 'serial' });
 
     const devicePayload = {
@@ -155,7 +155,7 @@ test.describe('Login – API 2: POST /devices/uuid', () => {
 // API 3 — POST /auth/signin
 // ─────────────────────────────────────────────────────────────────────────────
 
-test.describe('Login – API 3: POST /auth/signin', () => {
+test.describe('Login – API 3: POST /auth/signin', { tag: ['@login', '@api'], annotation: [{ type: 'feature', description: 'Login' }, { type: 'layer', description: 'api' }] }, () => {
     test.describe.configure({ mode: 'serial' });
 
     // ── Happy path ────────────────────────────────────────────────────────────
@@ -208,7 +208,7 @@ test.describe('Login – API 3: POST /auth/signin', () => {
         expect(body.accessToken.token.length).toBeGreaterThan(0);
     });
 
-    test('API-03c: accessToken.tenantNumber should match the submitted tenant', async ({ request }) => {
+    test('API-03c: accessToken.tenantNumber should match the submitted tenant', { annotation: [{ type: 'testcase', description: "LG-116: accessToken.tenantNumber matches submitted tenant" }] }, async ({ request }) => {
         const res  = await request.post(`${API_BASE}/auth/signin`, {
             data: {
                 username:     VALID_USERNAME,
@@ -222,7 +222,7 @@ test.describe('Login – API 3: POST /auth/signin', () => {
         expect(body.accessToken.tenantNumber).toBe(VALID_TENANT);
     });
 
-    test('API-03d: accessToken.expirationDuration should be a positive number', async ({ request }) => {
+    test('API-03d: accessToken.expirationDuration should be a positive number', { annotation: [{ type: 'testcase', description: "LG-117: accessToken.expirationDuration is a positive number" }] }, async ({ request }) => {
         const res  = await request.post(`${API_BASE}/auth/signin`, {
             data: {
                 username:     VALID_USERNAME,
@@ -382,7 +382,7 @@ test.describe('Login – API 3: POST /auth/signin', () => {
 // API 4 — POST /auth/verify/otp  (skipped when OTP is disabled)
 // ─────────────────────────────────────────────────────────────────────────────
 
-test.describe('Login – API 4: POST /auth/verify/otp', () => {
+test.describe('Login – API 4: POST /auth/verify/otp', { tag: ['@login', '@api'], annotation: [{ type: 'feature', description: 'Login' }, { type: 'layer', description: 'api' }] }, () => {
     test.describe.configure({ mode: 'serial' });
 
     let accessToken = '';
@@ -458,7 +458,7 @@ test.describe('Login – API 4: POST /auth/verify/otp', () => {
 // FULL FLOW — chain all 3 pre-auth steps + sign in
 // ─────────────────────────────────────────────────────────────────────────────
 
-test.describe('Login – Full API Flow (IP → UUID → Sign In)', () => {
+test.describe('Login – Full API Flow (IP → UUID → Sign In)', { tag: ['@login', '@api'], annotation: [{ type: 'feature', description: 'Login' }, { type: 'layer', description: 'api' }] }, () => {
     test('API-FLOW-01: should complete the full pre-auth and sign-in chain successfully', async ({ request }) => {
         // Step 1 — get IP
         const ipRes  = await request.get(`${API_BASE}/devices/ip-address`, { headers: commonHeaders() });

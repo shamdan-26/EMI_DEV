@@ -6,7 +6,7 @@ import { findTopupCase, loginToTopup, gotoTopupScreen, SUMMARY_LABEL, type Topup
 // guessed Arabic copy — the app renders Arabic by default on dev. Shared setup:
 // see TopupHelper.ts (loginToTopup / gotoTopupScreen / findTopupCase).
 
-test.describe('Topup – UI – Add Funds Summary (step 2)', () => {
+test.describe('Topup – UI – Add Funds Summary (step 2)', { tag: ['@topup', '@ui'], annotation: [{ type: 'feature', description: 'Topup' }, { type: 'layer', description: 'ui' }] }, () => {
     test.describe.configure({ mode: 'serial' });
     test.setTimeout(150000);
 
@@ -132,7 +132,7 @@ test.describe('Topup – UI – Add Funds Summary (step 2)', () => {
         await topup.clickSummaryCancelButton();
     });
 
-    test('Summary Total is consistent with the fee and VAT shown', async () => {
+    test('Summary Total is consistent with the fee and VAT shown', { annotation: [{ type: 'testcase', description: "TUP-17: Total row reads correctly" }] }, async () => {
         const { topup } = session;
         await reachSummary('visa', '1000');
         const original = await topup.getSummaryMoney(SUMMARY_LABEL.original);
@@ -182,7 +182,7 @@ test.describe('Topup – UI – Add Funds Summary (step 2)', () => {
         await topup.clickSummaryCancelButton();
     });
 
-    test('Summary Cancel returns to the amount form', async () => {
+    test('Summary Cancel returns to the amount form', { annotation: [{ type: 'testcase', description: "TUP-20: Cancel returns without side effects" }] }, async () => {
         const { topup } = session;
         await reachSummary();
         await topup.clickSummaryCancelButton();
@@ -191,7 +191,7 @@ test.describe('Topup – UI – Add Funds Summary (step 2)', () => {
         await expect(topup.summaryRows).toHaveCount(0);
     });
 
-    test('Summary Cancel then re-Proceed shows the same amount again', async () => {
+    test('Summary Cancel then re-Proceed shows the same amount again', { annotation: [{ type: 'testcase', description: "TUP-20: Cancel returns without side effects" }] }, async () => {
         const { topup } = session;
         await reachSummary('visa', '75');
         await topup.clickSummaryCancelButton();

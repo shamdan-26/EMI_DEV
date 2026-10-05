@@ -6,7 +6,7 @@ import { findTopupCase, loginToTopup, gotoTopupScreen, type TopupSession, TOPUP_
 // guessed Arabic copy — the app renders Arabic by default on dev. Shared setup:
 // see TopupHelper.ts (loginToTopup / gotoTopupScreen / findTopupCase).
 
-test.describe('Topup – UI – Amount form (step 1)', () => {
+test.describe('Topup – UI – Amount form (step 1)', { tag: ['@topup', '@ui'], annotation: [{ type: 'feature', description: 'Topup' }, { type: 'layer', description: 'ui' }] }, () => {
     test.describe.configure({ mode: 'serial' });
     test.setTimeout(150000);
 
@@ -32,7 +32,7 @@ test.describe('Topup – UI – Amount form (step 1)', () => {
         session.topup.resetActivePage();
     });
 
-    test('page title, subtitle, and balance card are visible with real content', async () => {
+    test('page title, subtitle, and balance card are visible with real content', { annotation: [{ type: 'testcase', description: "TUP-03: Page title and subtitle" }, { type: 'testcase', description: "TUP-05: Balance and wallet code match account" }] }, async () => {
         const { topup } = session;
         await expect(topup.pageTitle).toBeVisible();
         expect((await topup.pageTitle.innerText()).trim().length).toBeGreaterThan(0);
@@ -41,7 +41,7 @@ test.describe('Topup – UI – Amount form (step 1)', () => {
         expect((await topup.balanceWalletCode.innerText()).trim().length).toBeGreaterThan(0);
     });
 
-    test('MADA/VISA/MASTER are all present and mutually exclusive', async () => {
+    test('MADA/VISA/MASTER are all present and mutually exclusive', { annotation: [{ type: 'testcase', description: "TUP-10: Methods are mutually exclusive" }] }, async () => {
         const { topup } = session;
         await expect(topup.madaOption).toBeVisible();
         await expect(topup.visaOption).toBeVisible();
@@ -56,13 +56,13 @@ test.describe('Topup – UI – Amount form (step 1)', () => {
         await expect(topup.madaOption).not.toBeChecked();
     });
 
-    test('amount field shows a currency icon and Proceed stays disabled while empty', async () => {
+    test('amount field shows a currency icon and Proceed stays disabled while empty', { annotation: [{ type: 'testcase', description: "TUP-15: Currency icon always present" }, { type: 'testcase', description: "TUP-11: Proceed disabled with no method selected" }] }, async () => {
         const { topup } = session;
         await expect(topup.amountCurrencyIcon).toBeVisible();
         await expect(topup.proceedButton).toBeDisabled();
     });
 
-    test('each preset amount chip populates the amount field with its own value', async () => {
+    test('each preset amount chip populates the amount field with its own value', { annotation: [{ type: 'testcase', description: "TUP-16: Each chip populates the amount field" }] }, async () => {
         const { page, topup } = session;
         const chipValues = [500, 1000, 2000, 5000, 10000];
         for (const value of chipValues) {
@@ -75,13 +75,13 @@ test.describe('Topup – UI – Amount form (step 1)', () => {
         }
     });
 
-    test('balance card shows the QR and wallet-settings action buttons', async () => {
+    test('balance card shows the QR and wallet-settings action buttons', { annotation: [{ type: 'testcase', description: "TUP-06: Generate QR Code action" }, { type: 'testcase', description: "TUP-07: Wallet settings action" }] }, async () => {
         const { topup } = session;
         await expect(topup.balanceQrButton).toBeVisible();
         await expect(topup.balanceSettingsButton).toBeVisible();
     });
 
-    test('no payment method is selected on a fresh form', async () => {
+    test('no payment method is selected on a fresh form', { annotation: [{ type: 'testcase', description: "TUP-08: No method selected by default" }] }, async () => {
         const { topup } = session;
         for (const option of [topup.madaOption, topup.visaOption, topup.masterOption]) {
             await expect(option).not.toBeChecked();
@@ -91,7 +91,7 @@ test.describe('Topup – UI – Amount form (step 1)', () => {
     // KNOWN BUG: entering "0" shows no inline validation error — the field is
     // silently left empty (confirmed on dev, Arabic UI). Un-skip once the app
     // shows an error; update the regex to the real (Arabic) copy at that point.
-    test.skip('a zero amount shows an inline error and keeps Proceed disabled', async () => {
+    test.skip('a zero amount shows an inline error and keeps Proceed disabled', { annotation: [{ type: 'testcase', description: "TUP-12: Inline error text for zero amount" }] }, async () => {
         const { topup, page } = session;
         await topup.selectPaymentMethod('mada');
         await topup.enterAmount('0');
@@ -99,7 +99,7 @@ test.describe('Topup – UI – Amount form (step 1)', () => {
         await expect(topup.proceedButton).toBeDisabled();
     });
 
-    test('a manual amount replaces a previously selected preset chip', async () => {
+    test('a manual amount replaces a previously selected preset chip', { annotation: [{ type: 'testcase', description: "TUP-14: Preset chip then manual override" }] }, async () => {
         const { topup } = session;
         await topup.selectPaymentMethod('visa');
         await topup.presetAmountChips.first().click();
@@ -107,7 +107,7 @@ test.describe('Topup – UI – Amount form (step 1)', () => {
         await expect(topup.inputAmount).toHaveValue(/777/);
     });
 
-    test('the disclaimer banner is present on the main form', async () => {
+    test('the disclaimer banner is present on the main form', { annotation: [{ type: 'testcase', description: "TUP-19: Disclaimer copy matches current build" }] }, async () => {
         const { topup } = session;
         await expect(topup.disclaimerText).toBeVisible();
         await expect(topup.disclaimerText).toContainText(/مجد باي|MJD ?Pay|MajdPay/i);
@@ -127,13 +127,13 @@ test.describe('Topup – UI – Amount form (step 1)', () => {
         expect(direction).toBe('rtl');
     });
 
-    test('form title and subtitle match the Add Money screen', async () => {
+    test('form title and subtitle match the Add Money screen', { annotation: [{ type: 'testcase', description: "TUP-03: Page title and subtitle" }] }, async () => {
         const { topup } = session;
         await expect(topup.pageTitle).toHaveText(/شحن الرصيد|Top up/i);
         await expect(topup.pageSubtitle).toBeVisible();
     });
 
-    test('balance card shows the current balance label, amount, and wallet code', async () => {
+    test('balance card shows the current balance label, amount, and wallet code', { annotation: [{ type: 'testcase', description: "TUP-05: Balance and wallet code match account" }] }, async () => {
         const { topup } = session;
         await expect(topup.balanceCardLabel).toHaveText(/الرصيد الحالي|Current balance/i);
         await expect(topup.balanceAmount).toHaveText(/\d[\d,]*\.\d{2}/);
@@ -198,7 +198,7 @@ test.describe('Topup – UI – Amount form (step 1)', () => {
         }
     });
 
-    test('selecting a method sets aria-checked=true on that radio only', async () => {
+    test('selecting a method sets aria-checked=true on that radio only', { annotation: [{ type: 'testcase', description: "TUP-09: Selecting a method highlights it" }, { type: 'testcase', description: "TUP-10: Methods are mutually exclusive" }] }, async () => {
         const { topup } = session;
         await topup.selectPaymentMethod('master');
         await expect(topup.paymentMethodOptions.nth(2)).toHaveAttribute('aria-checked', 'true');
@@ -233,7 +233,7 @@ test.describe('Topup – UI – Amount form (step 1)', () => {
         await expect(topup.proceedButton).toBeDisabled();
     });
 
-    test('Proceed stays disabled with only an amount entered', async () => {
+    test('Proceed stays disabled with only an amount entered', { annotation: [{ type: 'testcase', description: "TUP-11: Proceed disabled with no method selected" }] }, async () => {
         const { topup } = session;
         await topup.enterAmount('100');
         await expect(topup.proceedButton).toBeDisabled();
@@ -300,7 +300,7 @@ test.describe('Topup – UI – Amount form (step 1)', () => {
         expect(await topup.getAmountValue()).not.toMatch(/[a-z]/i);
     });
 
-    test('a very long numeric string does not break the form', async () => {
+    test('a very long numeric string does not break the form', { annotation: [{ type: 'testcase', description: "TUP-13: **[Gap — not in `topupData.json`]** Long integer amount is capped" }] }, async () => {
         const { topup, page } = session;
         await topup.selectPaymentMethod('visa');
         await topup.enterAmount('9'.repeat(40));

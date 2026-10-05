@@ -9,7 +9,7 @@ import { findTopupCase, loginToTopup, gotoTopupScreen, completeCardPayment, type
 // element checks before them. Copy is matched bilingually / by `.mp-result-*`
 // class — the result screen has no ids or testids (confirmed).
 
-test.describe('Topup – Payment Success UI', () => {
+test.describe('Topup – Payment Success UI', { tag: ['@topup', '@ui'], annotation: [{ type: 'feature', description: 'Topup' }, { type: 'layer', description: 'ui' }] }, () => {
     test.describe.configure({ mode: 'serial' });
     test.setTimeout(180000);
 

@@ -32,7 +32,7 @@ import { closeSqlPool } from '../../../support/sqlServerClient';
 //
 // All three methods confirmed passing together, live on dev, 2026-09-20.
 
-test.describe('Topup – Happy Path', () => {
+test.describe('Topup – Happy Path', { tag: ['@topup', '@functional'], annotation: [{ type: 'feature', description: 'Topup' }, { type: 'layer', description: 'functional' }] }, () => {
     test.describe.configure({ mode: 'serial' });
     test.setTimeout(150000);
 

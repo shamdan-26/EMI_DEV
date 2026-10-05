@@ -13,7 +13,7 @@ const PENDING_TITLE = /الدفعة قيد التأكيد|payment pending confir
 const SUCCESS_TITLE = /دفعة ناجحة|successful payment/i;
 const FAILED_TITLE  = /فشلت الدفعة|payment failed/i;
 
-test.describe('Topup – Payment Pending UI', () => {
+test.describe('Topup – Payment Pending UI', { tag: ['@topup', '@ui'], annotation: [{ type: 'feature', description: 'Topup' }, { type: 'layer', description: 'ui' }] }, () => {
     test.describe.configure({ mode: 'serial' });
     test.setTimeout(180000);
 

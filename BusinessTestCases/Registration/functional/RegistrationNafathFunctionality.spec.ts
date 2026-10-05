@@ -9,7 +9,7 @@ import { RegistrationFinancialPage } from '../../pageElements/Registration/Regis
 import { RegistrationVerificationPage } from '../../pageElements/Registration/RegistrationVerificationPage';
 import { RegistrationProductsPage } from '../../pageElements/Registration/RegistrationProductsPage';
 
-test.describe('Registration - Nafath Verification', () => {
+test.describe('Registration - Nafath Verification', { tag: ['@registration', '@functional'], annotation: [{ type: 'feature', description: 'Registration' }, { type: 'layer', description: 'functional' }] }, () => {
     test.describe.configure({ mode: 'serial' });
 
     let page: Page;
@@ -144,13 +144,13 @@ test.describe('Registration - Nafath Verification', () => {
 
     // ── Page presence ─────────────────────────────────────────────────────────
 
-    test('should display the Nafath page after Sign Up', async () => {
+    test('should display the Nafath page after Sign Up', { annotation: [{ type: 'testcase', description: "RN-19: Display the Nafath page after Sign Up" }] }, async () => {
         await expect(nafathPage.nafathHeading).toBeVisible();
     });
 
     // ── Timer ─────────────────────────────────────────────────────────────────
 
-    test('should display a countdown timer on the Nafath page', async () => {
+    test('should display a countdown timer on the Nafath page', { annotation: [{ type: 'testcase', description: "RN-20: Display a countdown timer on the Nafath page" }] }, async () => {
         await expect(nafathPage.countdownTimer).toBeVisible();
     });
 
@@ -158,16 +158,16 @@ test.describe('Registration - Nafath Verification', () => {
     // Per EMI-4895: the button starts disabled and only enables once the
     // redirect countdown expires. EMI-4937 fixed that duration to 20s (was 30s).
 
-    test('should have the Verify button disabled while the redirect countdown is active [EMI-4895]', async () => {
+    test('should have the Verify button disabled while the redirect countdown is active [EMI-4895]', { annotation: [{ type: 'testcase', description: "RN-21: Have the Verify button disabled while the redirect countdown is active (EMI-4895)" }] }, async () => {
         await expect(nafathPage.verifyButton).toBeDisabled();
     });
 
-    test('should keep the Verify button disabled mid-countdown, not just on load [EMI-4895]', async () => {
+    test('should keep the Verify button disabled mid-countdown, not just on load [EMI-4895]', { annotation: [{ type: 'testcase', description: "RN-22: Keep the Verify button disabled mid-countdown, not just on load (EMI-4895)" }] }, async () => {
         await page.waitForTimeout(3000);
         await expect(nafathPage.verifyButton).toBeDisabled();
     });
 
-    test('should enable the Verify button once the 20-second countdown expires [EMI-4937]', async () => {
+    test('should enable the Verify button once the 20-second countdown expires [EMI-4937]', { annotation: [{ type: 'testcase', description: "RN-23: Enable the Verify button once the 20-second countdown expires (EMI-4937)" }] }, async () => {
         await expect(nafathPage.verifyButton).toBeEnabled({ timeout: 25_000 });
     });
 });

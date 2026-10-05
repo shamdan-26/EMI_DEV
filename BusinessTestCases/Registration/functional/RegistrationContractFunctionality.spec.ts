@@ -22,7 +22,7 @@ import { RegistrationContractPage } from '../../pageElements/Registration/Regist
 // registered dead ends the same way the other Products/Contract specs do.
 // ─────────────────────────────────────────────────────────────────────────────
 
-test.describe('Registration – Contract Review: Acknowledgement & Actions (Live)', () => {
+test.describe('Registration – Contract Review: Acknowledgement & Actions (Live)', { tag: ['@registration', '@functional'], annotation: [{ type: 'feature', description: 'Registration' }, { type: 'layer', description: 'functional' }] }, () => {
     test.describe.configure({ mode: 'serial' });
 
     let page: Page;
@@ -45,38 +45,38 @@ test.describe('Registration – Contract Review: Acknowledgement & Actions (Live
 
     // ── Acknowledgement checkbox ─────────────────────────────────────────
 
-    test('should keep Submit disabled while the agreement checkbox is unchecked', async () => {
+    test('should keep Submit disabled while the agreement checkbox is unchecked', { annotation: [{ type: 'testcase', description: "RC-21: Keep Submit disabled while the agreement checkbox is unchecked" }] }, async () => {
         await expect(contract.agreeCheckbox).not.toBeChecked();
         await expect(contract.submitButton).toBeDisabled();
     });
 
-    test('should auto-check the agreement checkbox once the document is scrolled to its end', async () => {
+    test('should auto-check the agreement checkbox once the document is scrolled to its end', { annotation: [{ type: 'testcase', description: "RC-22: Auto-check the agreement checkbox once the document is scrolled to its end" }] }, async () => {
         await contract.scrollDocumentToEnd();
         await expect(contract.agreeCheckbox).toBeChecked({ timeout: 5000 });
         // restore the unchecked precondition the manual-check tests below rely on
         await contract.agreeCheckbox.uncheck();
     });
 
-    test('should enable Submit once the agreement checkbox is checked', async () => {
+    test('should enable Submit once the agreement checkbox is checked', { annotation: [{ type: 'testcase', description: "RC-23: Enable Submit once the agreement checkbox is checked" }] }, async () => {
         await contract.agreeCheckbox.check();
         await expect(contract.submitButton).toBeEnabled({ timeout: 5000 });
     });
 
-    test('should disable Submit again when the agreement checkbox is unchecked', async () => {
+    test('should disable Submit again when the agreement checkbox is unchecked', { annotation: [{ type: 'testcase', description: "RC-24: Disable Submit again when the agreement checkbox is unchecked" }] }, async () => {
         await contract.agreeCheckbox.uncheck();
         await expect(contract.submitButton).toBeDisabled();
     });
 
     // ── Negative ──────────────────────────────────────────────────────────
 
-    test('should not advance past Contract when Submit is force-clicked while unchecked', async () => {
+    test('should not advance past Contract when Submit is force-clicked while unchecked', { annotation: [{ type: 'testcase', description: "RC-25: Not advance past Contract when Submit is force-clicked while unchecked" }] }, async () => {
         await contract.submitButton.click({ force: true }).catch(() => {});
         await expect(contract.agreementHeading).toBeVisible({ timeout: 5000 });
     });
 
     // ── PDF download ──────────────────────────────────────────────────────
 
-    test('should trigger a PDF download when "Download PDF file" is clicked', async () => {
+    test('should trigger a PDF download when "Download PDF file" is clicked', { annotation: [{ type: 'testcase', description: "RC-26: Trigger a PDF download when \"Download PDF file\" is clicked" }] }, async () => {
         const [download] = await Promise.all([
             page.waitForEvent('download', { timeout: 15000 }),
             contract.downloadPdfButton.click(),
@@ -94,7 +94,7 @@ test.describe('Registration – Contract Review: Acknowledgement & Actions (Live
 // response is expected to navigate away from Contract and end the session for
 // any test that would otherwise run after it.
 // ─────────────────────────────────────────────────────────────────────────────
-test.describe('Registration – Contract Submission (Mocked)', () => {
+test.describe('Registration – Contract Submission (Mocked)', { tag: ['@registration', '@functional'], annotation: [{ type: 'feature', description: 'Registration' }, { type: 'layer', description: 'functional' }] }, () => {
     test.describe.configure({ mode: 'serial' });
 
     let page: Page;
@@ -116,7 +116,7 @@ test.describe('Registration – Contract Submission (Mocked)', () => {
 
     test.afterAll(async () => { await page.close(); });
 
-    test('should surface an error and remain on Contract when submission fails', async () => {
+    test('should surface an error and remain on Contract when submission fails', { annotation: [{ type: 'testcase', description: "RC-27: Surface an error and remain on Contract when submission fails" }] }, async () => {
         await page.route('**/register/contract/accept**', route =>
             route.fulfill({ status: 500, contentType: 'application/json', body: JSON.stringify({ errorCode: 'INTERNAL_ERROR' }) })
         );
@@ -127,7 +127,7 @@ test.describe('Registration – Contract Submission (Mocked)', () => {
         expect(hasError || stillOnContract).toBeTruthy();
     });
 
-    test('should send only one request when Submit is clicked twice in quick succession', async () => {
+    test('should send only one request when Submit is clicked twice in quick succession', { annotation: [{ type: 'testcase', description: "RC-28: Send only one request when Submit is clicked twice in quick succession" }] }, async () => {
         let submissions = 0;
         await page.unroute('**/register/contract/accept**').catch(() => {});
         await page.route('**/register/contract/accept**', async route => {

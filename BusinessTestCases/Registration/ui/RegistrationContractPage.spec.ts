@@ -20,7 +20,7 @@ import { RegistrationContractPage } from '../../pageElements/Registration/Regist
 // positionally (RegistrationContractPage.section(n)).
 // ─────────────────────────────────────────────────────────────────────────────
 
-test.describe('Registration — Contract Review', () => {
+test.describe('Registration — Contract Review', { tag: ['@registration', '@ui'], annotation: [{ type: 'feature', description: 'Registration' }, { type: 'layer', description: 'ui' }] }, () => {
     test.describe.configure({ mode: 'serial', retries: 1 });
 
     let page: Page;
@@ -52,7 +52,7 @@ test.describe('Registration — Contract Review', () => {
         await expect(contract.logoImage).toBeVisible();
     });
 
-    test('should link the logo to the business landing page', async () => {
+    test('should link the logo to the business landing page', { annotation: [{ type: 'testcase', description: "RC-02: Link the logo to the business landing page" }] }, async () => {
         await expect(contract.logoLink).toHaveAttribute('href', /\/business\/landing/);
     });
 
@@ -60,7 +60,7 @@ test.describe('Registration — Contract Review', () => {
         await expect(contract.enButton).toBeVisible();
     });
 
-    test('should display the Arabic (العربية) language button', async () => {
+    test('should display the Arabic (العربية) language button', { annotation: [{ type: 'testcase', description: "RC-04: Display the Arabic (العربية) language button" }] }, async () => {
         await expect(contract.arabicButton).toBeVisible();
     });
 
@@ -70,15 +70,15 @@ test.describe('Registration — Contract Review', () => {
 
     // ── Step indicator ────────────────────────────────────────────────────────
 
-    test('should display the "Final step" label', async () => {
+    test('should display the "Final step" label', { annotation: [{ type: 'testcase', description: "RC-06: Display the \"Final step\" label" }] }, async () => {
         await expect(contract.finalStepLabel).toBeVisible();
     });
 
-    test('should display the "Contract review" title', async () => {
+    test('should display the "Contract review" title', { annotation: [{ type: 'testcase', description: "RC-07: Display the \"Contract review\" title" }] }, async () => {
         await expect(contract.contractReviewTitle).toBeVisible();
     });
 
-    test('should display instruction text about reading and agreeing to complete registration', async () => {
+    test('should display instruction text about reading and agreeing to complete registration', { annotation: [{ type: 'testcase', description: "RC-08: Display instruction text about reading and agreeing to complete registration" }] }, async () => {
         await expect(contract.instructionText.first()).toBeVisible();
     });
 
@@ -94,21 +94,21 @@ test.describe('Registration — Contract Review', () => {
         await expect(contract.outerStepBar.filter({ hasText: 'العقد' })).toBeVisible();
     });
 
-    test('should mark the Contract tab as the active step', async () => {
+    test('should mark the Contract tab as the active step', { annotation: [{ type: 'testcase', description: "RC-10: Mark the Contract tab as the active step" }] }, async () => {
         await expect(contract.activeStep).toContainText('العقد');
     });
 
     // ── Contract document ────────────────────────────────────────────────────
 
-    test('should display the "Download PDF file" button', async () => {
+    test('should display the "Download PDF file" button', { annotation: [{ type: 'testcase', description: "RC-11: Display the \"Download PDF file\" button" }] }, async () => {
         await expect(contract.downloadPdfButton).toBeVisible();
     });
 
-    test('should display the contract document title', async () => {
+    test('should display the contract document title', { annotation: [{ type: 'testcase', description: "RC-12: Display the contract document title" }] }, async () => {
         await expect(contract.agreementHeading).toBeVisible();
     });
 
-    test('should display the contract version field', async () => {
+    test('should display the contract version field', { annotation: [{ type: 'testcase', description: "RC-13: Display the contract version field" }] }, async () => {
         await expect(contract.contractVersionLabel).toBeVisible();
         await expect(contract.contractVersionValue).toBeVisible();
         await expect(contract.contractVersionValue).not.toBeEmpty();
@@ -122,7 +122,7 @@ test.describe('Registration — Contract Review', () => {
         await expect(contract.acceptanceDateValue).toHaveText(todayYmd);
     });
 
-    test('should display a non-empty intro paragraph', async () => {
+    test('should display a non-empty intro paragraph', { annotation: [{ type: 'testcase', description: "RC-15: Display a non-empty intro paragraph" }] }, async () => {
         await expect(contract.introParagraph).toBeVisible();
         await expect(contract.introParagraph).not.toBeEmpty();
     });
@@ -136,7 +136,7 @@ test.describe('Registration — Contract Review', () => {
     // Section count/topics vary by build (UAT: 4 fixed sections; dev: ~10 with
     // different topics) — validated generically so this passes on either.
 
-    test('should display at least one numbered contract section, each with visible non-empty heading text', async () => {
+    test('should display at least one numbered contract section, each with visible non-empty heading text', { annotation: [{ type: 'testcase', description: "RC-17: Display at least one numbered contract section, each with visible non-empty heading text" }] }, async () => {
         const count = await contract.contractSections.count();
         expect(count).toBeGreaterThan(0);
         for (let i = 1; i <= count; i++) {
@@ -148,7 +148,7 @@ test.describe('Registration — Contract Review', () => {
 
     // ── Consent & actions ────────────────────────────────────────────────────
 
-    test('should display the "I have read and agree to the contract terms" checkbox, unchecked', async () => {
+    test('should display the "I have read and agree to the contract terms" checkbox, unchecked', { annotation: [{ type: 'testcase', description: "RC-18: Display the \"I have read and agree to the contract terms\" checkbox, unchecked" }] }, async () => {
         await expect(contract.agreeCheckboxLabel).toBeVisible();
         await expect(contract.agreeCheckbox).toBeVisible();
         await expect(contract.agreeCheckbox).not.toBeChecked();
@@ -158,7 +158,7 @@ test.describe('Registration — Contract Review', () => {
         await expect(contract.cancelButton).toBeVisible();
     });
 
-    test('should display the Submit and finish button', async () => {
+    test('should display the Submit and finish button', { annotation: [{ type: 'testcase', description: "RC-20: Display the Submit and finish button" }] }, async () => {
         await expect(contract.submitButton).toBeVisible();
     });
 });

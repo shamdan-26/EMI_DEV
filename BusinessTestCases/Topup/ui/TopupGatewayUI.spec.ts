@@ -6,7 +6,7 @@ import { findTopupCase, loginToTopup, gotoTopupScreen, reachCardEntryPopup, type
 // guessed Arabic copy — the app renders Arabic by default on dev. Shared setup:
 // see TopupHelper.ts (loginToTopup / gotoTopupScreen / findTopupCase).
 
-test.describe('Topup – UI – Gateway hand-off', () => {
+test.describe('Topup – UI – Gateway hand-off', { tag: ['@topup', '@ui'], annotation: [{ type: 'feature', description: 'Topup' }, { type: 'layer', description: 'ui' }] }, () => {
     test.describe.configure({ mode: 'serial' });
     test.setTimeout(150000);
 

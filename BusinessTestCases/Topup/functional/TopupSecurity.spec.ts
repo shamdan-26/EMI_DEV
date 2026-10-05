@@ -6,7 +6,7 @@ import { findTopupCase, loginToTopup, gotoTopupScreen, reachCardEntryPopup, reac
 // Split out from Happy Path / UI / Negative / API — see TopupHelper.ts's
 // shared setup (loginToTopup/gotoTopupScreen/findTopupCase/reachCardEntryPopup).
 
-test.describe('Topup – Security', () => {
+test.describe('Topup – Security', { tag: ['@topup', '@functional'], annotation: [{ type: 'feature', description: 'Topup' }, { type: 'layer', description: 'functional' }] }, () => {
     test.describe.configure({ mode: 'serial' });
     test.setTimeout(150000);
 
@@ -64,7 +64,7 @@ test.describe('Topup – Security', () => {
      * shared logged-in `session`, so it doesn't disturb the other tests'
      * session state.
      */
-    test('direct URL access without an authenticated session redirects to login', async ({ browser }) => {
+    test('direct URL access without an authenticated session redirects to login', { annotation: [{ type: 'testcase', description: "TUP-04: Direct URL requires auth" }] }, async ({ browser }) => {
         const freshContext = await browser.newContext();
         try {
             const freshPage = await freshContext.newPage();

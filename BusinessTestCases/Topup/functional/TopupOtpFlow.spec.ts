@@ -18,7 +18,7 @@ import { findTopupCase, loginToTopup, gotoTopupScreen, reachOtpScreen, type Topu
 // Split out from Happy Path / Negative / UI / Security / API — see
 // TopupHelper.ts's shared setup (loginToTopup/gotoTopupScreen/reachOtpScreen).
 
-test.describe('Topup – OTP Flow', () => {
+test.describe('Topup – OTP Flow', { tag: ['@topup', '@functional'], annotation: [{ type: 'feature', description: 'Topup' }, { type: 'layer', description: 'functional' }] }, () => {
     test.describe.configure({ mode: 'serial' });
     test.setTimeout(150000);
 
@@ -73,7 +73,7 @@ test.describe('Topup – OTP Flow', () => {
     });
 
     /** TUP-25 */
-    test('resend stays disabled while the countdown is active', async () => {
+    test('resend stays disabled while the countdown is active', { annotation: [{ type: 'testcase', description: "TUP-25: Resend before expiry" }] }, async () => {
         const { otp } = session;
         await reachOtpScreen(session, 'visa', findTopupCase('VISA'));
         await expect(otp.resendButton).toBeDisabled();
@@ -86,7 +86,7 @@ test.describe('Topup – OTP Flow', () => {
      * down in real time rather than being a static label. Two reads a few
      * seconds apart, strictly decreasing, is the minimal proof of that.
      */
-    test('countdown timer actually counts down in real time', async () => {
+    test('countdown timer actually counts down in real time', { annotation: [{ type: 'testcase', description: "TUP-24: Countdown timer behavior" }] }, async () => {
         const { otp } = session;
         await reachOtpScreen(session, 'visa', findTopupCase('VISA'));
         const first = await otp.getRemainingSeconds();
@@ -106,7 +106,7 @@ test.describe('Topup – OTP Flow', () => {
      * instead: the countdown jumping back up near its original starting
      * value, rather than continuing from 0.
      */
-    test('resend enables after the countdown expires and restarts the timer', async () => {
+    test('resend enables after the countdown expires and restarts the timer', { annotation: [{ type: 'testcase', description: "TUP-26: Resend after expiry" }] }, async () => {
         const { otp } = session;
         await reachOtpScreen(session, 'visa', findTopupCase('VISA'));
         const seconds = await otp.getRemainingSeconds() || 90;
@@ -123,7 +123,7 @@ test.describe('Topup – OTP Flow', () => {
     });
 
     /** TUP-29 */
-    test('Cancel aborts the top-up, returns to the main form, and leaves the balance unchanged', async () => {
+    test('Cancel aborts the top-up, returns to the main form, and leaves the balance unchanged', { annotation: [{ type: 'testcase', description: "TUP-29: Cancel aborts the top-up" }] }, async () => {
         const { topup, otp } = session;
         await topup.getBalanceBeforeTopup();
         await reachOtpScreen(session, 'visa', findTopupCase('VISA'));
