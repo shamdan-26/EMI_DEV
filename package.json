@@ -1,14 +1,22 @@
 {
-  "name": "mjdpay-automation-playwright-testing",
+  "name": "emi_dev",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
     "test": "cross-env ENV=dev npx playwright test",
-    "test:uat": "cross-env ENV=uat npx playwright test",
     "test:dev": "cross-env ENV=dev npx playwright test",
-    "test:preprod": "cross-env ENV=preprod npx playwright test",
-    "prepare": "husky"
+    "test:pos": "cross-env ENV=dev npx playwright test BusinessTestCases/PosTransactions",
+    "postman:pos": "npx --yes newman run postman/POS-API-majdpay.postman_collection.json -e postman/POS-dev.postman_environment.json --reporters cli,json --reporter-json-export test-results/newman-pos.json",
+    "postman:registration": "npx --yes newman run postman/Registration-API-majdpay.postman_collection.json -e postman/Registration-dev.postman_environment.json --reporters cli,json --reporter-json-export test-results/newman-registration.json",
+    "postman:topup": "npx --yes newman run postman/Topup-API-majdpay.postman_collection.json -e postman/Topup-dev.postman_environment.json --folder \"1. Payment Methods\" --folder \"2. Summary\" --folder \"3. Initiate Payment\" --folder \"4. OTP Settings\" --folder \"5. Verify OTP\" --folder \"7. Balance\" --reporters cli,json --reporter-json-export test-results/newman-topup.json",
+    "postman:wallet-snapshot-admin": "npx --yes newman run postman/WalletSnapshotAdmin-API-majdpay.postman_collection.json -e postman/WalletSnapshotAdmin-dev.postman_environment.json --folder \"3. Negative / Auth (no token needed - confirmed live)\" --reporters cli,json --reporter-json-export test-results/newman-wallet-snapshot-admin.json",
+    "postman:wallet-snapshot-job": "npx --yes newman run postman/WalletSnapshotJob-API-majdpay.postman_collection.json -e postman/WalletSnapshotJob-dev.postman_environment.json --folder \"3. Gateway routing check (safe, read-only, confirmed live)\" --reporters cli,json --reporter-json-export test-results/newman-wallet-snapshot-job.json",
+    "postman:services": "node scripts/run-service-collections.mjs",
+    "prepare": "husky",
+    "build:manual-testcases": "node scripts/build-manual-testcases.mjs",
+    "build:testcase-exports": "node scripts/build-testcase-exports.mjs",
+    "build:manual-by-feature": "node scripts/build-manual-by-feature.mjs"
   },
   "keywords": [],
   "author": "",
@@ -19,6 +27,7 @@
     "@playwright/test": "^1.60.0",
     "@types/imapflow": "^1.0.23",
     "@types/mailparser": "^3.4.6",
+    "@types/mssql": "^12.3.0",
     "@types/node": "^25.9.1",
     "cross-env": "^10.1.0",
     "dotenv": "^17.4.2",
@@ -27,5 +36,9 @@
     "imapflow": "^1.5.0",
     "mailparser": "^3.9.14",
     "typescript": "^6.0.3"
+  },
+  "dependencies": {
+    "mongodb": "^7.6.0",
+    "mssql": "^12.7.2"
   }
 }

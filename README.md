@@ -1,4 +1,4 @@
-# MJD Pay — Playwright Automation
+# EMI_DEV — Playwright Automation
 
 End-to-end UI and API test automation for the MJD Pay business banking app, built with [Playwright Test](https://playwright.dev/) and TypeScript.
 
