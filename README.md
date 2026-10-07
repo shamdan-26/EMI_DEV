@@ -9,15 +9,13 @@ npm install
 npx playwright install
 ```
 
-Copy the relevant `.env.<env>` file (see [Environments](#environments)) into the project root before running anything.
+Create a `.env.dev` file in the project root (see [Environment](#environment)) before running anything. `.env.*` files are gitignored — never commit them.
 
 ## Running tests
 
 ```bash
-# Run everything against a given environment
-npm run test:dev       # ENV=dev      — local/dev backend, OTP hardcoded to 00000000
-npm run test:uat       # ENV=uat      — UAT backend, real OTP via the shared test mailbox
-npm run test:preprod   # ENV=preprod  — pre-production backend
+# Run everything against the dev environment (the only supported environment)
+npm run test:dev       # ENV=dev      — dev backend, OTP hardcoded to 00000000
 
 # Run a single spec file
 npx playwright test BusinessTestCases/Login/functional/LoginHappyPath.spec.ts
@@ -35,22 +33,24 @@ npx playwright test --ui
 npx playwright show-report
 ```
 
-`ENV` selects which `.env.<ENV>` file `playwright.config.ts` loads via `dotenv`. `cross-env` (used in the npm scripts) sets it cross-platform; when calling `npx playwright test` directly, prefix with `cross-env ENV=uat` (or set the variable however your shell supports it).
+`ENV` selects which `.env.<ENV>` file `playwright.config.ts` loads via `dotenv`. `cross-env` (used in the npm scripts) sets it cross-platform; when calling `npx playwright test` directly, prefix with `cross-env ENV=dev` (or set the variable however your shell supports it).
 
-## Environments
+## Environment
+
+Dev is the only environment this suite targets; UAT and preprod support has been removed. The variables below go in `.env.dev`.
 
 | Variable | Used by |
 |---|---|
 | `BASE_URL` | every helper/page object |
-| `IMAP_HOST`, `IMAP_PORT`, `IMAP_USER` | fetching real OTPs from the shared test mailbox (UAT/preprod) |
+| `IMAP_HOST`, `IMAP_PORT`, `IMAP_USER` | fetching real OTPs from the shared test mailbox (dev) |
 | `AZURE_TENANT_ID`, `AZURE_CLIENT_ID`, `AZURE_CLIENT_SECRET` | OAuth2 (XOAUTH2) app-only login to that mailbox — Exchange Online retired IMAP Basic Auth |
-| `UAT_COMPANY`, `UAT_MOBILE` | primary shared test account (homepage, bank transfer, login) |
-| `UAT_SETUP_COMPANY` / `_MOBILE` / `_PASSWORD` | used once by `support/global-setup.ts` |
-| `UAT_COMPANY_2`, `UAT_MOBILE_2`, ... `_3`, `_4` | additional homepage test accounts — the pool auto-extends as these are added, no code changes needed (see `Homepage/HomePageHelper.ts`) |
+| `DEV_COMPANY`, `DEV_MOBILE` | primary shared test account (homepage, bank transfer, login) |
+| `DEV_SETUP_COMPANY` / `_MOBILE` / `_PASSWORD` | used once by `support/global-setup.ts` |
+| `DEV_COMPANY_2`, `DEV_MOBILE_2`, ... `_3`, `_4` | additional homepage test accounts — the pool auto-extends as these are added, no code changes needed (see `Homepage/HomePageHelper.ts`) |
 
-`support/global-setup.ts` runs once before the suite: it authenticates every account in the homepage account pool and saves a `storageState` per account under `playwright/.auth/`. `support/global-teardown.ts` cleans those up afterward. Any spec using `test.use({ storageState: ... })` or the `Homepage` worker fixture (see below) picks up a pre-authenticated session instead of logging in per test.
+`support/global-setup.ts` runs once before the suite: it logs in with `DEV_SETUP_*` and saves `session.json`, then authenticates every account in the homepage account pool and saves a `storageState` per account under `playwright/.auth/`. `support/global-teardown.ts` cleans those up afterward. Any spec using `test.use({ storageState: ... })` or the `Homepage` worker fixture (see below) picks up a pre-authenticated session instead of logging in per test.
 
-In `ENV=dev`, OTP is always `00000000` and the mailbox is skipped entirely — real-OTP lookups only happen against UAT/preprod.
+In `ENV=dev`, OTP is always `00000000` and the mailbox is skipped entirely — real-OTP lookups only happen against dev.
 
 ## Project structure
 
@@ -89,9 +89,29 @@ BusinessTestCases/
     <Feature>Helper.ts           Each holds its own helper + functional/; specs log in per-test via a
                                  local async login helper (not fixtures.ts, not a shared beforeAll session)
 
+  BeneficiaryManagement/ · UserManagement/ · SubWallets/ · BillQr/ · CommissionManagement/ ·
+  Transactions/ · TransactionLedger/ · Balances/ · PaymentsTtl/
+    <Feature>Helper.ts           Feature-owned helper + functional/ · ui/ · api/ as needed
+
+  PosTransactions/              POS transactions, ledger, ACH transfers, terminal callback and the
+    api/ · ui/                  POS/ACH admin screens (see its README.md)
+
   Reconciliation/ · TransactionOperations/
     <Feature>Helper.ts           API-only, no page objects; every spec is test.skip() pending
     api/                         Admin Portal / Reconciliation Ops tooling access
+
+  WalletSnapshot/               Wallet-snapshotting epic — API-only; unauthenticated checks run,
+    api/                         admin-token cases are test.skip()
+
+  ServiceApis/                  Generated per-microservice scaffolds (all test.skip placeholders,
+                                registered only with SERVICE_API_SCAFFOLD=true / SERVICE_API_SMOKE=true)
+
+Other top-level folders
+  data/                         Test data (accounts, registration assets, mocks)
+  docs/                         Manual test cases, business knowledge, setup guides
+  scripts/                      Workbook builders, secret check, service-collection runner
+  support/                      global-setup/teardown, email OTP, SQL client
+  postman/                      Generated Postman collections + dev environment
 ```
 
 ### Fixtures — the two session lifecycles
