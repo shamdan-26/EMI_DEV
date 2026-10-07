@@ -6,13 +6,15 @@ EMI-2203), **Reconciliation** (EMI-4537 core framework, Done, plus the Dynamic R
 Management System overhaul stories EMI-4538/4541/4542/4543/4549/4550/4551, To Do — epic EMI-2177),
 **End-of-Day (EOD) Processing** (EMI-636, EMI-637, EMI-710, EMI-5258 — all Done — plus EMI-5920's
 recon_id three-way matching, To Do, and regression bug EMI-5771), **Transaction Reversal** (EMI-2028 —
-epic EMI-2208), and **Transaction Adjustment** (EMI-2219 — epic EMI-2209).
+epic EMI-2208), **Transaction Adjustment** (EMI-2219 — epic EMI-2209), and **Transaction Ledger
+Initiator Attribution** (EMI-5839 — BE task, status Testing as of 2026-08-02).
 
 Money Request is a wallet-holder-facing feature with an actual UI (like W2W Transfer or QR Payment).
-Reconciliation, EOD, Reversal, and Adjustment are **Finance/Ops and Admin Portal** functions — there is
-no Business Portal (merchant/biller) screen for any of them; they're exercised via Admin Portal tooling
-or backend job/API triggers, not the app under test in this repo. Cases below reflect that: sections
-B–E read as Finance/Ops procedures, not "log in as a business user and click X."
+Reconciliation, EOD, Reversal, Adjustment, and Ledger Initiator Attribution are **Finance/Ops and
+Admin Portal** functions — there is no Business Portal (merchant/biller) screen for any of them;
+they're exercised via Admin Portal tooling, backend job/API triggers, or direct ledger inspection, not
+the app under test in this repo. Cases below reflect that: sections B–F read as Finance/Ops
+procedures, not "log in as a business user and click X."
 
 Priority key: **P1** = blocks the release / core happy path, **P2** = important secondary behavior,
 **P3** = edge case / polish.
@@ -67,26 +69,26 @@ append-only, audit-logged rules.
 
 | ID | Title | Steps | Expected Result | Priority |
 |---|---|---|---|---|
-| RC-01 | Missing bank transaction flagged | Import a bank statement containing a transaction absent from `transaction_log` | Mismatch report lists it as a missing TXN in the system | P1 |
-| RC-02 | Amount/status/date discrepancy flagged | Import a statement where a matched TXN's amount, status, or date differs from the system record | Mismatch report lists the discrepancy with both values | P1 |
-| RC-03 | Bank omnibus balance vs Control Wallet mismatch flagged | Compare an imported bank balance against the system Control Wallet | Mismatch report flags any difference | P1 |
-| RC-04 | Missing bank transaction auto-inserted with correct metadata | Run the external reconciliation system function on a batch with a missing TXN | New row inserted with `txn_code`, `batch_transaction_reference`, a PENDING/SUCCESS pair, plus `reconciliation_batch_id`/`source`/`inserted_by`/`timestamp` | P1 |
-| RC-05 | Auto-inserted transaction updates running_balance | After RC-04's insert | Affected wallet's `running_balance` reflects the newly inserted transaction | P1 |
-| RC-06 | All external reconciliation actions logged | Run an external reconciliation cycle | Every action recorded in `reconciliation_runs` with `recon_id`, type, executed_by/at, totals, summary | P2 |
-| RC-07 | running_balance vs transaction_log mismatch triggers rebuild | Introduce a mismatch, run internal reconciliation reporting | Mismatch flagged; rebuild system function available/triggered | P1 |
-| RC-08 | Stale wallet-table balance flagged | A wallet's last `running_balance` record differs from its `wallets` table balance | Flagged in the internal reconciliation report | P1 |
-| RC-09 | Control wallet vs summed wallet balances mismatch flagged | Sum of all wallet balances ≠ control wallet balance | Flagged in the internal reconciliation report | P1 |
-| RC-10 | Manual rebuild via Admin UI succeeds | Admin triggers a running-balance rebuild for a `from_date`/`to_date` range | Job completes; `running_balance` matches `transaction_log` for that range; wallets updated | P1 |
-| RC-11 | Scheduled (nightly) rebuild succeeds | Let the nightly rebuild job run | Same outcome as RC-10, unattended | P2 |
-| RC-12 | Old entries archived before rebuild | Trigger a rebuild over a range with existing running_balance rows | Existing rows moved to `running_balance_history` before new rows are written | P2 |
-| RC-13 | Wallets table updated with correct last-valid-TXN balance | After a rebuild | `wallets` table balance matches the last valid TXN per wallet | P1 |
-| RC-14 | Custom reconciliation rule configured and applied | Admin configures a matching rule (EMI-4541 Rules Engine) | New rule is applied on the next reconciliation run | P2 |
-| RC-15 | Two systems' records paired for matching | Admin links two systems for reconciliation (EMI-4542 Pair Management) | Pair is created and used by subsequent runs | P2 |
-| RC-16 | New reconciliation data source registered | Admin registers a new system (EMI-4543 Systems Management) | System appears as a selectable reconciliation source | P2 |
-| RC-17 | External fields mapped to unified schema | Admin maps a new source's fields (EMI-4549 System Types & Unified Schema) | Mapping is saved and used during ingestion | P2 |
-| RC-18 | Ingestion source configured | Admin configures a file/API ingestion source (EMI-4550) | Source is available for scheduled/manual ingestion | P2 |
-| RC-19 | Manual reconciliation run + report generation | Admin manually triggers a run and generates a report (EMI-4551) | Run completes; report reflects matched/discrepant totals | P1 |
-| RC-20 | Reconciliation report exportable | Open a generated report and export/download it | File downloads with report contents intact | P3 |
+| RCN-01 | Missing bank transaction flagged | Import a bank statement containing a transaction absent from `transaction_log` | Mismatch report lists it as a missing TXN in the system | P1 |
+| RCN-02 | Amount/status/date discrepancy flagged | Import a statement where a matched TXN's amount, status, or date differs from the system record | Mismatch report lists the discrepancy with both values | P1 |
+| RCN-03 | Bank omnibus balance vs Control Wallet mismatch flagged | Compare an imported bank balance against the system Control Wallet | Mismatch report flags any difference | P1 |
+| RCN-04 | Missing bank transaction auto-inserted with correct metadata | Run the external reconciliation system function on a batch with a missing TXN | New row inserted with `txn_code`, `batch_transaction_reference`, a PENDING/SUCCESS pair, plus `reconciliation_batch_id`/`source`/`inserted_by`/`timestamp` | P1 |
+| RCN-05 | Auto-inserted transaction updates running_balance | After RCN-04's insert | Affected wallet's `running_balance` reflects the newly inserted transaction | P1 |
+| RCN-06 | All external reconciliation actions logged | Run an external reconciliation cycle | Every action recorded in `reconciliation_runs` with `recon_id`, type, executed_by/at, totals, summary | P2 |
+| RCN-07 | running_balance vs transaction_log mismatch triggers rebuild | Introduce a mismatch, run internal reconciliation reporting | Mismatch flagged; rebuild system function available/triggered | P1 |
+| RCN-08 | Stale wallet-table balance flagged | A wallet's last `running_balance` record differs from its `wallets` table balance | Flagged in the internal reconciliation report | P1 |
+| RCN-09 | Control wallet vs summed wallet balances mismatch flagged | Sum of all wallet balances ≠ control wallet balance | Flagged in the internal reconciliation report | P1 |
+| RCN-10 | Manual rebuild via Admin UI succeeds | Admin triggers a running-balance rebuild for a `from_date`/`to_date` range | Job completes; `running_balance` matches `transaction_log` for that range; wallets updated | P1 |
+| RCN-11 | Scheduled (nightly) rebuild succeeds | Let the nightly rebuild job run | Same outcome as RCN-10, unattended | P2 |
+| RCN-12 | Old entries archived before rebuild | Trigger a rebuild over a range with existing running_balance rows | Existing rows moved to `running_balance_history` before new rows are written | P2 |
+| RCN-13 | Wallets table updated with correct last-valid-TXN balance | After a rebuild | `wallets` table balance matches the last valid TXN per wallet | P1 |
+| RCN-14 | Custom reconciliation rule configured and applied | Admin configures a matching rule (EMI-4541 Rules Engine) | New rule is applied on the next reconciliation run | P2 |
+| RCN-15 | Two systems' records paired for matching | Admin links two systems for reconciliation (EMI-4542 Pair Management) | Pair is created and used by subsequent runs | P2 |
+| RCN-16 | New reconciliation data source registered | Admin registers a new system (EMI-4543 Systems Management) | System appears as a selectable reconciliation source | P2 |
+| RCN-17 | External fields mapped to unified schema | Admin maps a new source's fields (EMI-4549 System Types & Unified Schema) | Mapping is saved and used during ingestion | P2 |
+| RCN-18 | Ingestion source configured | Admin configures a file/API ingestion source (EMI-4550) | Source is available for scheduled/manual ingestion | P2 |
+| RCN-19 | Manual reconciliation run + report generation | Admin manually triggers a run and generates a report (EMI-4551) | Run completes; report reflects matched/discrepant totals | P1 |
+| RCN-20 | Reconciliation report exportable | Open a generated report and export/download it | File downloads with report contents intact | P3 |
 
 ---
 
@@ -164,6 +166,32 @@ inserts a `reversal_of` entry plus a new `adjustment_of` entry).
 
 ---
 
+## F. Transaction Ledger — Initiator Attribution (EMI-5839)
+
+Context: **BE task** — the transaction ledger's `initiator` field must be populated for both pending
+and successful ledger entries, sourced consistently across states. The ticket names only two flows:
+per a comment thread on EMI-5839 (Amer Majed Abdalrazeq, 2026-07-16), the initiator for both **Bill
+payment link** and **Wallet payment link** transactions is `"System, MjdPay Profile User"`. Acceptance
+criterion 4 ("list any transaction flows where initiator cannot be populated") is an open discovery
+item — the ticket does not enumerate the full set of ledger-writing flows, so full regression coverage
+is blocked until engineering delivers that list. No Business Portal UI surface displays this field
+(confirmed: `TransactionSummaryPage.ts`'s summary panel renders commission/VAT/total but nothing
+initiator-related) — this is a ledger/DB-level attribute, inspected the same way as Reconciliation's
+`transaction_log`/`running_balance` fields below.
+
+| ID | Title | Steps | Expected Result | Priority |
+|---|---|---|---|---|
+| LI-01 | Pending bill payment link ledger entry has initiator | Create a bill payment link; initiate payment; query the ledger entry while status = pending | Ledger entry exists with status `pending` and `initiator` = `"System, MjdPay Profile User"` | P1 |
+| LI-02 | Successful bill payment link ledger entry has initiator | Allow LI-01's transaction to settle; query the ledger entry once status = successful | Ledger entry exists with status `successful` and `initiator` = `"System, MjdPay Profile User"` | P1 |
+| LI-03 | Pending wallet payment link ledger entry has initiator | Create a wallet payment link; initiate payment; query the ledger entry while status = pending | Ledger entry exists with status `pending` and `initiator` = `"System, MjdPay Profile User"` | P1 |
+| LI-04 | Successful wallet payment link ledger entry has initiator | Allow LI-03's transaction to settle; query the ledger entry once status = successful | Ledger entry exists with status `successful` and `initiator` = `"System, MjdPay Profile User"` | P1 |
+| LI-05 | Initiator is consistent across pending → successful for the same transaction | Capture initiator at pending state, let the transaction settle, capture initiator at successful state, compare | Value is identical at both states — never overwritten, cleared, or re-sourced on transition | P1 |
+| LI-06 | Initiator field is never null/blank for in-scope flows | Query a sample of recent bill/wallet payment link ledger entries across both states | No record has a null, empty, or placeholder `initiator` value | P2 |
+| LI-07 | Initiator populated — or documented as unsupported — for ledger-writing flows beyond the two named | For every transaction flow that writes a ledger entry (not just bill/wallet payment link), execute a pending and successful transaction and inspect `initiator` | Either populated with a defined, documented value, or the flow appears on engineering's list of flows where initiator cannot be populated (AC 4) | P1 |
+| LI-08 | Ledger behavior for failed/cancelled/expired transactions | Drive a bill or wallet payment link transaction to failed/cancelled/expired; query the ledger entry | Document actual behavior — current AC only defines pending and successful, so this is an uncovered gap, not a defined pass/fail | P3 |
+
+---
+
 ## Automated coverage note
 
 - **Money Request** — `BusinessTestCases/MoneyRequest/functional/MoneyRequestFlow.spec.ts` is
@@ -179,11 +207,14 @@ inserts a `reversal_of` entry plus a new `adjustment_of` entry).
   `Login/api/LoginAPIFlow.spec.ts`), with every test `test.skip()`'d pending access to the
   Admin Portal / Castlemock mock-server / Ops tooling these jobs actually run against in UAT — kept in
   the suite rather than omitted, same rationale as `BankTransferCommission.spec.ts`:
-  - `BusinessTestCases/Reconciliation/api/ReconciliationFlow.spec.ts` (RC-01–20)
+  - `BusinessTestCases/Reconciliation/api/ReconciliationFlow.spec.ts` (RCN-01–20)
   - `BusinessTestCases/Reconciliation/api/EODFlow.spec.ts` (EOD-01–17)
   - `BusinessTestCases/TransactionOperations/api/TransactionReversal.spec.ts` (RV-01–10)
   - `BusinessTestCases/TransactionOperations/api/TransactionAdjustment.spec.ts` (AD-01–14)
+  - `BusinessTestCases/TransactionLedger/api/TransactionLedgerInitiator.spec.ts` (LI-01–08, EMI-5839)
 
   Remove each file's `test.skip()` once the corresponding Admin Portal / Ops tooling access exists.
   EOD-05/EOD-06 in particular have a fully-specified repro (EMI-5771) ready to implement the moment
-  Castlemock access is available.
+  Castlemock access is available. LI-07 specifically also needs engineering to deliver AC 4's flow
+  list before it can be implemented as anything other than a skip — it isn't just a tooling-access
+  gap.

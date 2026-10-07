@@ -1,0 +1,989 @@
+{
+  "RVU-33": {
+    "feature": "Registration",
+    "sub": "B. Verification & Uploads Step (Tab 3 of 3)",
+    "title": "Keep Sign Up disabled when required fields are empty",
+    "kept": "RVU-26",
+    "reason": "two sections of one screen, identical title and expected result"
+  },
+  "RVU-32": {
+    "feature": "Registration",
+    "sub": "B. Verification & Uploads Step (Tab 3 of 3)",
+    "title": "Display the Sign Up button",
+    "kept": "RVU-25",
+    "reason": "two sections of one screen, identical title and expected result"
+  },
+  "RVU-34": {
+    "feature": "Registration",
+    "sub": "B. Verification & Uploads Step (Tab 3 of 3)",
+    "title": "Display the IBAN field",
+    "kept": "RVU-09",
+    "reason": "two sections of one screen, identical title and expected result"
+  },
+  "RVU-35": {
+    "feature": "Registration",
+    "sub": "B. Verification & Uploads Step (Tab 3 of 3)",
+    "title": "Show the correct placeholder for IBAN",
+    "kept": "RVU-10",
+    "reason": "two sections of one screen, identical title and expected result"
+  },
+  "RVU-45": {
+    "feature": "Registration",
+    "sub": "B. Verification & Uploads Step (Tab 3 of 3)",
+    "title": "Display the \"Click to upload\" prompt for IBAN proof",
+    "kept": "RVU-13",
+    "reason": "two sections of one screen, identical title and expected result"
+  },
+  "RVU-43": {
+    "feature": "Registration",
+    "sub": "B. Verification & Uploads Step (Tab 3 of 3)",
+    "title": "Display the accepted file types for IBAN proof (PDF, JPG)",
+    "kept": "RVU-15",
+    "reason": "two sections of one screen, identical title and expected result"
+  },
+  "RVU-44": {
+    "feature": "Registration",
+    "sub": "B. Verification & Uploads Step (Tab 3 of 3)",
+    "title": "Display the max file size for IBAN proof (5MB)",
+    "kept": "RVU-16",
+    "reason": "two sections of one screen, identical title and expected result"
+  },
+  "RVU-46": {
+    "feature": "Registration",
+    "sub": "B. Verification & Uploads Step (Tab 3 of 3)",
+    "title": "Display the VAT Number field",
+    "kept": "RVU-17",
+    "reason": "two sections of one screen, identical title and expected result"
+  },
+  "RVU-47": {
+    "feature": "Registration",
+    "sub": "B. Verification & Uploads Step (Tab 3 of 3)",
+    "title": "Show the correct placeholder for VAT Number",
+    "kept": "RVU-18",
+    "reason": "two sections of one screen, identical title and expected result"
+  },
+  "RVU-36": {
+    "feature": "Registration",
+    "sub": "B. Verification & Uploads Step (Tab 3 of 3)",
+    "title": "Display the IBAN hint \"24 characters starting with SA\"",
+    "kept": "RVU-11",
+    "reason": "two sections of one screen, identical title and expected result"
+  },
+  "RVU-48": {
+    "feature": "Registration",
+    "sub": "B. Verification & Uploads Step (Tab 3 of 3)",
+    "title": "Display the VAT Number hint \"From your VAT certificate\"",
+    "kept": "RVU-19",
+    "reason": "two sections of one screen, identical title and expected result"
+  },
+  "RF-47": {
+    "feature": "Registration",
+    "sub": "D. Financial & Business Functionality",
+    "title": "Accept numeric input for Monthly Expected Sum Of Bills",
+    "kept": "RF-36",
+    "reason": "two sections of one screen, identical title and expected result"
+  },
+  "RF-48": {
+    "feature": "Registration",
+    "sub": "D. Financial & Business Functionality",
+    "title": "Accept numeric input for Expected Monthly Withdrawal",
+    "kept": "RF-37",
+    "reason": "two sections of one screen, identical title and expected result"
+  },
+  "RF-49": {
+    "feature": "Registration",
+    "sub": "D. Financial & Business Functionality",
+    "title": "Accept numeric input for Expected Monthly Deposit",
+    "kept": "RF-38",
+    "reason": "two sections of one screen, identical title and expected result"
+  },
+  "RF-65": {
+    "feature": "Registration",
+    "sub": "D. Financial & Business Functionality",
+    "title": "Open the Industries dropdown when clicked",
+    "kept": "RF-40",
+    "reason": "two sections of one screen, identical title and expected result"
+  },
+  "RF-67": {
+    "feature": "Registration",
+    "sub": "D. Financial & Business Functionality",
+    "title": "Open the Annual Income dropdown when clicked",
+    "kept": "RF-41",
+    "reason": "two sections of one screen, identical title and expected result"
+  },
+  "RF-46": {
+    "feature": "Registration",
+    "sub": "D. Financial & Business Functionality",
+    "title": "Accept numeric input for Monthly Expected Number Of Bills",
+    "kept": "RF-45",
+    "reason": "two sections of one screen, identical title and expected result"
+  },
+  "EMI-TC-2640": {
+    "feature": "Registration",
+    "sub": "Registration",
+    "title": "Business - Validate the user is unable to resend the code before the timer finishes.",
+    "kept": "EMI-TC-960",
+    "reason": "copied id block (55 pairs)"
+  },
+  "EMI-TC-2709": {
+    "feature": "Registration",
+    "sub": "Registration",
+    "title": "Business - Validate the user is unable to resend the code before the timer finishes.",
+    "kept": "EMI-TC-960",
+    "reason": "copied id block (55 pairs)"
+  },
+  "EMI-TC-2643": {
+    "feature": "Registration",
+    "sub": "Registration",
+    "title": "Business - Validate that the OTP input field accepts only the correct number of digits",
+    "kept": "EMI-TC-963",
+    "reason": "copied id block (55 pairs)"
+  },
+  "EMI-TC-2712": {
+    "feature": "Registration",
+    "sub": "Registration",
+    "title": "Business - Validate that the OTP input field accepts only the correct number of digits",
+    "kept": "EMI-TC-963",
+    "reason": "copied id block (55 pairs)"
+  },
+  "EMI-TC-2646": {
+    "feature": "Registration",
+    "sub": "Registration",
+    "title": "Business - Validate that appropriate error messages are displayed for incorrect OTP",
+    "kept": "EMI-TC-966",
+    "reason": "copied id block (55 pairs)"
+  },
+  "EMI-TC-2715": {
+    "feature": "Registration",
+    "sub": "Registration",
+    "title": "Business - Validate that appropriate error messages are displayed for incorrect OTP",
+    "kept": "EMI-TC-966",
+    "reason": "copied id block (55 pairs)"
+  },
+  "EMI-TC-2648": {
+    "feature": "Registration",
+    "sub": "Registration",
+    "title": "Business - Validate that the OTP form submission fails if the user clears the OTP field",
+    "kept": "EMI-TC-968",
+    "reason": "copied id block (55 pairs)"
+  },
+  "EMI-TC-2717": {
+    "feature": "Registration",
+    "sub": "Registration",
+    "title": "Business - Validate that the OTP form submission fails if the user clears the OTP field",
+    "kept": "EMI-TC-968",
+    "reason": "copied id block (55 pairs)"
+  },
+  "EMI-TC-2649": {
+    "feature": "Registration",
+    "sub": "Registration",
+    "title": "Business - Validate inability to past OTP contains spaces or characters",
+    "kept": "EMI-TC-969",
+    "reason": "copied id block (55 pairs)"
+  },
+  "EMI-TC-2718": {
+    "feature": "Registration",
+    "sub": "Registration",
+    "title": "Business - Validate inability to past OTP contains spaces or characters",
+    "kept": "EMI-TC-969",
+    "reason": "copied id block (55 pairs)"
+  },
+  "EMI-TC-2650": {
+    "feature": "Registration",
+    "sub": "Registration",
+    "title": "Business - Validate the ability to submit the OTP correctly after the user enters an invalid OTP and then enters the  Valid OTP.",
+    "kept": "EMI-TC-970",
+    "reason": "copied id block (55 pairs)"
+  },
+  "EMI-TC-2719": {
+    "feature": "Registration",
+    "sub": "Registration",
+    "title": "Business - Validate the ability to submit the OTP correctly after the user enters an invalid OTP and then enters the  Valid OTP.",
+    "kept": "EMI-TC-970",
+    "reason": "copied id block (55 pairs)"
+  },
+  "EMI-TC-2713": {
+    "feature": "Registration",
+    "sub": "Registration",
+    "title": "Business - Validate that the OTP field is empty when the page is loaded",
+    "kept": "EMI-TC-964",
+    "reason": "copied id block (55 pairs)"
+  },
+  "EMI-TC-2644": {
+    "feature": "Registration",
+    "sub": "Registration",
+    "title": "Business - Validate that the OTP field is empty when the page is loaded",
+    "kept": "EMI-TC-964",
+    "reason": "copied id block (55 pairs)"
+  },
+  "EMI-TC-2708": {
+    "feature": "Registration",
+    "sub": "Registration",
+    "title": "Business - Verify that the OTP expiration timer resets after the user clicks the \"Click to Resend\" link.",
+    "kept": "EMI-TC-959",
+    "reason": "copied id block (55 pairs)"
+  },
+  "EMI-TC-2639": {
+    "feature": "Registration",
+    "sub": "Registration",
+    "title": "Business - Verify that the OTP expiration timer resets after the user clicks the \"Click to Resend\" link.",
+    "kept": "EMI-TC-959",
+    "reason": "copied id block (55 pairs)"
+  },
+  "EMI-TC-2645": {
+    "feature": "Registration",
+    "sub": "Registration",
+    "title": "Business - Validate that pressing the backspace key clears the OTP correctly.",
+    "kept": "EMI-TC-965",
+    "reason": "copied id block (55 pairs)"
+  },
+  "EMI-TC-2714": {
+    "feature": "Registration",
+    "sub": "Registration",
+    "title": "Business - Validate that pressing the backspace key clears the OTP correctly.",
+    "kept": "EMI-TC-965",
+    "reason": "copied id block (55 pairs)"
+  },
+  "EMI-TC-2647": {
+    "feature": "Registration",
+    "sub": "Registration",
+    "title": "Business - Validate that the OTP input field is focused automatically during typing",
+    "kept": "EMI-TC-967",
+    "reason": "copied id block (55 pairs)"
+  },
+  "EMI-TC-2716": {
+    "feature": "Registration",
+    "sub": "Registration",
+    "title": "Business - Validate that the OTP input field is focused automatically during typing",
+    "kept": "EMI-TC-967",
+    "reason": "copied id block (55 pairs)"
+  },
+  "EMI-TC-2710": {
+    "feature": "Registration",
+    "sub": "Registration",
+    "title": "Business - Verify that the \"Click to resend\" link activates after the timer finishes.",
+    "kept": "EMI-TC-961",
+    "reason": "copied id block (55 pairs)"
+  },
+  "EMI-TC-2641": {
+    "feature": "Registration",
+    "sub": "Registration",
+    "title": "Business - Verify that the \"Click to resend\" link activates after the timer finishes.",
+    "kept": "EMI-TC-961",
+    "reason": "copied id block (55 pairs)"
+  },
+  "EMI-TC-2711": {
+    "feature": "Registration",
+    "sub": "Registration",
+    "title": "Business - Close Verification Code popup",
+    "kept": "EMI-TC-962",
+    "reason": "copied id block (55 pairs)"
+  },
+  "EMI-TC-2642": {
+    "feature": "Registration",
+    "sub": "Registration",
+    "title": "Business - Close Verification Code popup",
+    "kept": "EMI-TC-962",
+    "reason": "copied id block (55 pairs)"
+  },
+  "EMI-TC-2726": {
+    "feature": "Registration",
+    "sub": "Registration",
+    "title": "Business - Verify the Terms & Conditions link",
+    "kept": "EMI-TC-971",
+    "reason": "copied id block (55 pairs)"
+  },
+  "EMI-TC-2657": {
+    "feature": "Registration",
+    "sub": "Registration",
+    "title": "Business - Verify the Terms & Conditions link",
+    "kept": "EMI-TC-971",
+    "reason": "copied id block (55 pairs)"
+  },
+  "RI-69": {
+    "feature": "Registration",
+    "sub": "H. National ID / Iqama Field",
+    "title": "Be empty on initial page load",
+    "kept": "RI-56",
+    "reason": "two sections of one screen, identical title and expected result"
+  },
+  "RI-78": {
+    "feature": "Registration",
+    "sub": "H. National ID / Iqama Field",
+    "title": "Handle a 1000-character input without crashing",
+    "kept": "RI-64",
+    "reason": "two sections of one screen, identical title and expected result"
+  },
+  "RI-70": {
+    "feature": "Registration",
+    "sub": "H. National ID / Iqama Field",
+    "title": "Show the Clear button after a value is entered",
+    "kept": "RI-57",
+    "reason": "two sections of one screen, identical title and expected result"
+  },
+  "RI-72": {
+    "feature": "Registration",
+    "sub": "H. National ID / Iqama Field",
+    "title": "Hide the Clear button after the field is emptied via Clear",
+    "kept": "RI-59",
+    "reason": "two sections of one screen, identical title and expected result"
+  },
+  "EMI-TC-2686": {
+    "feature": "Registration",
+    "sub": "Registration",
+    "title": "Business - Validate the email format",
+    "kept": "EMI-TC-2617",
+    "reason": "copied id block (55 pairs)"
+  },
+  "EMI-TC-2687": {
+    "feature": "Registration",
+    "sub": "Registration",
+    "title": "Business - Validate that the system call Tahaqaq",
+    "kept": "EMI-TC-2618",
+    "reason": "copied id block (55 pairs)"
+  },
+  "EMI-TC-2688": {
+    "feature": "Registration",
+    "sub": "Registration",
+    "title": "Business - Validate that the system call ELM (Yaqeeen)",
+    "kept": "EMI-TC-2619",
+    "reason": "copied id block (55 pairs)"
+  },
+  "EMI-TC-2704": {
+    "feature": "Registration",
+    "sub": "Registration",
+    "title": "Business - Validate the ability to upload PDF, PNG, jpeg, and JPG files in VAT & BANK File",
+    "kept": "EMI-TC-2635",
+    "reason": "copied id block (55 pairs)"
+  },
+  "EMI-TC-2720": {
+    "feature": "Registration",
+    "sub": "Registration",
+    "title": "Business - Validate that the system call Wathiq",
+    "kept": "EMI-TC-2651",
+    "reason": "copied id block (55 pairs)"
+  },
+  "EMI-TC-2695": {
+    "feature": "Registration",
+    "sub": "Registration",
+    "title": "Business - Verify the Monthly Expected Sum of bill field accepted only 12 digit",
+    "kept": "EMI-TC-2626",
+    "reason": "copied id block (55 pairs)"
+  },
+  "EMI-TC-2703": {
+    "feature": "Registration",
+    "sub": "Registration",
+    "title": "Business - Validate that the VAT Field does not accept Invalid Input",
+    "kept": "EMI-TC-2634",
+    "reason": "copied id block (55 pairs)"
+  },
+  "EMI-TC-2705": {
+    "feature": "Registration",
+    "sub": "Registration",
+    "title": "Business - Validating the site will display a clear error message when trying to upload an unsupported field to the VAT & Bank certificates fields.",
+    "kept": "EMI-TC-2636",
+    "reason": "copied id block (55 pairs)"
+  },
+  "EMI-TC-2692": {
+    "feature": "Registration",
+    "sub": "Registration",
+    "title": "Business - Validate that the Monthly Expected Number of Bills Field does not accept Invalid Input",
+    "kept": "EMI-TC-2623",
+    "reason": "copied id block (55 pairs)"
+  },
+  "EMI-TC-2700": {
+    "feature": "Registration",
+    "sub": "Registration",
+    "title": "Business - Register with valid VAT",
+    "kept": "EMI-TC-2631",
+    "reason": "copied id block (55 pairs)"
+  },
+  "EMI-TC-2707": {
+    "feature": "Registration",
+    "sub": "Registration",
+    "title": "Business - Validate the site/App will save the data when pressing on Back button during the registration",
+    "kept": "EMI-TC-2638",
+    "reason": "copied id block (55 pairs)"
+  },
+  "EMI-TC-2672": {
+    "feature": "Registration",
+    "sub": "Registration",
+    "title": "Business - Validate the Registration attempt fails when using Invalid Mobile Number",
+    "kept": "EMI-TC-2603",
+    "reason": "copied id block (55 pairs)"
+  },
+  "EMI-TC-2673": {
+    "feature": "Registration",
+    "sub": "Registration",
+    "title": "Business - Validate that the CRN Field does not accept more than 15 digits.",
+    "kept": "EMI-TC-2604",
+    "reason": "copied id block (55 pairs)"
+  },
+  "EMI-TC-2675": {
+    "feature": "Registration",
+    "sub": "Registration",
+    "title": "Business - Validate that the CRN Field does not accept Non-Numeric Characters.",
+    "kept": "EMI-TC-2606",
+    "reason": "copied id block (55 pairs)"
+  },
+  "EMI-TC-2676": {
+    "feature": "Registration",
+    "sub": "Registration",
+    "title": "Business - Prevent registration with registered CRN",
+    "kept": "EMI-TC-2607",
+    "reason": "copied id block (55 pairs)"
+  },
+  "EMI-TC-2679": {
+    "feature": "Registration",
+    "sub": "Registration",
+    "title": "Business - Validate that the Mobile Number Field.",
+    "kept": "EMI-TC-2610",
+    "reason": "copied id block (55 pairs)"
+  },
+  "EMI-TC-2682": {
+    "feature": "Registration",
+    "sub": "Registration",
+    "title": "Business - Validate that the National ID Field does not accept More Than ten Characters.",
+    "kept": "EMI-TC-2613",
+    "reason": "copied id block (55 pairs)"
+  },
+  "EMI-TC-2683": {
+    "feature": "Registration",
+    "sub": "Registration",
+    "title": "Business - Validate that the National ID Field does not accept Non-Numeric Characters",
+    "kept": "EMI-TC-2614",
+    "reason": "copied id block (55 pairs)"
+  },
+  "EMI-TC-2684": {
+    "feature": "Registration",
+    "sub": "Registration",
+    "title": "Business - Register with an invalid National ID",
+    "kept": "EMI-TC-2615",
+    "reason": "copied id block (55 pairs)"
+  },
+  "EMI-TC-2685": {
+    "feature": "Registration",
+    "sub": "Registration",
+    "title": "Business - Validate that the system prevents the user from registering without email",
+    "kept": "EMI-TC-2616",
+    "reason": "copied id block (55 pairs)"
+  },
+  "EMI-TC-2694": {
+    "feature": "Registration",
+    "sub": "Registration",
+    "title": "Business - Verify the Monthly Expected Number of bill field accepted only 12 digit",
+    "kept": "EMI-TC-2625",
+    "reason": "copied id block (55 pairs)"
+  },
+  "EMI-TC-2696": {
+    "feature": "Registration",
+    "sub": "Registration",
+    "title": "Business - Verify ability to select Bank & Indestries correctly",
+    "kept": "EMI-TC-2627",
+    "reason": "copied id block (55 pairs)"
+  },
+  "EMI-TC-2701": {
+    "feature": "Registration",
+    "sub": "Registration",
+    "title": "Business - Validate registration with invalid IBAN",
+    "kept": "EMI-TC-2632",
+    "reason": "copied id block (55 pairs)"
+  },
+  "EMI-TC-2678": {
+    "feature": "Registration",
+    "sub": "Registration",
+    "title": "Business - Validate that the Mobile Number Field does not accept More Than 11 digits.",
+    "kept": "EMI-TC-2609",
+    "reason": "copied id block (55 pairs)"
+  },
+  "EMI-TC-2680": {
+    "feature": "Registration",
+    "sub": "Registration",
+    "title": "Business - Validate the National ID / Iqama number.",
+    "kept": "EMI-TC-2611",
+    "reason": "copied id block (55 pairs)"
+  },
+  "EMI-TC-2699": {
+    "feature": "Registration",
+    "sub": "Registration",
+    "title": "Business - Register with A valid IBAN",
+    "kept": "EMI-TC-2630",
+    "reason": "copied id block (55 pairs)"
+  },
+  "EMI-TC-2671": {
+    "feature": "Registration",
+    "sub": "Registration",
+    "title": "Business - Validate that the fields in the first registration form fields are all required",
+    "kept": "EMI-TC-2602",
+    "reason": "copied id block (55 pairs)"
+  },
+  "EMI-TC-2674": {
+    "feature": "Registration",
+    "sub": "Registration",
+    "title": "Business - Validate that the CRN Field does not accept Less Than ten digits.",
+    "kept": "EMI-TC-2605",
+    "reason": "copied id block (55 pairs)"
+  },
+  "EMI-TC-2677": {
+    "feature": "Registration",
+    "sub": "Registration",
+    "title": "Business - Validate that the Mobile Number Field does not accept Less Than nine digits.",
+    "kept": "EMI-TC-2608",
+    "reason": "copied id block (55 pairs)"
+  },
+  "EMI-TC-2663": {
+    "feature": "Registration",
+    "sub": "Registration",
+    "title": "Business - Register new user",
+    "kept": "EMI-TC-2594",
+    "reason": "copied id block (55 pairs)"
+  },
+  "EMI-TC-2664": {
+    "feature": "Registration",
+    "sub": "Registration",
+    "title": "Business - Validate the registration form - First page.",
+    "kept": "EMI-TC-2595",
+    "reason": "copied id block (55 pairs)"
+  },
+  "EMI-TC-2689": {
+    "feature": "Registration",
+    "sub": "Registration",
+    "title": "Business - Validate the registration form - second page",
+    "kept": "EMI-TC-2620",
+    "reason": "copied id block (55 pairs)"
+  },
+  "EMI-TC-2697": {
+    "feature": "Registration",
+    "sub": "Registration",
+    "title": "Business - Verify the Registration Page contains the correct Fields/Buttons",
+    "kept": "EMI-TC-2628",
+    "reason": "copied id block (55 pairs)"
+  },
+  "EMI-TC-2698": {
+    "feature": "Registration",
+    "sub": "Registration",
+    "title": "Business - Validate the registration form - third page",
+    "kept": "EMI-TC-2629",
+    "reason": "copied id block (55 pairs)"
+  },
+  "EMI-TC-2706": {
+    "feature": "Registration",
+    "sub": "Registration",
+    "title": "Business - Verify the file name is displayed correctly inside the BANK & VAT certificates field",
+    "kept": "EMI-TC-2637",
+    "reason": "copied id block (55 pairs)"
+  },
+  "EMI-TC-2702": {
+    "feature": "Registration",
+    "sub": "Registration",
+    "title": "Business - Validate IBAN with spaces",
+    "kept": "EMI-TC-2633",
+    "reason": "copied id block (55 pairs)"
+  },
+  "EMI-TC-2666": {
+    "feature": "Registration",
+    "sub": "Registration",
+    "title": "Business - Register with a registered Mobile Number",
+    "kept": "EMI-TC-2597",
+    "reason": "copied id block (55 pairs)"
+  },
+  "EMI-TC-2669": {
+    "feature": "Registration",
+    "sub": "Registration",
+    "title": "Business - Register with A valid non-Saudi National ID",
+    "kept": "EMI-TC-2600",
+    "reason": "copied id block (55 pairs)"
+  },
+  "EMI-TC-2670": {
+    "feature": "Registration",
+    "sub": "Registration",
+    "title": "Business - Register with Saudi Mobile Number",
+    "kept": "EMI-TC-2601",
+    "reason": "copied id block (55 pairs)"
+  },
+  "EMI-TC-2681": {
+    "feature": "Registration",
+    "sub": "Registration",
+    "title": "Business - Validate that the National ID Field does not accept Less Than ten digits",
+    "kept": "EMI-TC-2612",
+    "reason": "copied id block (55 pairs)"
+  },
+  "EMI-TC-2690": {
+    "feature": "Registration",
+    "sub": "Registration",
+    "title": "Business - Register with a valid Expected Number of Bills.",
+    "kept": "EMI-TC-2621",
+    "reason": "copied id block (55 pairs)"
+  },
+  "EMI-TC-2691": {
+    "feature": "Registration",
+    "sub": "Registration",
+    "title": "Business - Register with Expected Sum of Bills",
+    "kept": "EMI-TC-2622",
+    "reason": "copied id block (55 pairs)"
+  },
+  "EMI-TC-3402": {
+    "feature": "Dashboard & Wallets",
+    "sub": "Admin Homepage/Dashboard",
+    "title": "Expiry Updates Stats",
+    "kept": "EMI-TC-3104",
+    "reason": "copied id block (11 pairs)"
+  },
+  "EMI-TC-3399": {
+    "feature": "Dashboard & Wallets",
+    "sub": "Admin Homepage/Dashboard",
+    "title": "No Data Scenario",
+    "kept": "EMI-TC-3101",
+    "reason": "copied id block (11 pairs)"
+  },
+  "EMI-TC-3400": {
+    "feature": "Dashboard & Wallets",
+    "sub": "Admin Homepage/Dashboard",
+    "title": "Real-time Update",
+    "kept": "EMI-TC-3102",
+    "reason": "copied id block (11 pairs)"
+  },
+  "EMI-TC-3401": {
+    "feature": "Dashboard & Wallets",
+    "sub": "Admin Homepage/Dashboard",
+    "title": "Paid Bill Updates Stats",
+    "kept": "EMI-TC-3103",
+    "reason": "copied id block (11 pairs)"
+  },
+  "EMI-TC-3403": {
+    "feature": "Dashboard & Wallets",
+    "sub": "Admin Homepage/Dashboard",
+    "title": "Beneficiary Aggregation",
+    "kept": "EMI-TC-3105",
+    "reason": "copied id block (11 pairs)"
+  },
+  "EMI-TC-3405": {
+    "feature": "Dashboard & Wallets",
+    "sub": "Admin Homepage/Dashboard",
+    "title": "Role Access Control",
+    "kept": "EMI-TC-3107",
+    "reason": "copied id block (11 pairs)"
+  },
+  "EMI-TC-3395": {
+    "feature": "Dashboard & Wallets",
+    "sub": "Admin Homepage/Dashboard",
+    "title": "Display Total Expired Bills",
+    "kept": "EMI-TC-3097",
+    "reason": "copied id block (11 pairs)"
+  },
+  "EMI-TC-3392": {
+    "feature": "Dashboard & Wallets",
+    "sub": "Admin Homepage/Dashboard",
+    "title": "Display Total Paid Bills",
+    "kept": "EMI-TC-3094",
+    "reason": "copied id block (11 pairs)"
+  },
+  "EMI-TC-3393": {
+    "feature": "Dashboard & Wallets",
+    "sub": "Admin Homepage/Dashboard",
+    "title": "Display Total Unpaid Bills",
+    "kept": "EMI-TC-3095",
+    "reason": "copied id block (11 pairs)"
+  },
+  "EMI-TC-3394": {
+    "feature": "Dashboard & Wallets",
+    "sub": "Admin Homepage/Dashboard",
+    "title": "Display Total Created (Pending Approval)",
+    "kept": "EMI-TC-3096",
+    "reason": "copied id block (11 pairs)"
+  },
+  "EMI-TC-3396": {
+    "feature": "Dashboard & Wallets",
+    "sub": "Admin Homepage/Dashboard",
+    "title": "Display Total Bills Paid This Month",
+    "kept": "EMI-TC-3098",
+    "reason": "copied id block (11 pairs)"
+  },
+  "EMI-TC-1109": {
+    "feature": "Roles & Permissions",
+    "sub": "Business Manage Users",
+    "title": "Combine invalid user search and Active filter.",
+    "kept": "EMI-TC-379",
+    "reason": "copied id block (14 pairs)"
+  },
+  "EMI-TC-1111": {
+    "feature": "Roles & Permissions",
+    "sub": "Business Manage Users",
+    "title": "Combine invalid user search and Inactive filter.",
+    "kept": "EMI-TC-381",
+    "reason": "copied id block (14 pairs)"
+  },
+  "EMI-TC-1113": {
+    "feature": "Roles & Permissions",
+    "sub": "Business Manage Users",
+    "title": "Combine invalid user search and Locked filter.",
+    "kept": "EMI-TC-383",
+    "reason": "copied id block (14 pairs)"
+  },
+  "EMI-TC-1100": {
+    "feature": "Roles & Permissions",
+    "sub": "Business Manage Users",
+    "title": "Validate Manage Users Page",
+    "kept": "EMI-TC-370",
+    "reason": "copied id block (14 pairs)"
+  },
+  "EMI-TC-1123": {
+    "feature": "Roles & Permissions",
+    "sub": "Business Manage Users",
+    "title": "Validate Manage Users page",
+    "kept": "EMI-TC-370",
+    "reason": "copied id block (14 pairs)"
+  },
+  "EMI-TC-1114": {
+    "feature": "Roles & Permissions",
+    "sub": "Business Manage Users",
+    "title": "Validate add new user popup.",
+    "kept": "EMI-TC-384",
+    "reason": "copied id block (14 pairs)"
+  },
+  "EMI-TC-1103": {
+    "feature": "Roles & Permissions",
+    "sub": "Business Manage Users",
+    "title": "Clear Search Selection",
+    "kept": "EMI-TC-373",
+    "reason": "copied id block (14 pairs)"
+  },
+  "EMI-TC-1105": {
+    "feature": "Roles & Permissions",
+    "sub": "Business Manage Users",
+    "title": "Filter Active users",
+    "kept": "EMI-TC-375",
+    "reason": "copied id block (14 pairs)"
+  },
+  "EMI-TC-1106": {
+    "feature": "Roles & Permissions",
+    "sub": "Business Manage Users",
+    "title": "Filter Inactive users",
+    "kept": "EMI-TC-376",
+    "reason": "copied id block (14 pairs)"
+  },
+  "EMI-TC-1107": {
+    "feature": "Roles & Permissions",
+    "sub": "Business Manage Users",
+    "title": "Filter Locked users",
+    "kept": "EMI-TC-377",
+    "reason": "copied id block (14 pairs)"
+  },
+  "EMI-TC-1108": {
+    "feature": "Roles & Permissions",
+    "sub": "Business Manage Users",
+    "title": "Combine valid user search and Active filter.",
+    "kept": "EMI-TC-378",
+    "reason": "copied id block (14 pairs)"
+  },
+  "EMI-TC-1110": {
+    "feature": "Roles & Permissions",
+    "sub": "Business Manage Users",
+    "title": "Combine valid user search and Inactive filter.",
+    "kept": "EMI-TC-380",
+    "reason": "copied id block (14 pairs)"
+  },
+  "EMI-TC-1112": {
+    "feature": "Roles & Permissions",
+    "sub": "Business Manage Users",
+    "title": "Combine valid user search and Locked filter.",
+    "kept": "EMI-TC-382",
+    "reason": "copied id block (14 pairs)"
+  },
+  "EMI-TC-1115": {
+    "feature": "Roles & Permissions",
+    "sub": "Business Manage Users",
+    "title": "Validate that the confirm is active upon adding all data.",
+    "kept": "EMI-TC-385",
+    "reason": "copied id block (14 pairs)"
+  },
+  "EMI-TC-1119": {
+    "feature": "Roles & Permissions",
+    "sub": "Business Manage Users",
+    "title": "Cancel create a user",
+    "kept": "EMI-TC-389",
+    "reason": "copied id block (14 pairs)"
+  },
+  "EMI-TC-2333": {
+    "feature": "Profile & Manage Accounts",
+    "sub": "Profile",
+    "title": "Business - Verify that the Business can log out of their user account.",
+    "kept": "EMI-TC-2306",
+    "reason": "copied id block (20 pairs)"
+  },
+  "EMI-TC-2341": {
+    "feature": "Profile & Manage Accounts",
+    "sub": "Profile",
+    "title": "Business - Validate that the password length matches the backend configuration for the New Password field.",
+    "kept": "EMI-TC-2314",
+    "reason": "copied id block (20 pairs)"
+  },
+  "EMI-TC-2342": {
+    "feature": "Profile & Manage Accounts",
+    "sub": "Profile",
+    "title": "Business - Validate that the password length matches the backend configuration for the Confirm Password field.",
+    "kept": "EMI-TC-2315",
+    "reason": "copied id block (20 pairs)"
+  },
+  "EMI-TC-2328": {
+    "feature": "Profile & Manage Accounts",
+    "sub": "Profile",
+    "title": "Business - Verify that the business is able to change the system mood (drop down)",
+    "kept": "EMI-TC-2301",
+    "reason": "copied id block (20 pairs)"
+  },
+  "EMI-TC-2329": {
+    "feature": "Profile & Manage Accounts",
+    "sub": "Profile",
+    "title": "Business - Verify that the business can change language (drop down)",
+    "kept": "EMI-TC-2302",
+    "reason": "copied id block (20 pairs)"
+  },
+  "EMI-TC-2330": {
+    "feature": "Profile & Manage Accounts",
+    "sub": "Profile",
+    "title": "Business - Verify the \"turn off notification\" (drop down)",
+    "kept": "EMI-TC-2303",
+    "reason": "copied id block (20 pairs)"
+  },
+  "EMI-TC-2331": {
+    "feature": "Profile & Manage Accounts",
+    "sub": "Profile",
+    "title": "Business - Verify the \"turn on notification\" (drop down)",
+    "kept": "EMI-TC-2304",
+    "reason": "copied id block (20 pairs)"
+  },
+  "EMI-TC-2335": {
+    "feature": "Profile & Manage Accounts",
+    "sub": "Profile",
+    "title": "Business - Verify that user is able to change the image",
+    "kept": "EMI-TC-2308",
+    "reason": "copied id block (20 pairs)"
+  },
+  "EMI-TC-2336": {
+    "feature": "Profile & Manage Accounts",
+    "sub": "Profile",
+    "title": "Business - Verify that the business is able to change the system mood (profile)",
+    "kept": "EMI-TC-2309",
+    "reason": "copied id block (20 pairs)"
+  },
+  "EMI-TC-2338": {
+    "feature": "Profile & Manage Accounts",
+    "sub": "Profile",
+    "title": "Business - Verify that the business can change language (profile)",
+    "kept": "EMI-TC-2311",
+    "reason": "copied id block (20 pairs)"
+  },
+  "EMI-TC-2340": {
+    "feature": "Profile & Manage Accounts",
+    "sub": "Profile",
+    "title": "Business - Validate that the business is able to change the password",
+    "kept": "EMI-TC-2313",
+    "reason": "copied id block (20 pairs)"
+  },
+  "EMI-TC-2344": {
+    "feature": "Profile & Manage Accounts",
+    "sub": "Profile",
+    "title": "Business - Validate that the password is hidden by default in the new password field.",
+    "kept": "EMI-TC-2317",
+    "reason": "copied id block (20 pairs)"
+  },
+  "EMI-TC-2345": {
+    "feature": "Profile & Manage Accounts",
+    "sub": "Profile",
+    "title": "Business - Validate that the Password is hidden by default in the Confirm Password field",
+    "kept": "EMI-TC-2318",
+    "reason": "copied id block (20 pairs)"
+  },
+  "EMI-TC-2346": {
+    "feature": "Profile & Manage Accounts",
+    "sub": "Profile",
+    "title": "Business - Validate that the password is hidden by default in the Current Password field",
+    "kept": "EMI-TC-2319",
+    "reason": "copied id block (20 pairs)"
+  },
+  "EMI-TC-2347": {
+    "feature": "Profile & Manage Accounts",
+    "sub": "Profile",
+    "title": "Business - Validate that the Show Password icon works correctly for the business.",
+    "kept": "EMI-TC-2320",
+    "reason": "copied id block (20 pairs)"
+  },
+  "EMI-TC-2353": {
+    "feature": "Profile & Manage Accounts",
+    "sub": "Profile",
+    "title": "Business - Validate that the user can successfully submit the OTP by pressing the \"Enter\" key",
+    "kept": "EMI-TC-2326",
+    "reason": "copied id block (20 pairs)"
+  },
+  "EMI-TC-2334": {
+    "feature": "Profile & Manage Accounts",
+    "sub": "Profile",
+    "title": "Business - Verify that the user can open user profile page.",
+    "kept": "EMI-TC-2307",
+    "reason": "copied id block (20 pairs)"
+  },
+  "EMI-TC-2327": {
+    "feature": "Profile & Manage Accounts",
+    "sub": "Profile",
+    "title": "Business - Verify Profile Drop Down",
+    "kept": "EMI-TC-2300",
+    "reason": "copied id block (20 pairs)"
+  },
+  "EMI-TC-2343": {
+    "feature": "Profile & Manage Accounts",
+    "sub": "Profile",
+    "title": "Business - Validate that entering a password shorter than required displays inside the New Password field an error message.",
+    "kept": "EMI-TC-2316",
+    "reason": "copied id block (20 pairs)"
+  },
+  "EMI-TC-2352": {
+    "feature": "Profile & Manage Accounts",
+    "sub": "Profile",
+    "title": "Business - Validate that the user can successfully submit the OTP by clicking the 'Verify' button",
+    "kept": "EMI-TC-2325",
+    "reason": "copied id block (20 pairs)"
+  },
+  "RF-44": {
+    "feature": "Registration",
+    "sub": "B. Financial & Business Step (Tab 2 of 3) - stateful",
+    "title": "Proceed to Verification & Uploads tab when Next is clicked with valid data",
+    "kept": "RF-76",
+    "reason": "two sections of the Financial & Business tab, same check on Next with valid data"
+  },
+  "RI-62": {
+    "feature": "Registration",
+    "sub": "G. Unified Number (CRN) Field",
+    "title": "Keep Next disabled when CRN is cleared after full form fill",
+    "kept": "RI-105",
+    "reason": "same check as RI-109, already check 2 of the RI-105 Next button checklist"
+  },
+  "RI-73": {
+    "feature": "Registration",
+    "sub": "H. National ID / Iqama Field",
+    "title": "Keep Next disabled when National ID is cleared after full form fill",
+    "kept": "RI-105",
+    "reason": "same check as RI-110, already check 3 of the RI-105 Next button checklist"
+  },
+  "EMI-TC-2660": {
+    "feature": "Registration",
+    "sub": "Registration",
+    "title": "Business - Verify successful registration with valid credentials and OTP in the Dark Mode.",
+    "kept": "EMI-TC-2730",
+    "reason": "same title, preconditions and steps in one sub-area; EMI-TC-2730 is the written-out version"
+  },
+  "EMI-TC-2659": {
+    "feature": "Registration",
+    "sub": "Registration",
+    "title": "Business - Registration in light mode",
+    "kept": "EMI-TC-2729",
+    "reason": "same title, preconditions and steps in one sub-area; EMI-TC-2729 is the written-out version"
+  },
+  "EMI-TC-2661": {
+    "feature": "Registration",
+    "sub": "Registration",
+    "title": "Business - Registration in Arabic",
+    "kept": "EMI-TC-2731",
+    "reason": "same title, preconditions and steps in one sub-area; EMI-TC-2731 is the written-out version"
+  }
+}

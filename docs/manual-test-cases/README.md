@@ -7,7 +7,9 @@ executed by hand, plus the coverage analysis that says what is and is not covere
 
 | File | What it is |
 |---|---|
-| **`EMI Manual Test Cases - BY FEATURE.xlsx`** | **The working suite.** 8,854 cases across 39 feature sheets — one sheet per feature, with Status dropdowns, colour coding and per-feature roll-ups. This is the file to execute from. |
+| **`EMI Manual Test Cases - B2B - BY FEATURE.xlsx`** | **The working suite.** 8,548 cases across 39 feature sheets — one sheet per feature, with Status dropdowns, colour coding and per-feature roll-ups. This is the file to execute from. |
+| `B2C/EMI Manual Test Cases - B2C - BY FEATURE.xlsx` | The consumer-side suite — 504 cases across Customer App, Qattah and Cards. |
+| `WRITING-TEST-CASES.md` | **The standard for adding cases.** Read it before writing any. |
 | `Archive/Archived-Manual-Test-Cases.xlsx` | Retired cases and the review queue. Nothing is deleted — see its README sheet. |
 
 Everything else below is a source that feeds the by-feature file.
@@ -32,7 +34,7 @@ Superseded by the by-feature file for day-to-day use; kept because it is the aud
 ## Markdown sources
 
 The `.md` files here are hand-maintained manual cases for the core flows — Login, Registration
-(split across nine files), Forgot Password, Home Page, Bank Transfer, B2B Transactions,
+(split across nine files), Forgot Password, Home Page, Bank Transfer, Topup, B2B Transactions,
 Bill Items, Manage Accounts, Transaction Operations, PoS Products.
 
 **The markdown is the source of truth.** `../../data/ManualTestCases.xlsx` is a rendering of it —

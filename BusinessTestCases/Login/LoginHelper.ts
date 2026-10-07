@@ -8,13 +8,13 @@ export const LOGIN_URL    = `${process.env['BASE_URL'] ?? 'https://uat.majdpay.c
 export const SESSION_PATH = 'session.json';
 
 // Account used for wrong-password / invalid-credential tests.
-export const VALID_COMPANY  = process.env['UAT_COMPANY'] ?? testAccounts.merchant.company;
-export const VALID_MOBILE   = process.env['UAT_MOBILE']  ?? testAccounts.merchant.mobile;
+export const VALID_COMPANY  = process.env['DEV_COMPANY'] ?? testAccounts.merchant.company;
+export const VALID_MOBILE   = process.env['DEV_MOBILE']  ?? testAccounts.merchant.mobile;
 
 // Account used for successful-login tests (happy path, OTP flow, validation card).
 // Same shared merchant account as above — its password is testAccounts.defaultPassword.
-export const LOGIN_COMPANY  = process.env['UAT_LOGIN_COMPANY'] ?? testAccounts.merchant.company;
-export const LOGIN_MOBILE   = process.env['UAT_LOGIN_MOBILE']  ?? testAccounts.merchant.mobile;
+export const LOGIN_COMPANY  = process.env['DEV_LOGIN_COMPANY'] ?? testAccounts.merchant.company;
+export const LOGIN_MOBILE   = process.env['DEV_LOGIN_MOBILE']  ?? testAccounts.merchant.mobile;
 
 export const VALID_PASSWORD = testAccounts.defaultPassword;
 export const WRONG_PASSWORD = testAccounts.wrongPassword;

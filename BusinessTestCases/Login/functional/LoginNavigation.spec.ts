@@ -57,7 +57,7 @@ test.describe('Login — Already Authenticated', { tag: ['@login', '@functional'
     // Establish a real authenticated session first — these tests assert what
     // happens when an already-logged-in user hits the login URL, so the login
     // is the precondition, not something to assume from a global session.json
-    // (which only exists when UAT_SETUP_* is set and its login succeeded).
+    // (which only exists when DEV_SETUP_* is set and its login succeeded).
     test.beforeEach(async ({ page, loginPage: lp }) => {
         const loginPage = lp;
         await loginPage.goto(LOGIN_URL);

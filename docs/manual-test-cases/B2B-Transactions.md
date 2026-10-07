@@ -119,13 +119,23 @@ or by generating and paying a SADAD bill.
 
 ### D.1 HyperPay (card) top-up
 
+Ledger detail (added per EMI-6120's balance-calculation rules — `emi_transaction.transaction_log` is
+the same ledger table that automation already reads in `TopupHappyPath.spec.ts`, so this is the confirmed
+live table, not a re-derivation): the top-up's destination wallet is an **account wallet** (Merchant/
+Biller type, not `CONTROL`), and the top-up is that wallet's ledger record acting as the **destination**.
+Per the "Account wallet as destination" rule, the buckets move as: `PENDING` → credit **Reserved Credit**
+only (Available/Current untouched); `SUCCESS` → debit **Reserved Credit** back, credit **Available** and
+**Current**; `FAILED` → debit **Reserved Credit** back to zero, Available/Current never touched. TU-03/04/05
+below restate their expected results in these terms; TU-01/TU-02 are unaffected (no ledger row exists yet
+at that step).
+
 | ID | Title | Steps | Expected Result | Priority | Ticket |
 |---|---|---|---|---|---|
 | TU-01 | Enter amount and proceed to HyperPay UI | Enter a valid SAR amount, tap Proceed | If OTP required, OTP gate appears first; otherwise HyperPay's custom UI opens directly | P1 | EMI-171 |
 | TU-02 | Amount format validation | Enter an amount with more than 7 digits or 2 decimal places | Input is rejected or truncated per the SAR prefix / 7-digit / 2-decimal rule | P2 | EMI-171 |
-| TU-03 | Successful card payment updates wallet balance | Complete payment with MADA/VISA/MASTER test card | Wallet balance increases by exactly the entered amount | P1 | EMI-171 |
-| TU-04 | Declined/failed payment shows clear error | Simulate a declined card on the gateway | User-friendly error message shown; balance unchanged; transaction marked FAILED | P1 | EMI-171 |
-| TU-05 | Pending gateway result leaves balance unchanged until resolved | Simulate a pending gateway response | Balance stays unchanged; transaction shows PENDING until resolved | P2 | EMI-171 |
+| TU-03 | Successful card payment updates wallet balance | Complete payment with MADA/VISA/MASTER test card | The `PENDING` ledger row's **Reserved Credit** is debited back and **Available** + **Current** are each credited by exactly the entered amount (EMI-6120 account-wallet-as-destination, `SUCCESS` row) — net effect: the customer-visible wallet balance increases by exactly the entered amount | P1 | EMI-171, EMI-6120 |
+| TU-04 | Declined/failed payment shows clear error | Simulate a declined card on the gateway | User-friendly error message shown; transaction marked `FAILED`; per EMI-6120's rule the `FAILED` row debits **Reserved Credit** back to zero — Available/Current were never credited, so the customer-visible balance is unchanged throughout | P1 | EMI-171, EMI-6120 |
+| TU-05 | Pending gateway result leaves balance unchanged until resolved | Simulate a pending gateway response | Transaction shows `PENDING`; per EMI-6120's rule the `PENDING` row only credits the internal **Reserved Credit** bucket, not Available/Current, so the customer-visible balance stays unchanged until the transaction resolves (`SUCCESS` releases the hold into Available/Current per TU-03; `FAILED` releases it with no balance change per TU-04) | P2 | EMI-171, EMI-6120 |
 
 ### D.2 VIBAN bank transfer top-up
 
@@ -380,7 +390,7 @@ split across sender/receiver.
 | ID | Title | Steps | Expected Result | Priority |
 |---|---|---|---|---|
 | TU-CM01 | Default schema applies when no custom commission exists | Ensure no custom commission for the user's account; top up | Default commission schema applies | P2 |
-| TU-CM02 | Custom per-account schema overrides the default | Admin configures a custom top-up commission for the account; top up | Custom commission applied instead of default | P2 |
+| TU-CM02 | Custom per-account schema takes priority over the default | Admin configures a custom top-up commission for the account; top up | Custom commission is applied for this account; the platform-wide default row is untouched and still Active, it's simply outranked for this one account | P2 |
 | TU-CM03 | Fixed commission deducted on a standard top-up | Admin configures a fixed-amount commission for Top Up; user tops up within its range | Wallet is credited the top-up amount minus the fixed commission | P1 |
 | TU-CM04 | Fixed commission applied at minimum boundary | Same setup; top-up amount equals the configured minimum | Fixed commission is deducted | P2 |
 | TU-CM05 | Fixed commission applied at maximum boundary | Same setup; top-up amount equals the configured maximum | Fixed commission is deducted | P2 |
@@ -397,6 +407,51 @@ split across sender/receiver.
 | TU-CM16 | Transaction type cannot be edited on an existing commission | Admin attempts to change the transaction type on an existing Top-Up commission rule | Field is read-only | P3 |
 | TU-CM17 | Disabling a commission schema stops it applying | Admin disables the schema; user tops up | No commission applied | P2 |
 | TU-CM18 | Re-enabling a commission schema resumes applying it | Admin re-enables the schema; user tops up again | Commission applied again | P3 |
+
+### Live single-tier schema validation (EMI-2031)
+
+Context: the account's live Web default schema for Merchant Cashin configures a single active row
+(one minimum–maximum range, percentage-or-fixed) rather than the three simultaneous tiers this
+subsection originally described. TU-CM19–32 test that row generically — every boundary below is
+whatever the admin portal currently configures for it (minimum/maximum/value/percentage-or-fixed),
+not a fixed number, so the cases keep passing however the live range or value changes over time. A
+case whose Expected Result says "verify against live behaviour" is an open question until confirmed
+against a live run, not an assumed pass.
+
+| ID | Title | Steps | Expected Result | Priority |
+|---|---|---|---|---|
+| TU-CM19 | Commission applied at the tier's minimum boundary | Top up the live row's configured minimum amount | Commission is charged per the row's percentage-or-fixed configuration | P1 |
+| TU-CM20 | Commission applied at the tier's maximum boundary | Same setup; top up the configured maximum amount | Commission is charged per the row's configuration | P1 |
+| TU-CM21 | Commission applied mid-range within the tier | Same setup; top up an amount midway between the configured minimum and maximum | Commission is charged per the row's configuration (skip if the range is too narrow for a distinct midpoint) | P2 |
+| TU-CM22 | Amount just below the tier minimum falls in an unconfigured gap | Same setup; top up one unit below the configured minimum (skip if the minimum is already the smallest positive amount) | Topup is rejected as below the minimum allowed amount, or the rule actually configured for this range applies — verify against live behaviour; flag as a config gap if neither | P1 |
+| TU-CM23 | Amount just above the tier maximum falls in an unconfigured gap | Same setup; top up one unit above the configured maximum | Topup is rejected, or another applicable rule applies — verify against live behaviour; flag as a config gap if neither | P1 |
+| TU-CM29 | Amount below the smallest valid amount (0 or negative) is rejected outright | Same setup; top up 0 | Rejected with a validation error; no commission is calculated or charged | P1 |
+| TU-CM31 | Commission type flag matches the tier's configuration | Top up at the tier's minimum and maximum boundaries | Both boundaries reflect the same percentage-or-fixed flag: a percentage tier's commission scales proportionally with amount at both boundaries; a fixed tier's stays the identical absolute value at both — the two are never interchanged | P2 |
+| TU-CM32 | Commission rule does not apply on platforms other than its configured one | Initiate a Web top-up at the amount matching a *different*, APP-scoped Merchant Cashin row's minimum boundary | The APP-scoped commission is not applied to the Web-initiated top-up | P2 |
+
+### Account-level commission validation (EMI-2031)
+
+Context: same concept as the "Live single-tier schema validation" block above, but against a
+per-account commission override (Admin Portal → Commission Management → Accounts Commission) instead
+of the platform-wide Default Commission row — TU-CM02 above already proves the override takes
+priority; the cases below prove its own boundaries/value/type are read correctly, the same way
+TU-CM19/20/21/31 and TU-CM03/08 do for the Default row. IDs reuse the Tier-B/Tier-C slots freed up
+when the 3-tier configuration below TU-CM23 was retired down to a single row, rather than extending
+the range past TU-CM32.
+
+| ID | Title | Steps | Expected Result | Priority |
+|---|---|---|---|---|
+| TU-CM24 | Fixed-type account-level commission deducted on a standard top-up | Admin configures a fixed-amount account-level commission override; user tops up within its range | Wallet is credited the top-up amount minus the fixed commission | P2 |
+| TU-CM25 | Percentage-type account-level commission deducted on a standard top-up | Admin configures a percentage account-level commission override; user tops up within its range | Commission reflects the correct percentage | P2 |
+| TU-CM26 | Account-level commission applied at the tier's minimum boundary | Top up the override row's configured minimum amount | Commission is charged per the row's percentage-or-fixed configuration | P2 |
+| TU-CM27 | Account-level commission applied at the tier's maximum boundary | Same setup; top up the configured maximum amount | Commission is charged per the row's configuration | P2 |
+| TU-CM28 | Account-level commission applied mid-range within the tier | Same setup; top up an amount midway between the configured minimum and maximum | Commission is charged per the row's configuration (skip if the range is too narrow for a distinct midpoint) | P3 |
+| TU-CM30 | Account-level commission type flag matches the tier's configuration | Top up at the override row's minimum and maximum boundaries | Both boundaries reflect the same percentage-or-fixed flag, the same way TU-CM31 proves it for the Default row | P2 |
+
+Automated in `BusinessTestCases/Topup/functional/TopupCommission.spec.ts`'s "Account-level live
+schema validation" block. TU-CM24 is `test.skip()` — forcing the override from percentage to fixed
+hits the identical percentage→fixed edit-commission defect TU-CM03 already confirmed live
+(2026-09-27) for the Default row; see that test's own note.
 
 ## P. Wallet Payment QR — Wallet Balance Limits (EMI-659, EMI-1653, EMI-195)
 
@@ -533,7 +588,17 @@ EMI-185's own AC: "Alias — no special characters, minimum length 3, maximum le
   - `BusinessTestCases/PayBill/functional/PayBillCommission.spec.ts` (PB-CM01–18)
   - `BusinessTestCases/Topup/functional/TopupWalletLimits.spec.ts` (TU-WB01–08)
   - `BusinessTestCases/Topup/functional/TopupTransactionLimits.spec.ts` (TU-TL01–12)
-  - `BusinessTestCases/Topup/functional/TopupCommission.spec.ts` (TU-CM01–18)
+  - `BusinessTestCases/Topup/functional/TopupCommission.spec.ts` — **deviates from the 1:1-stub
+    pattern above.** TU-CM01–18 (the generic single-schema cases) carry no stub here; only
+    TU-CM19–32 are implemented, against the account's *live* 3-tier Merchant Cashin Web schema
+    (Tier A/B/C — see section O) rather than a synthetic per-test schema. The admin portal is
+    opened exactly twice for the whole file (verify+snapshot in `beforeAll`, restore in
+    `afterAll`) — no test edits the schema, so TU-CM01–18's old per-test
+    `setTopupCommission(...)` pattern was removed rather than extended. TU-CM02 and TU-CM24–28/30
+    (account-level override validation — see this section's own subsection above) are also
+    implemented, against a per-account commission row rather than the platform-wide Default one;
+    TU-CM24 is `test.skip()` for the same confirmed percentage→fixed edit defect as TU-CM03. See
+    `TopupCommission.spec.ts` itself for which other individual cases remain `test.skip()`.
   - `BusinessTestCases/QRPayment/functional/QRPaymentWalletLimits.spec.ts` (QR-WB01–08)
   - `BusinessTestCases/QRPayment/functional/QRPaymentTransactionLimits.spec.ts` (QR-TL01–12)
   - `BusinessTestCases/QRPayment/functional/QRPaymentCommission.spec.ts` (QR-CM01–18)

@@ -112,4 +112,4 @@ This manual test suite mirrors the existing Playwright automation for the Regist
 
 The same coverage is also runnable by hand or via Newman as `postman/Registration-API-majdpay.postman_collection.json` (see `postman/README.md`) — its 38 requests are grouped into the same eight sections as this doc (Phone Entry / Business Info / NAFATH / Products / Contract / Session Refresh / Lookups / Negative checks) and numbered in the same order as `RegistrationAPIFlow.spec.ts`'s endpoint list.
 
-Supporting helper: `BusinessTestCases/Registration/RegistrationHelper.ts` (`UAT_OTP_ASSETS` pool, `getOtpFromDb`, `generateEmail`, `VALID_IBAN`/`VALID_VAT_NUMBER`, `TEST_FILE_BUFFER`).
+Supporting helper: `BusinessTestCases/Registration/RegistrationHelper.ts` (`DEV_OTP_ASSETS` pool, `getOtpFromDb`, `generateEmail`, `VALID_IBAN`/`VALID_VAT_NUMBER`, `TEST_FILE_BUFFER`).

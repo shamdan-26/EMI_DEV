@@ -306,7 +306,7 @@ export function generateKSAMobile(): string {
 }
 
 // UAT test accounts from phone numbers.xlsx — Sheet1, uat-flagged rows — see data/registrationAssets.json
-export const UAT_OTP_ASSETS = registrationAssets.uatOtpAssets;
+export const DEV_OTP_ASSETS = registrationAssets.uatOtpAssets;
 
 let _uatOtpIndex = 0;
 
@@ -316,10 +316,10 @@ let _uatOtpIndex = 0;
  *  "already registered" state instead of showing the OTP dialog. Falls back to
  *  the full pool once nothing matches so callers never hard-fail. */
 export function nextUatOtpAsset() {
-    const available = UAT_OTP_ASSETS.filter(a => !a.used);
+    const available = DEV_OTP_ASSETS.filter(a => !a.used);
     if (available.length === 0) {
         console.warn('[RegistrationHelper] All UAT OTP assets are flagged used — cycling the full pool again.');
-        return UAT_OTP_ASSETS[_uatOtpIndex++ % UAT_OTP_ASSETS.length];
+        return DEV_OTP_ASSETS[_uatOtpIndex++ % DEV_OTP_ASSETS.length];
     }
     return available[_uatOtpIndex++ % available.length];
 }
@@ -327,15 +327,15 @@ export function nextUatOtpAsset() {
 /** Marks a UAT OTP asset used and persists the flag to data/registrationAssets.json,
  *  mirroring `markCitizenAssetUsed`. */
 export function markUatOtpAssetUsed(mobile: string): void {
-    const asset = UAT_OTP_ASSETS.find(a => a.mobile === mobile);
+    const asset = DEV_OTP_ASSETS.find(a => a.mobile === mobile);
     if (asset) (asset as { used?: boolean }).used = true;
     persistAssetUsedFlag('uatOtpAssets', mobile, true);
 }
 
 /** Picks an unused UAT OTP test mobile from phone numbers.xlsx (see `nextUatOtpAsset`). */
 export function generateFreshKSAMobile(): string {
-    const available = UAT_OTP_ASSETS.filter(a => !a.used);
-    const pool = available.length > 0 ? available : UAT_OTP_ASSETS;
+    const available = DEV_OTP_ASSETS.filter(a => !a.used);
+    const pool = available.length > 0 ? available : DEV_OTP_ASSETS;
     return pool[Math.floor(Math.random() * pool.length)].mobile;
 }
 
@@ -343,7 +343,7 @@ export function generateFreshKSAMobile(): string {
 export async function getOtpFromDb(mobile: string, maxAttempts = 10, delayMs = 2000): Promise<string> {
     const env = process.env['ENV'] ?? 'dev';
     // UAT now accepts a fixed all-zero OTP for any mobile, same as dev — no
-    // longer limited to the dedicated UAT_OTP_ASSETS pool (see fillOTP's
+    // longer limited to the dedicated DEV_OTP_ASSETS pool (see fillOTP's
     // '0'-per-digit fallback for '' below; '000000' behaves identically).
     // Skips the real IMAP/Azure round trip entirely.
     if (env === 'dev' || env === 'uat') return '000000';

@@ -1,0 +1,1782 @@
+[
+  {
+    "feature": "Registration",
+    "sub": "A. Contract Review",
+    "keep": "RC-02",
+    "title": "Contract Review — all checks on loading the Contract Review step",
+    "absorb": [
+      "RC-10",
+      "RC-15",
+      "RC-17",
+      "RC-20",
+      "RC-03",
+      "RC-04",
+      "RC-05",
+      "RC-11",
+      "RC-13",
+      "RC-14",
+      "RC-16",
+      "RC-18",
+      "RC-19",
+      "RC-01",
+      "RC-06",
+      "RC-07",
+      "RC-08",
+      "RC-09",
+      "RC-12"
+    ]
+  },
+  {
+    "feature": "Registration",
+    "sub": "A. Financial & Business Step (Tab 2 of 3) — read-only",
+    "keep": "RF-02",
+    "title": "Financial & Business Step (Tab 2 of 3) — read-only — all checks on loading the Financial & Business tab",
+    "absorb": [
+      "RF-06",
+      "RF-07",
+      "RF-08",
+      "RF-24",
+      "RF-27",
+      "RF-29",
+      "RF-03",
+      "RF-04",
+      "RF-05",
+      "RF-09",
+      "RF-11",
+      "RF-12",
+      "RF-14",
+      "RF-15",
+      "RF-17",
+      "RF-18",
+      "RF-20",
+      "RF-21",
+      "RF-23",
+      "RF-26",
+      "RF-28",
+      "RF-01",
+      "RF-10",
+      "RF-13",
+      "RF-16",
+      "RF-19",
+      "RF-22",
+      "RF-25",
+      "RF-31",
+      "RF-32",
+      "RF-33",
+      "RF-34",
+      "RF-35"
+    ]
+  },
+  {
+    "feature": "Registration",
+    "sub": "A. Full E2E Happy Path",
+    "keep": "RE-01",
+    "title": "Full E2E Happy Path — all checks on loading the registration wizard",
+    "absorb": [
+      "RE-02"
+    ]
+  },
+  {
+    "feature": "Registration",
+    "sub": "A. Header & Banner",
+    "keep": "RI-02",
+    "title": "Header & Banner — all checks on loading the Business Info tab",
+    "absorb": [
+      "RI-03",
+      "RI-04",
+      "RI-05",
+      "RI-06",
+      "RI-01"
+    ]
+  },
+  {
+    "feature": "Registration",
+    "sub": "A. NAFATH Step Page Elements",
+    "keep": "RN-02",
+    "title": "NAFATH Step Page Elements — all checks on loading the NAFATH step",
+    "absorb": [
+      "RN-17",
+      "RN-03",
+      "RN-04",
+      "RN-05",
+      "RN-07",
+      "RN-08",
+      "RN-09",
+      "RN-10",
+      "RN-13",
+      "RN-14",
+      "RN-15",
+      "RN-16",
+      "RN-18",
+      "RN-01",
+      "RN-06",
+      "RN-11",
+      "RN-12"
+    ]
+  },
+  {
+    "feature": "Registration",
+    "sub": "A. Page Elements",
+    "keep": "RM-02",
+    "title": "Page Elements — all checks on loading the Mobile Number page",
+    "absorb": [
+      "RM-07",
+      "RM-09",
+      "RM-17",
+      "RM-06",
+      "RM-08",
+      "RM-10",
+      "RM-14",
+      "RM-15",
+      "RM-16",
+      "RM-03",
+      "RM-04",
+      "RM-12",
+      "RM-13",
+      "RM-19",
+      "RM-20"
+    ]
+  },
+  {
+    "feature": "Registration",
+    "sub": "A. Page Elements",
+    "keep": "RO-06",
+    "title": "Page Elements — all checks on loading the OTP popup",
+    "absorb": [
+      "RO-02",
+      "RO-03",
+      "RO-04",
+      "RO-05",
+      "RO-07",
+      "RO-01"
+    ]
+  },
+  {
+    "feature": "Registration",
+    "sub": "A. Products Step UI (Page Elements)",
+    "keep": "RP-02",
+    "title": "Products Step UI (Page Elements) — all checks on loading the Products step",
+    "absorb": [
+      "RP-10",
+      "RP-13",
+      "RP-16",
+      "RP-18",
+      "RP-19",
+      "RP-03",
+      "RP-04",
+      "RP-05",
+      "RP-11",
+      "RP-12",
+      "RP-14",
+      "RP-15",
+      "RP-17",
+      "RP-01",
+      "RP-06",
+      "RP-07",
+      "RP-08",
+      "RP-09"
+    ]
+  },
+  {
+    "feature": "Registration",
+    "sub": "A. Verification & Uploads Step (Tab 3 of 3) — read-only",
+    "keep": "RVU-02",
+    "title": "Verification & Uploads Step (Tab 3 of 3) — read-only — all checks on loading the Verification & Uploads tab",
+    "absorb": [
+      "RVU-06",
+      "RVU-07",
+      "RVU-23",
+      "RVU-25",
+      "RVU-03",
+      "RVU-04",
+      "RVU-05",
+      "RVU-08",
+      "RVU-09",
+      "RVU-10",
+      "RVU-13",
+      "RVU-15",
+      "RVU-16",
+      "RVU-17",
+      "RVU-18",
+      "RVU-21",
+      "RVU-24",
+      "RVU-29",
+      "RVU-30",
+      "RVU-01",
+      "RVU-11",
+      "RVU-12",
+      "RVU-14",
+      "RVU-19",
+      "RVU-20",
+      "RVU-22",
+      "RVU-27",
+      "RVU-28"
+    ]
+  },
+  {
+    "feature": "Registration",
+    "sub": "B. Financial & Business Step (Tab 2 of 3) — stateful",
+    "keep": "RF-40",
+    "title": "Financial & Business Step (Tab 2 of 3) — stateful — all checks when the control is clicked",
+    "absorb": [
+      "RF-41",
+      "RF-42"
+    ]
+  },
+  {
+    "feature": "Registration",
+    "sub": "B. Fixed Business Sign-Up Mode (TC-REG-005, TC-REG-006)",
+    "keep": "RE-04",
+    "title": "Fixed Business Sign-Up Mode (TC-REG-005, TC-REG-006) — all checks on loading the registration wizard",
+    "absorb": [
+      "RE-03"
+    ]
+  },
+  {
+    "feature": "Registration",
+    "sub": "B. Functionality",
+    "keep": "RO-16",
+    "title": "OTP popup — Verify button, input boxes and resend behaviour",
+    "absorb": [
+      "RO-15",
+      "RO-13",
+      "RO-08",
+      "RO-09",
+      "RO-10",
+      "RO-11",
+      "RO-12",
+      "RO-14"
+    ]
+  },
+  {
+    "feature": "Registration",
+    "sub": "B. Functionality",
+    "keep": "RO-17",
+    "title": "Functionality — all checks when Cancel is clicked",
+    "absorb": [
+      "RO-18"
+    ]
+  },
+  {
+    "feature": "Registration",
+    "sub": "B. Main Content, Headings & Progress Bar",
+    "keep": "RI-07",
+    "title": "Main Content, Headings & Progress Bar — all checks on loading the Business Info tab",
+    "absorb": [
+      "RI-10",
+      "RI-11",
+      "RI-12",
+      "RI-13",
+      "RI-14",
+      "RI-08",
+      "RI-09"
+    ]
+  },
+  {
+    "feature": "Registration",
+    "sub": "B. Nafath Verification",
+    "keep": "RN-19",
+    "title": "NAFATH step — panel content and Verify button countdown",
+    "absorb": [
+      "RN-21",
+      "RN-20",
+      "RN-22",
+      "RN-23"
+    ]
+  },
+  {
+    "feature": "Registration",
+    "sub": "B. Products Step: PoS Onboarding Setup (EMI-5783)",
+    "keep": "RP-20",
+    "title": "Products Step: PoS Onboarding Setup (EMI-5783) — all checks on loading the PoS Onboarding Setup panel",
+    "absorb": [
+      "RP-21",
+      "RP-23",
+      "RP-24",
+      "RP-25",
+      "RP-37",
+      "RP-22",
+      "RP-26",
+      "RP-27",
+      "RP-34",
+      "RP-39"
+    ]
+  },
+  {
+    "feature": "Registration",
+    "sub": "B. Verification & Uploads Step (Tab 3 of 3)",
+    "keep": "RVU-31",
+    "title": "Verification & Uploads Step (Tab 3 of 3) — all checks on loading the Verification & Uploads tab",
+    "absorb": [
+      "RVU-41",
+      "RVU-54",
+      "RVU-55",
+      "RVU-42"
+    ]
+  },
+  {
+    "feature": "Registration",
+    "sub": "C. File upload interactions",
+    "keep": "RVU-69",
+    "title": "File upload interactions — all checks on loading the Verification & Uploads tab",
+    "absorb": [
+      "RVU-71",
+      "RVU-72",
+      "RVU-73"
+    ]
+  },
+  {
+    "feature": "Registration",
+    "sub": "C. Inner Tab Navigation",
+    "keep": "RI-15",
+    "title": "Inner Tab Navigation — all checks on loading the Business Info tab",
+    "absorb": [
+      "RI-16",
+      "RI-17",
+      "RI-18"
+    ]
+  },
+  {
+    "feature": "Registration",
+    "sub": "C. Products Step",
+    "keep": "RP-40",
+    "title": "Products Step — all checks on loading the Products step",
+    "absorb": [
+      "RP-42",
+      "RP-43",
+      "RP-49",
+      "RP-51",
+      "RP-52",
+      "RP-44",
+      "RP-47",
+      "RP-53",
+      "RP-45",
+      "RP-41"
+    ]
+  },
+  {
+    "feature": "Registration",
+    "sub": "D. Auto-Approval, Auto-Activation & Activation Email (TC-REG-001, TC-REG-002, TC-REG-007)",
+    "keep": "RE-06",
+    "title": "Auto-Approval, Auto-Activation & Activation Email (TC-REG-001, TC-REG-002, TC-REG-007) — all checks on loading the registration wizard",
+    "absorb": [
+      "RE-07",
+      "RE-08"
+    ]
+  },
+  {
+    "feature": "Registration",
+    "sub": "D. Element Visibility",
+    "keep": "RI-38",
+    "title": "Element Visibility — all checks on loading the Business Info tab",
+    "absorb": [
+      "RI-19",
+      "RI-20",
+      "RI-24",
+      "RI-30",
+      "RI-34",
+      "RI-42",
+      "RI-43",
+      "RI-25",
+      "RI-28",
+      "RI-29",
+      "RI-31",
+      "RI-32",
+      "RI-33",
+      "RI-35",
+      "RI-36",
+      "RI-37",
+      "RI-39",
+      "RI-40",
+      "RI-41"
+    ]
+  },
+  {
+    "feature": "Registration",
+    "sub": "D. Financial & Business Functionality",
+    "keep": "RF-66",
+    "title": "Financial & Business Functionality — all checks on loading the Financial & Business tab",
+    "absorb": [
+      "RF-68",
+      "RF-74",
+      "RF-75",
+      "RF-64"
+    ]
+  },
+  {
+    "feature": "Registration",
+    "sub": "D. Financial & Business Functionality",
+    "keep": "RF-69",
+    "title": "Financial & Business Functionality — all checks for: typing in the dropdown search field",
+    "absorb": [
+      "RF-70"
+    ]
+  },
+  {
+    "feature": "Registration",
+    "sub": "D. Products Step: PoS Onboarding Setup (EMI-5783) - Devices & Delivery functional",
+    "keep": "RP-55",
+    "title": "Products Step: PoS Onboarding Setup (EMI-5783) - Devices & Delivery functional — all checks on loading the Products step",
+    "absorb": [
+      "RP-56"
+    ]
+  },
+  {
+    "feature": "Registration",
+    "sub": "G. Unified Number (CRN) Field",
+    "keep": "RI-56",
+    "title": "Unified Number (CRN) Field — all checks on loading the Business Info tab",
+    "absorb": [
+      "RI-57",
+      "RI-59"
+    ]
+  },
+  {
+    "feature": "Registration",
+    "sub": "H. National ID / Iqama Field",
+    "keep": "RI-76",
+    "title": "National ID / Iqama Field — all checks for: enter a script/JS-URI payload in National ID field and submit",
+    "absorb": [
+      "RI-77"
+    ]
+  },
+  {
+    "feature": "Registration",
+    "sub": "I. Email Field",
+    "keep": "RI-93",
+    "title": "Email Field — all checks on loading the Business Info tab",
+    "absorb": [
+      "RI-94",
+      "RI-96"
+    ]
+  },
+  {
+    "feature": "Registration",
+    "sub": "J. Next Button Enable/Disable Logic",
+    "keep": "RI-105",
+    "title": "Next button enable/disable on the Business Info tab",
+    "absorb": [
+      "RI-109",
+      "RI-110",
+      "RI-50",
+      "RI-51",
+      "RI-66",
+      "RI-67",
+      "RI-79",
+      "RI-92",
+      "RI-111"
+    ]
+  },
+  {
+    "feature": "Registration",
+    "sub": "K. Tab 1 → Tab 2 Transition",
+    "keep": "RI-113",
+    "title": "Tab 1 → Tab 2 Transition — all checks on loading the Business Info tab",
+    "absorb": [
+      "RI-114",
+      "RI-115",
+      "RI-116"
+    ]
+  },
+  {
+    "feature": "Registration",
+    "sub": "L. Back Navigation (Tab 2 → Tab 1)",
+    "keep": "RI-118",
+    "title": "Back Navigation (Tab 2 → Tab 1) — all checks on loading the Business Info tab",
+    "absorb": [
+      "RI-119"
+    ]
+  },
+  {
+    "feature": "Registration",
+    "sub": "M. Step Indicator Progression",
+    "keep": "RI-120",
+    "title": "Step Indicator Progression — all checks on loading the Business Info tab",
+    "absorb": [
+      "RI-121"
+    ]
+  },
+  {
+    "feature": "Registration",
+    "sub": "N. Footer Navigation",
+    "keep": "RI-125",
+    "title": "Footer Navigation — all checks on loading the Business Info tab",
+    "absorb": [
+      "RI-126",
+      "RI-123",
+      "RI-124"
+    ]
+  },
+  {
+    "feature": "Registration",
+    "sub": "B. Field Validation & Navigation",
+    "keep": "RM-26",
+    "title": "Next button enable/disable on the Mobile Number page",
+    "steps": "Open the Business registration wizard and load the Mobile Number page.",
+    "absorb": [
+      "RM-18",
+      "RM-27"
+    ]
+  },
+  {
+    "feature": "Registration",
+    "sub": "D. Financial & Business Functionality",
+    "keep": "RF-62",
+    "title": "Next button enable/disable on the Financial & Business tab",
+    "steps": "Open the Business registration wizard and reach the Financial & Business tab (Tab 2 of 3).",
+    "absorb": [
+      "RF-30",
+      "RF-63",
+      "RF-71",
+      "RF-72",
+      "RF-76"
+    ]
+  },
+  {
+    "feature": "Registration",
+    "sub": "Continue Registration",
+    "keep": "EMI-TC-966",
+    "title": "Continue Registration OTP popup — input, submission and error behaviour",
+    "steps": "Reach the OTP step in the Continue Registration flow, so the OTP popup is showing.",
+    "absorb": [
+      "EMI-TC-963",
+      "EMI-TC-964",
+      "EMI-TC-965",
+      "EMI-TC-967",
+      "EMI-TC-968",
+      "EMI-TC-969",
+      "EMI-TC-1407",
+      "EMI-TC-1408",
+      "EMI-TC-1409",
+      "EMI-TC-1410",
+      "EMI-TC-1411",
+      "EMI-TC-1412",
+      "EMI-TC-1413"
+    ]
+  },
+  {
+    "feature": "Registration",
+    "sub": "Registration",
+    "keep": "EMI-TC-8302",
+    "title": "Phone and OTP steps — required, correct, incorrect, expired and resend",
+    "steps": "Open Business registration at the mobile-number step.",
+    "absorb": [
+      "EMI-TC-8353",
+      "EMI-TC-8354",
+      "EMI-TC-8355",
+      "EMI-TC-8303",
+      "EMI-TC-8356",
+      "EMI-TC-8304",
+      "EMI-TC-8305",
+      "EMI-TC-8306",
+      "EMI-TC-8357"
+    ]
+  },
+  {
+    "feature": "Registration",
+    "sub": "Continue Registration",
+    "keep": "EMI-TC-959",
+    "title": "Continue Registration verification code popup - resend countdown and Cancel",
+    "steps": "Reach the OTP step in the Continue Registration flow so the verification code popup is showing, with its resend countdown running.",
+    "absorb": [
+      "EMI-TC-960",
+      "EMI-TC-961",
+      "EMI-TC-962",
+      "EMI-TC-1403",
+      "EMI-TC-1404",
+      "EMI-TC-1405",
+      "EMI-TC-1406"
+    ]
+  },
+  {
+    "feature": "Registration",
+    "sub": "B. Verification & Uploads Step (Tab 3 of 3)",
+    "keep": "RVU-49",
+    "title": "VAT Number field validation",
+    "steps": "Open the Verification & Uploads step (Tab 3 of 3) and put the cursor in the VAT Number field.",
+    "absorb": [
+      "RVU-50",
+      "RVU-51",
+      "RVU-52",
+      "RVU-53"
+    ]
+  },
+  {
+    "feature": "Registration",
+    "sub": "B. Verification & Uploads Step (Tab 3 of 3)",
+    "keep": "RVU-37",
+    "title": "IBAN field validation",
+    "steps": "Open the Verification & Uploads step (Tab 3 of 3) and put the cursor in the IBAN field.",
+    "absorb": [
+      "RVU-38",
+      "RVU-39",
+      "RVU-40"
+    ]
+  },
+  {
+    "feature": "Registration",
+    "sub": "B. Verification & Uploads Step (Tab 3 of 3)",
+    "keep": "RVU-58",
+    "title": "Hostile input in the IBAN and VAT Number fields",
+    "steps": "Open the Verification & Uploads step (Tab 3 of 3), with the IBAN and VAT Number fields available.",
+    "absorb": [
+      "RVU-56",
+      "RVU-57"
+    ]
+  },
+  {
+    "feature": "Registration",
+    "sub": "C. File upload interactions",
+    "keep": "RVU-60",
+    "title": "VAT certificate upload",
+    "steps": "Open the Verification & Uploads step (Tab 3 of 3) and use the VAT certificate upload control.",
+    "absorb": [
+      "RVU-61",
+      "RVU-64",
+      "RVU-65",
+      "RVU-68"
+    ]
+  },
+  {
+    "feature": "Registration",
+    "sub": "C. File upload interactions",
+    "keep": "RVU-59",
+    "title": "IBAN proof upload",
+    "steps": "Open the Verification & Uploads step (Tab 3 of 3) and use the IBAN proof upload control.",
+    "absorb": [
+      "RVU-62",
+      "RVU-63",
+      "RVU-66",
+      "RVU-67"
+    ]
+  },
+  {
+    "feature": "Registration",
+    "sub": "A. Verification & Uploads Step (Tab 3 of 3) — read-only",
+    "keep": "RVU-26",
+    "title": "Sign Up button enable/disable",
+    "steps": "Open the Verification & Uploads step (Tab 3 of 3) with the form empty.",
+    "absorb": [
+      "RVU-70"
+    ]
+  },
+  {
+    "feature": "Registration",
+    "sub": "Registration",
+    "keep": "EMI-TC-2635",
+    "title": "VAT and BANK certificate upload - accepted types, rejected types and file name",
+    "steps": "Reach the Verification & Uploads step with the VAT and BANK certificate fields showing.",
+    "absorb": [
+      "EMI-TC-2636",
+      "EMI-TC-2637"
+    ]
+  },
+  {
+    "feature": "Technical Updates",
+    "sub": "5.2.0",
+    "keep": "EMI-TC-5819",
+    "title": "5.2.0 — all checks from: Navigate to My Wallet Links page.",
+    "absorb": [
+      "EMI-TC-5820",
+      "EMI-TC-5813",
+      "EMI-TC-5809"
+    ]
+  },
+  {
+    "feature": "Technical Updates",
+    "sub": "5.2.0",
+    "keep": "EMI-TC-5808",
+    "title": "5.2.0 — all checks from: Navigate to the My Wallet Links page.",
+    "absorb": [
+      "EMI-TC-5804"
+    ]
+  },
+  {
+    "feature": "Technical Updates",
+    "sub": "5.2.0",
+    "keep": "EMI-TC-5270",
+    "title": "5.2.0 — all checks from: Tap 'Resend OTP' on the login OTP screen.",
+    "absorb": [
+      "EMI-TC-5271",
+      "EMI-TC-5295"
+    ]
+  },
+  {
+    "feature": "Technical Updates",
+    "sub": "5.2.0",
+    "keep": "EMI-TC-5273",
+    "title": "5.2.0 — all checks from: Tap 'Resend OTP' on password reset screen.",
+    "absorb": [
+      "EMI-TC-5297"
+    ]
+  },
+  {
+    "feature": "Technical Updates",
+    "sub": "5.2.0",
+    "keep": "EMI-TC-5274",
+    "title": "5.2.0 — all checks from: Tap 'Resend OTP' on transaction confirmation screen.",
+    "absorb": [
+      "EMI-TC-5275",
+      "EMI-TC-5299"
+    ]
+  },
+  {
+    "feature": "Technical Updates",
+    "sub": "5.2.0",
+    "keep": "EMI-TC-5277",
+    "title": "5.2.0 — all checks from: Tap 'Resend OTP' on registration screen.",
+    "absorb": [
+      "EMI-TC-5301"
+    ]
+  },
+  {
+    "feature": "Technical Updates",
+    "sub": "5.2.0",
+    "keep": "EMI-TC-5860",
+    "title": "5.2.0 — all checks from: Navigate to Wallet Settings → Transactions & Limits tab.",
+    "absorb": [
+      "EMI-TC-5852",
+      "EMI-TC-5853",
+      "EMI-TC-5865"
+    ]
+  },
+  {
+    "feature": "Technical Updates",
+    "sub": "5.2.0",
+    "keep": "EMI-TC-5725",
+    "title": "5.2.0 — all checks from: Navigate to Wallet Settings > Transactions & Limits tab.",
+    "absorb": [
+      "EMI-TC-5736"
+    ]
+  },
+  {
+    "feature": "Technical Updates",
+    "sub": "5.2.0",
+    "keep": "EMI-TC-5735",
+    "title": "5.2.0 — all checks from: Navigate to Wallet Settings.",
+    "absorb": [
+      "EMI-TC-5859"
+    ]
+  },
+  {
+    "feature": "Technical Updates",
+    "sub": "5.2.0",
+    "keep": "EMI-TC-5292",
+    "title": "5.2.0 — all checks from one shared setup",
+    "absorb": [
+      "EMI-TC-5313"
+    ]
+  },
+  {
+    "feature": "Technical Updates",
+    "sub": "5.2.0",
+    "keep": "EMI-TC-5278",
+    "title": "5.2.0 — all checks from: Observe 'Resend OTP' button immediately after OTP is sent.",
+    "absorb": [
+      "EMI-TC-5302"
+    ]
+  },
+  {
+    "feature": "Technical Updates",
+    "sub": "6.0.0",
+    "keep": "EMI-TC-7812",
+    "title": "6.0.0 — all checks from: View bill payment summary",
+    "absorb": [
+      "EMI-TC-7813"
+    ]
+  },
+  {
+    "feature": "Technical Updates",
+    "sub": "6.0.0",
+    "keep": "EMI-TC-7800",
+    "title": "6.0.0 — all checks from: View bank transfer summary",
+    "absorb": [
+      "EMI-TC-7801",
+      "EMI-TC-7802"
+    ]
+  },
+  {
+    "feature": "Technical Updates",
+    "sub": "6.0.0",
+    "keep": "EMI-TC-7806",
+    "title": "6.0.0 — all checks from: View wallet transfer summary",
+    "absorb": [
+      "EMI-TC-7807",
+      "EMI-TC-7808"
+    ]
+  },
+  {
+    "feature": "Setup & Admin",
+    "sub": "Count Limitation",
+    "keep": "EMI-TC-338",
+    "title": "Count Limitation — all checks from one shared setup",
+    "absorb": [
+      "EMI-TC-344"
+    ]
+  },
+  {
+    "feature": "Setup & Admin",
+    "sub": "Groups, Roles and Privileges",
+    "keep": "EMI-TC-352",
+    "title": "Groups, Roles and Privileges — all checks from: Navigate to Groups, Roles and Privileges from the LHS menu",
+    "absorb": [
+      "EMI-TC-353"
+    ]
+  },
+  {
+    "feature": "Setup & Admin",
+    "sub": "Groups, Roles and Privileges",
+    "keep": "EMI-TC-356",
+    "title": "Groups, Roles and Privileges — all checks from: Navigate to Groups, Roles and Privileges from the LHS menu",
+    "absorb": [
+      "EMI-TC-357",
+      "EMI-TC-358",
+      "EMI-TC-359",
+      "EMI-TC-360",
+      "EMI-TC-361",
+      "EMI-TC-362",
+      "EMI-TC-363",
+      "EMI-TC-364",
+      "EMI-TC-365",
+      "EMI-TC-366",
+      "EMI-TC-367",
+      "EMI-TC-368",
+      "EMI-TC-369"
+    ]
+  },
+  {
+    "feature": "Setup & Admin",
+    "sub": "Transaction Limitation",
+    "keep": "EMI-TC-326",
+    "title": "Transaction Limitation — all checks from one shared setup",
+    "absorb": [
+      "EMI-TC-333"
+    ]
+  },
+  {
+    "feature": "Transaction Operations",
+    "sub": "L. Pay Bill — Commission (EMI-2031)",
+    "keep": "PB-CM04",
+    "title": "Pay Bill — Commission (EMI-2031) — all checks from: Same setup; bill amount equals the configured minimum",
+    "absorb": [
+      "PB-CM09"
+    ]
+  },
+  {
+    "feature": "Transaction Operations",
+    "sub": "L. Pay Bill — Commission (EMI-2031)",
+    "keep": "PB-CM05",
+    "title": "Pay Bill — Commission (EMI-2031) — all checks from: Same setup; bill amount equals the configured maximum",
+    "absorb": [
+      "PB-CM10"
+    ]
+  },
+  {
+    "feature": "Transaction Operations",
+    "sub": "L. Pay Bill — Commission (EMI-2031)",
+    "keep": "PB-CM06",
+    "title": "Pay Bill — Commission (EMI-2031) — all checks from: Same setup; bill amount below the configured minimum",
+    "absorb": [
+      "PB-CM11"
+    ]
+  },
+  {
+    "feature": "Transaction Operations",
+    "sub": "L. Pay Bill — Commission (EMI-2031)",
+    "keep": "PB-CM07",
+    "title": "Pay Bill — Commission (EMI-2031) — all checks from: Same setup; bill amount above the configured maximum",
+    "absorb": [
+      "PB-CM12"
+    ]
+  },
+  {
+    "feature": "Transaction Operations",
+    "sub": "O. Top Up — Commission (EMI-2031)",
+    "keep": "TU-CM04",
+    "title": "Top Up — Commission (EMI-2031) — all checks from: Same setup; top-up amount equals the configured minimum",
+    "absorb": [
+      "TU-CM09"
+    ]
+  },
+  {
+    "feature": "Transaction Operations",
+    "sub": "O. Top Up — Commission (EMI-2031)",
+    "keep": "TU-CM05",
+    "title": "Top Up — Commission (EMI-2031) — all checks from: Same setup; top-up amount equals the configured maximum",
+    "absorb": [
+      "TU-CM10"
+    ]
+  },
+  {
+    "feature": "Transaction Operations",
+    "sub": "O. Top Up — Commission (EMI-2031)",
+    "keep": "TU-CM06",
+    "title": "Top Up — Commission (EMI-2031) — all checks from: Same setup; top-up amount below the configured minimum",
+    "absorb": [
+      "TU-CM11"
+    ]
+  },
+  {
+    "feature": "Transaction Operations",
+    "sub": "O. Top Up — Commission (EMI-2031)",
+    "keep": "TU-CM07",
+    "title": "Top Up — Commission (EMI-2031) — all checks from: Same setup; top-up amount above the configured maximum",
+    "absorb": [
+      "TU-CM12"
+    ]
+  },
+  {
+    "feature": "Transaction Operations",
+    "sub": "R. Wallet Payment QR — Commission (EMI-2031)",
+    "keep": "QR-CM04",
+    "title": "Wallet Payment QR — Commission (EMI-2031) — all checks from: Same setup; QR amount equals the configured minimum",
+    "absorb": [
+      "QR-CM09"
+    ]
+  },
+  {
+    "feature": "Transaction Operations",
+    "sub": "R. Wallet Payment QR — Commission (EMI-2031)",
+    "keep": "QR-CM05",
+    "title": "Wallet Payment QR — Commission (EMI-2031) — all checks from: Same setup; QR amount equals the configured maximum",
+    "absorb": [
+      "QR-CM10"
+    ]
+  },
+  {
+    "feature": "Transaction Operations",
+    "sub": "R. Wallet Payment QR — Commission (EMI-2031)",
+    "keep": "QR-CM06",
+    "title": "Wallet Payment QR — Commission (EMI-2031) — all checks from: Same setup; QR amount below the configured minimum",
+    "absorb": [
+      "QR-CM11"
+    ]
+  },
+  {
+    "feature": "Transaction Operations",
+    "sub": "R. Wallet Payment QR — Commission (EMI-2031)",
+    "keep": "QR-CM07",
+    "title": "Wallet Payment QR — Commission (EMI-2031) — all checks from: Same setup; QR amount above the configured maximum",
+    "absorb": [
+      "QR-CM12"
+    ]
+  },
+  {
+    "feature": "Products",
+    "sub": "EMI-5782 — Products Navigation & In-App PoS Request Flow",
+    "keep": "PN-01",
+    "title": "EMI-5782 — Products Navigation & In-App PoS Request Flow — all checks from: Open the More menu",
+    "absorb": [
+      "PN-03"
+    ]
+  },
+  {
+    "feature": "Products",
+    "sub": "EMI-5782 — Products Navigation & In-App PoS Request Flow",
+    "keep": "PN-22",
+    "title": "EMI-5782 — Products Navigation & In-App PoS Request Flow — all checks from: Open Orders tab",
+    "absorb": [
+      "PN-13"
+    ]
+  },
+  {
+    "feature": "Products",
+    "sub": "EMI-5782 — Products Navigation & In-App PoS Request Flow",
+    "keep": "PN-23",
+    "title": "EMI-5782 — Products Navigation & In-App PoS Request Flow — all checks from: Trigger request-devices",
+    "absorb": [
+      "PN-24"
+    ]
+  },
+  {
+    "feature": "Products",
+    "sub": "EMI-5782 — Products Navigation & In-App PoS Request Flow",
+    "keep": "PN-10",
+    "title": "EMI-5782 — Products Navigation & In-App PoS Request Flow — all checks from: Inside PoS management",
+    "absorb": [
+      "PN-11"
+    ]
+  },
+  {
+    "feature": "Products",
+    "sub": "EMI-5782 — Products Navigation & In-App PoS Request Flow",
+    "keep": "PN-15",
+    "title": "EMI-5782 — Products Navigation & In-App PoS Request Flow — all checks from: Open an order's detail",
+    "absorb": [
+      "PN-16"
+    ]
+  },
+  {
+    "feature": "Products",
+    "sub": "EMI-5782 (web) — Products Navigation & In-App PoS Request Flow",
+    "keep": "WPN-22",
+    "title": "EMI-5782 (web) — Products Navigation & In-App PoS Request Flow — all checks from: Open Orders tab",
+    "absorb": [
+      "WPN-13"
+    ]
+  },
+  {
+    "feature": "Products",
+    "sub": "EMI-5782 (web) — Products Navigation & In-App PoS Request Flow",
+    "keep": "WPN-23",
+    "title": "EMI-5782 (web) — Products Navigation & In-App PoS Request Flow — all checks from: Trigger request-devices",
+    "absorb": [
+      "WPN-24"
+    ]
+  },
+  {
+    "feature": "Products",
+    "sub": "EMI-5782 (web) — Products Navigation & In-App PoS Request Flow",
+    "keep": "WPN-01",
+    "title": "EMI-5782 (web) — Products Navigation & In-App PoS Request Flow — all checks from: Open the sidebar",
+    "absorb": [
+      "WPN-03"
+    ]
+  },
+  {
+    "feature": "Products",
+    "sub": "EMI-5782 (web) — Products Navigation & In-App PoS Request Flow",
+    "keep": "WPN-10",
+    "title": "EMI-5782 (web) — Products Navigation & In-App PoS Request Flow — all checks from: Inside PoS management",
+    "absorb": [
+      "WPN-11"
+    ]
+  },
+  {
+    "feature": "Products",
+    "sub": "EMI-5782 (web) — Products Navigation & In-App PoS Request Flow",
+    "keep": "WPN-15",
+    "title": "EMI-5782 (web) — Products Navigation & In-App PoS Request Flow — all checks from: Open an order's detail",
+    "absorb": [
+      "WPN-16"
+    ]
+  },
+  {
+    "feature": "Products",
+    "sub": "Products2026",
+    "keep": "EMI-TC-8223",
+    "title": "Products2026 — all checks from: Open product detail page",
+    "absorb": [
+      "EMI-TC-8220"
+    ]
+  },
+  {
+    "feature": "Login",
+    "sub": "A. Page elements & layout",
+    "keep": "LG-25",
+    "title": "Page elements & layout — all checks from: Load the login page",
+    "absorb": [
+      "LG-02",
+      "LG-05",
+      "LG-08",
+      "LG-21",
+      "LG-03",
+      "LG-16",
+      "LG-23",
+      "LG-28",
+      "LG-07",
+      "LG-09",
+      "LG-10",
+      "LG-22",
+      "LG-26",
+      "LG-27",
+      "LG-31",
+      "LG-04",
+      "LG-06",
+      "LG-13",
+      "LG-15",
+      "LG-17",
+      "LG-20",
+      "LG-24",
+      "LG-30"
+    ]
+  },
+  {
+    "feature": "Login",
+    "sub": "C. Validation card (\"Just a moment...\")",
+    "keep": "LG-55",
+    "title": "Validation card (\"Just a moment...\") — all checks from: Submit valid credentials",
+    "absorb": [
+      "LG-56"
+    ]
+  },
+  {
+    "feature": "Login",
+    "sub": "C. Validation card (\"Just a moment...\")",
+    "keep": "LG-57",
+    "title": "Validation card (\"Just a moment...\") — all checks from: Submit valid credentials, observe the card",
+    "absorb": [
+      "LG-58",
+      "LG-59"
+    ]
+  },
+  {
+    "feature": "Login",
+    "sub": "D. OTP verification",
+    "keep": "LG-72",
+    "title": "OTP verification — all checks from: Click \"Cancel\" on the OTP dialog",
+    "absorb": [
+      "LG-73"
+    ]
+  },
+  {
+    "feature": "Login",
+    "sub": "E. Happy path — successful login end to end",
+    "keep": "LG-80",
+    "title": "Happy path — successful login end to end — all checks from: Complete login",
+    "absorb": [
+      "LG-81",
+      "LG-82",
+      "LG-83",
+      "LG-84",
+      "LG-85"
+    ]
+  },
+  {
+    "feature": "Login",
+    "sub": "J. API contract (sign-in chain)",
+    "keep": "LG-116",
+    "title": "API contract (sign-in chain) — all checks from: Inspect the sign-in response from LG-115",
+    "absorb": [
+      "LG-117"
+    ]
+  },
+  {
+    "feature": "RMS",
+    "sub": "System Types",
+    "keep": "EMI-TC-4155",
+    "title": "System Types — all checks from: Navigate to system types",
+    "absorb": [
+      "EMI-TC-4156"
+    ]
+  },
+  {
+    "feature": "Dashboard & Wallets",
+    "sub": "A. Page identity — URL, title & greeting",
+    "keep": "HP-02",
+    "title": "Page identity — URL, title & greeting — all checks from: Land on the homepage",
+    "absorb": [
+      "HP-05",
+      "HP-03",
+      "HP-04",
+      "HP-06"
+    ]
+  },
+  {
+    "feature": "Dashboard & Wallets",
+    "sub": "Admin Dashboard with Bills",
+    "keep": "EMI-TC-533",
+    "title": "Admin Dashboard with Bills — all checks from: Login with admin user",
+    "absorb": [
+      "EMI-TC-535"
+    ]
+  },
+  {
+    "feature": "Dashboard & Wallets",
+    "sub": "Admin Homepage/Dashboard",
+    "keep": "EMI-TC-516",
+    "title": "Admin Homepage/Dashboard — all checks from: Login with admin user",
+    "absorb": [
+      "EMI-TC-517",
+      "EMI-TC-518",
+      "EMI-TC-519",
+      "EMI-TC-520",
+      "EMI-TC-521",
+      "EMI-TC-522",
+      "EMI-TC-515"
+    ]
+  },
+  {
+    "feature": "Dashboard & Wallets",
+    "sub": "B. Header / top bar",
+    "keep": "HP-07",
+    "title": "Header / top bar — all checks from: Land on the homepage",
+    "absorb": [
+      "HP-08"
+    ]
+  },
+  {
+    "feature": "Dashboard & Wallets",
+    "sub": "D. Profile menu",
+    "keep": "HP-11",
+    "title": "Profile menu — all checks from: Open the profile menu",
+    "absorb": [
+      "HP-12"
+    ]
+  },
+  {
+    "feature": "Dashboard & Wallets",
+    "sub": "F. Balance card",
+    "keep": "HP-16",
+    "title": "Balance card — all checks from: Land on the homepage",
+    "absorb": [
+      "HP-17",
+      "HP-21",
+      "HP-23",
+      "HP-15"
+    ]
+  },
+  {
+    "feature": "Dashboard & Wallets",
+    "sub": "G. Quick actions",
+    "keep": "HP-26",
+    "title": "Quick actions — all checks from: Land on the homepage",
+    "absorb": [
+      "HP-27",
+      "HP-28",
+      "HP-29",
+      "HP-25"
+    ]
+  },
+  {
+    "feature": "Dashboard & Wallets",
+    "sub": "H. Bills overview",
+    "keep": "HP-35",
+    "title": "Bills overview — all checks from: Land on the homepage",
+    "absorb": [
+      "HP-36",
+      "HP-37",
+      "HP-34"
+    ]
+  },
+  {
+    "feature": "Dashboard & Wallets",
+    "sub": "I. Sub-wallets panel",
+    "keep": "HP-44",
+    "title": "Sub-wallets panel — all checks from: Land on the homepage",
+    "absorb": [
+      "HP-43"
+    ]
+  },
+  {
+    "feature": "Dashboard & Wallets",
+    "sub": "J. Last transactions widget",
+    "keep": "HP-54",
+    "title": "Last transactions widget — all checks from: Same as HP-52",
+    "absorb": [
+      "HP-55",
+      "HP-53"
+    ]
+  },
+  {
+    "feature": "Dashboard & Wallets",
+    "sub": "J. Last transactions widget",
+    "keep": "HP-49",
+    "title": "Last transactions widget — all checks from: View the last-transactions table",
+    "absorb": [
+      "HP-50"
+    ]
+  },
+  {
+    "feature": "Dashboard & Wallets",
+    "sub": "K. Sidebar navigation",
+    "keep": "HP-56",
+    "title": "Sidebar navigation — all checks from: Land on the homepage",
+    "absorb": [
+      "HP-57",
+      "HP-58",
+      "HP-59",
+      "HP-60",
+      "HP-61",
+      "HP-62",
+      "HP-63",
+      "HP-65",
+      "HP-66",
+      "HP-67",
+      "HP-68",
+      "HP-64",
+      "HP-69"
+    ]
+  },
+  {
+    "feature": "Dashboard & Wallets",
+    "sub": "K. Sidebar navigation",
+    "keep": "HP-73",
+    "title": "Sidebar navigation — all checks from: Click the Transfer item",
+    "absorb": [
+      "HP-74",
+      "HP-75"
+    ]
+  },
+  {
+    "feature": "Roles & Permissions",
+    "sub": "Admin User",
+    "keep": "EMI-TC-390",
+    "title": "Admin User — all checks from: Navigate to Manage Admin users from the LHS menu",
+    "absorb": [
+      "EMI-TC-370"
+    ]
+  },
+  {
+    "feature": "Adjustments & Reversals",
+    "sub": "Adjustments",
+    "keep": "EMI-TC-5188",
+    "title": "Adjustments — all checks from: Send POST /transactions/{id}/reverse",
+    "absorb": [
+      "EMI-TC-5174"
+    ]
+  },
+  {
+    "feature": "Adjustments & Reversals",
+    "sub": "Adjustments",
+    "keep": "EMI-TC-5229",
+    "title": "Adjustments — all checks from: Perform valid adjustment on transaction",
+    "absorb": [
+      "EMI-TC-5228"
+    ]
+  },
+  {
+    "feature": "Adjustments & Reversals",
+    "sub": "Adjustments",
+    "keep": "EMI-TC-5165",
+    "title": "Adjustments — all checks from: Send PATCH /transactions/{id}/adjust with delta = 0",
+    "absorb": [
+      "EMI-TC-5173"
+    ]
+  },
+  {
+    "feature": "Adjustments & Reversals",
+    "sub": "Adjustments",
+    "keep": "EMI-TC-5171",
+    "title": "Adjustments — all checks from: Send PATCH /transactions/{id}/adjust with delta = -100",
+    "absorb": [
+      "EMI-TC-5172"
+    ]
+  },
+  {
+    "feature": "Adjustments & Reversals",
+    "sub": "Reversal",
+    "keep": "EMI-TC-5231",
+    "title": "Reversal — all checks from one shared setup",
+    "absorb": [
+      "EMI-TC-5232"
+    ]
+  },
+  {
+    "feature": "Adjustments & Reversals",
+    "sub": "Reversal",
+    "keep": "EMI-TC-5235",
+    "title": "Reversal — all checks from one shared setup",
+    "absorb": [
+      "EMI-TC-5236"
+    ]
+  },
+  {
+    "feature": "Top Up & Cash In",
+    "sub": "Top up",
+    "keep": "EMI-TC-1488",
+    "title": "Top up — all checks from one shared setup",
+    "absorb": [
+      "EMI-TC-1489"
+    ]
+  },
+  {
+    "feature": "Top Up & Cash In",
+    "sub": "Top up",
+    "keep": "EMI-TC-1493",
+    "title": "Top up — all checks from one shared setup",
+    "absorb": [
+      "EMI-TC-1492"
+    ]
+  },
+  {
+    "feature": "Top Up & Cash In",
+    "sub": "Top up",
+    "keep": "EMI-TC-1495",
+    "title": "Top up — all checks from one shared setup",
+    "absorb": [
+      "EMI-TC-1494"
+    ]
+  },
+  {
+    "feature": "Top Up & Cash In",
+    "sub": "Top up",
+    "keep": "EMI-TC-1496",
+    "title": "Top up — all checks from one shared setup",
+    "absorb": [
+      "EMI-TC-1502",
+      "EMI-TC-1503"
+    ]
+  },
+  {
+    "feature": "Top Up & Cash In",
+    "sub": "Top up",
+    "keep": "EMI-TC-1497",
+    "title": "Top up — all checks from one shared setup",
+    "absorb": [
+      "EMI-TC-1498",
+      "EMI-TC-1499",
+      "EMI-TC-1500",
+      "EMI-TC-1501"
+    ]
+  },
+  {
+    "feature": "Top Up & Cash In",
+    "sub": "Top up",
+    "keep": "EMI-TC-1504",
+    "title": "Top up — all checks from one shared setup",
+    "absorb": [
+      "EMI-TC-1505"
+    ]
+  },
+  {
+    "feature": "Top Up & Cash In",
+    "sub": "Top up",
+    "keep": "EMI-TC-1512",
+    "title": "Top up — all checks from one shared setup",
+    "absorb": [
+      "EMI-TC-1513",
+      "EMI-TC-1514",
+      "EMI-TC-1515",
+      "EMI-TC-1516"
+    ]
+  },
+  {
+    "feature": "Top Up & Cash In",
+    "sub": "Top up",
+    "keep": "EMI-TC-1517",
+    "title": "Top up — all checks from one shared setup",
+    "absorb": [
+      "EMI-TC-1518",
+      "EMI-TC-1519",
+      "EMI-TC-1520",
+      "EMI-TC-1521"
+    ]
+  },
+  {
+    "feature": "Reconciliation",
+    "sub": "Reconciliation",
+    "keep": "EMI-TC-144",
+    "title": "Reconciliation — all checks from one shared setup",
+    "absorb": [
+      "EMI-TC-155",
+      "EMI-TC-156",
+      "EMI-TC-154"
+    ]
+  },
+  {
+    "feature": "Profile & Manage Accounts",
+    "sub": "Profile",
+    "keep": "EMI-TC-2304",
+    "title": "Profile — all checks from one shared setup",
+    "absorb": [
+      "EMI-TC-2301",
+      "EMI-TC-2309"
+    ]
+  },
+  {
+    "feature": "Profile & Manage Accounts",
+    "sub": "Profile",
+    "keep": "EMI-TC-2302",
+    "title": "Profile — all checks from one shared setup",
+    "absorb": [
+      "EMI-TC-2311"
+    ]
+  },
+  {
+    "feature": "Money Request",
+    "sub": "Money Request",
+    "keep": "EMI-TC-5507",
+    "title": "Money Request — all checks from: Enter an incorrect OTP.",
+    "absorb": [
+      "EMI-TC-5533"
+    ]
+  },
+  {
+    "feature": "Money Request",
+    "sub": "Money Request",
+    "keep": "EMI-TC-5509",
+    "title": "Money Request — all checks from: Navigate to Requests Sent list.",
+    "absorb": [
+      "EMI-TC-5529"
+    ]
+  },
+  {
+    "feature": "Forgot Password",
+    "sub": "A. Step 1 — Identify Account: Page Elements & Layout",
+    "keep": "FP-06",
+    "title": "Step 1 — Identify Account: Page Elements & Layout — all checks from: Load the page",
+    "absorb": [
+      "FP-07",
+      "FP-05"
+    ]
+  },
+  {
+    "feature": "Forgot Password",
+    "sub": "D. Step 1 — Negative Scenarios",
+    "keep": "FP-25",
+    "title": "Step 1 — Negative Scenarios — all checks from: Submit invalid credentials",
+    "absorb": [
+      "FP-24",
+      "FP-26"
+    ]
+  },
+  {
+    "feature": "Forgot Password",
+    "sub": "G. OTP Verification — Popup Elements",
+    "keep": "FP-41",
+    "title": "OTP Verification — Popup Elements — all checks from: Open the OTP modal",
+    "absorb": [
+      "FP-44",
+      "FP-42",
+      "FP-43"
+    ]
+  },
+  {
+    "feature": "Forgot Password",
+    "sub": "I. Step 2 — New Password: Page Elements & Layout",
+    "keep": "FP-54",
+    "title": "Step 2 — New Password: Page Elements & Layout — all checks from: Reach Step 2",
+    "absorb": [
+      "FP-55",
+      "FP-53",
+      "FP-52"
+    ]
+  },
+  {
+    "feature": "Bill Payment",
+    "sub": "Bill payment",
+    "keep": "EMI-TC-2166",
+    "title": "Bill payment — all checks from one shared setup",
+    "absorb": [
+      "EMI-TC-2165",
+      "EMI-TC-2167",
+      "EMI-TC-2168",
+      "EMI-TC-2169",
+      "EMI-TC-2170",
+      "EMI-TC-2171",
+      "EMI-TC-2172",
+      "EMI-TC-2209",
+      "EMI-TC-2210",
+      "EMI-TC-2211",
+      "EMI-TC-2212",
+      "EMI-TC-2213",
+      "EMI-TC-2214"
+    ]
+  },
+  {
+    "feature": "Bill Payment",
+    "sub": "Bill payment",
+    "keep": "EMI-TC-2173",
+    "title": "Bill payment — all checks from one shared setup",
+    "absorb": [
+      "EMI-TC-2174",
+      "EMI-TC-2175",
+      "EMI-TC-2176",
+      "EMI-TC-2177",
+      "EMI-TC-2178",
+      "EMI-TC-2179",
+      "EMI-TC-2180"
+    ]
+  },
+  {
+    "feature": "Bill Payment",
+    "sub": "Bill payment",
+    "keep": "EMI-TC-2181",
+    "title": "Bill payment — all checks from one shared setup",
+    "absorb": [
+      "EMI-TC-2182",
+      "EMI-TC-2184"
+    ]
+  },
+  {
+    "feature": "Bill Payment",
+    "sub": "Bill payment",
+    "keep": "EMI-TC-2189",
+    "title": "Bill payment — all checks from one shared setup",
+    "absorb": [
+      "EMI-TC-2190",
+      "EMI-TC-2191",
+      "EMI-TC-2192",
+      "EMI-TC-2193",
+      "EMI-TC-2194",
+      "EMI-TC-2195",
+      "EMI-TC-2196",
+      "EMI-TC-2197",
+      "EMI-TC-2198"
+    ]
+  },
+  {
+    "feature": "Bill Payment",
+    "sub": "Close loop - b2b & bill payment",
+    "keep": "EMI-TC-6561",
+    "title": "Close loop - b2b & bill payment — all checks from one shared setup",
+    "absorb": [
+      "EMI-TC-6559"
+    ]
+  },
+  {
+    "feature": "Bill Management (Creation)",
+    "sub": "Business Bills",
+    "keep": "EMI-TC-4188",
+    "title": "Business Bills — all checks from: the customer created bills",
+    "absorb": [
+      "EMI-TC-4189",
+      "EMI-TC-4191",
+      "EMI-TC-4208",
+      "EMI-TC-4209"
+    ]
+  },
+  {
+    "feature": "Bank Transfer & Cash Out",
+    "sub": "A. Amount Entry",
+    "keep": "BT-06",
+    "title": "Amount Entry — all checks from: Land on the Amount step",
+    "absorb": [
+      "BT-02",
+      "BT-05",
+      "BT-11",
+      "BT-03",
+      "BT-04",
+      "BT-07",
+      "BT-09",
+      "BT-12"
+    ]
+  },
+  {
+    "feature": "Bank Transfer & Cash Out",
+    "sub": "B. Confirmation Summary & Commission Calculation",
+    "keep": "BT-20",
+    "title": "Confirmation Summary & Commission Calculation — all checks from: Proceed to Confirmation",
+    "absorb": [
+      "BT-23"
+    ]
+  },
+  {
+    "feature": "Bank Transfer & Cash Out",
+    "sub": "B. Confirmation Summary & Commission Calculation",
+    "keep": "BT-21",
+    "title": "Confirmation Summary & Commission Calculation — all checks from: Proceed to Confirmation and let the summary settle",
+    "absorb": [
+      "BT-22"
+    ]
+  },
+  {
+    "feature": "Bank Transfer & Cash Out",
+    "sub": "B. Confirmation Summary & Commission Calculation",
+    "keep": "BT-25",
+    "title": "Confirmation Summary & Commission Calculation — all checks from one shared setup",
+    "absorb": [
+      "BT-30"
+    ]
+  },
+  {
+    "feature": "Bank Transfer & Cash Out",
+    "sub": "B. Confirmation Summary & Commission Calculation",
+    "keep": "BT-26",
+    "title": "Confirmation Summary & Commission Calculation — all checks from one shared setup",
+    "absorb": [
+      "BT-31"
+    ]
+  },
+  {
+    "feature": "Bank Transfer & Cash Out",
+    "sub": "B. Confirmation Summary & Commission Calculation",
+    "keep": "BT-27",
+    "title": "Confirmation Summary & Commission Calculation — all checks from one shared setup",
+    "absorb": [
+      "BT-32"
+    ]
+  },
+  {
+    "feature": "Bank Transfer & Cash Out",
+    "sub": "B. Confirmation Summary & Commission Calculation",
+    "keep": "BT-28",
+    "title": "Confirmation Summary & Commission Calculation — all checks from one shared setup",
+    "absorb": [
+      "BT-33"
+    ]
+  },
+  {
+    "feature": "KYC - KYB - AML",
+    "sub": "KYB/KYC",
+    "keep": "EMI-TC-8233",
+    "title": "KYB/KYC — all checks from: Open the template editor",
+    "absorb": [
+      "EMI-TC-8234"
+    ]
+  },
+  {
+    "feature": "Wallet Configuration",
+    "sub": "Wallet Configuration",
+    "keep": "EMI-TC-4529",
+    "title": "Wallet Configuration — all checks from: Load Add/Edit screen",
+    "absorb": [
+      "EMI-TC-4530"
+    ]
+  },
+  {
+    "feature": "Wallet Configuration",
+    "sub": "Wallet Configuration",
+    "keep": "EMI-TC-4077",
+    "title": "Wallet Configuration — all checks from: The customer at wallet configuration",
+    "absorb": [
+      "EMI-TC-4078"
+    ]
+  },
+  {
+    "feature": "Wallet Transfer (W2W)",
+    "sub": "Transfer",
+    "keep": "EMI-TC-2363",
+    "title": "Transfer — all checks from one shared setup",
+    "absorb": [
+      "EMI-TC-2362",
+      "EMI-TC-2364",
+      "EMI-TC-2365",
+      "EMI-TC-2366",
+      "EMI-TC-2367",
+      "EMI-TC-2368",
+      "EMI-TC-2369",
+      "EMI-TC-2398",
+      "EMI-TC-2399",
+      "EMI-TC-2400",
+      "EMI-TC-2401"
+    ]
+  },
+  {
+    "feature": "Wallet Transfer (W2W)",
+    "sub": "Transfer",
+    "keep": "EMI-TC-2370",
+    "title": "Transfer — all checks from one shared setup",
+    "absorb": [
+      "EMI-TC-2371",
+      "EMI-TC-2372",
+      "EMI-TC-2373",
+      "EMI-TC-2374",
+      "EMI-TC-2375",
+      "EMI-TC-2376",
+      "EMI-TC-2377",
+      "EMI-TC-2378"
+    ]
+  },
+  {
+    "feature": "Wallet Transfer (W2W)",
+    "sub": "Transfer",
+    "keep": "EMI-TC-2379",
+    "title": "Transfer — all checks from one shared setup",
+    "absorb": [
+      "EMI-TC-2380",
+      "EMI-TC-2381",
+      "EMI-TC-2383",
+      "EMI-TC-2385",
+      "EMI-TC-2387"
+    ]
+  },
+  {
+    "feature": "Wallet Transfer (W2W)",
+    "sub": "Transfer",
+    "keep": "EMI-TC-2388",
+    "title": "Transfer — all checks from one shared setup",
+    "absorb": [
+      "EMI-TC-2389",
+      "EMI-TC-2390",
+      "EMI-TC-2391",
+      "EMI-TC-2392",
+      "EMI-TC-2393",
+      "EMI-TC-2394",
+      "EMI-TC-2395",
+      "EMI-TC-2396",
+      "EMI-TC-2397"
+    ]
+  }
+]

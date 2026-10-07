@@ -7,6 +7,7 @@ This file serves as our central, living registry for all automated test suites a
 ## 1. Authentication (Login)
 **File Reference:**
 `BusinessTestCases/Login/api/LoginAPIFlow.spec.ts`
+`BusinessTestCases/Login/api/LoginNafathWathiqExpiry.spec.ts`
 `BusinessTestCases/Login/functional/LoginFormValidation.spec.ts`
 `BusinessTestCases/Login/functional/LoginInvalidCredentials.spec.ts`
 `BusinessTestCases/Login/functional/LoginOtpFlow.spec.ts`
@@ -51,6 +52,29 @@ This file serves as our central, living registry for all automated test suites a
 | API-N12: should return 400 when OTP field is missing | Negative | Asserts a missing `otp` field returns 400/422. |
 | API-N13: should return 401 when Authorization header is missing | Negative | Asserts a missing `Authorization` header returns 401. |
 | API-FLOW-01: should complete the full pre-auth and sign-in chain successfully | Positive | Chains IP lookup → device UUID registration → sign-in, asserting each step succeeds and the final access token is non-empty. |
+
+### `Login/api/LoginNafathWathiqExpiry.spec.ts`
+*(EMI-5836 — login blocked when NAFATH/WATHIQ document or Redis-TTL data has expired, plus revalidation flows and deactivation scope. Ticket title says "Yaqeen"; the ticket text itself only ever discusses NAFATH and WATHIQ — flagged in the file header, not assumed to be a third system.)*
+
+| Exact Test Title (From Code) | Test Type | Target Assertions & Verification Points |
+| :--- | :--- | :--- |
+| NW-01: should return 409 when NAFATH document data has expired | Negative | Asserts `POST /auth/signin` returns 409 for a dedicated expired-NAFATH account. Skipped unless `NAFATH_EXPIRED_COMPANY`/`NAFATH_EXPIRED_MOBILE` are set. |
+| NW-01a: 409 response body should carry error code NAFATH_DATA_EXPIRED | Negative | Asserts the response body contains `NAFATH_DATA_EXPIRED`. Same skip condition as NW-01. |
+| NW-01b: error response should not expose stack traces or database details | Negative | Asserts the 409 body text doesn't match stack/exception/sql/ORA-/JDBC patterns. Same skip condition. |
+| NW-02: should return 409 when WATHIQ document data has expired | Negative | Asserts 409 for a dedicated expired-WATHIQ account. Skipped unless `WATHIQ_EXPIRED_COMPANY`/`WATHIQ_EXPIRED_MOBILE` are set. |
+| NW-02a: 409 response body should carry error code WATHIQ_DATA_EXPIRED | Negative | Asserts the response body contains `WATHIQ_DATA_EXPIRED`. Same skip condition as NW-02. |
+| NW-02b: error response should not expose stack traces or database details | Negative | Asserts the 409 body text doesn't match stack/exception/sql/ORA-/JDBC patterns. Same skip condition. |
+| NW-03: login should still succeed (200) for an account with no NAFATH/WATHIQ expiry | Positive | Regression check against the standard `VALID_COMPANY`/`VALID_MOBILE` account — always runs. |
+| NW-04: should return 409 distinguishing TTL/cache expiry from document expiry | Negative | `test.skip(true, ...)` — pending a way to seed a NAFATH Redis-TTL-only-expired state; intended assertions documented inline. |
+| NW-05: should not require the user to physically re-present ID — only NAFATH Generate Random + Get Status re-verification | Negative | `test.skip(true, ...)` — same pending reason as NW-04. |
+| NW-06: login should succeed once the background TTL-monitoring job has refreshed WATHIQ data automatically | Positive | `test.skip(true, ...)` — pending WATHIQ TTL seeding/job-trigger access. |
+| NW-07: login should be blocked with WATHIQ_DATA_EXPIRED if the TTL-refresh job discovers the CRN itself has since expired | Negative | `test.skip(true, ...)` — same pending reason as NW-06. |
+| NW-08: successful re-verification should clear is_nafath_data_expired and allow login | Positive | `test.skip(true, ...)` — pending confirmed NAFATH renewal endpoint paths from the Emi Profile Service Swagger doc. |
+| NW-09: a failed/abandoned re-verification should leave the account blocked with 409 NAFATH_DATA_EXPIRED | Negative | `test.skip(true, ...)` — same pending reason as NW-08. |
+| NW-10: successful CRN refresh should clear is_wathiq_data_expired and allow login | Positive | `test.skip(true, ...)` — pending confirmed WATHIQ renewal endpoint paths from the same Swagger doc. |
+| NW-11: a refresh attempt that still returns an expired CRN should leave the account blocked with 409 WATHIQ_DATA_EXPIRED | Negative | `test.skip(true, ...)` — same pending reason as NW-10. |
+| NW-12: NAFATH expiry should deactivate the USER, not the individual business profile | Negative | `test.skip(true, ...)` — pending DB access to confirm which entity was deactivated; verifies the user- vs. profile-scope correction from the ticket's comment thread. |
+| NW-13: WATHIQ expiry should deactivate the PROFILE, not the user | Negative | `test.skip(true, ...)` — same pending reason as NW-12. |
 
 ### `Login/functional/LoginFormValidation.spec.ts`
 
@@ -101,7 +125,7 @@ This file serves as our central, living registry for all automated test suites a
 | should preserve field values after a failed login attempt | Negative | Asserts the company and mobile fields retain their entered values after a failed submit. |
 
 ### `Login/functional/LoginOtpFlow.spec.ts`
-*(the whole "OTP Flow" describe block is skipped when the OTP dialog doesn't appear — i.e. when Login OTP is disabled in the environment)*
+*(the "OTP Flow" describe's `beforeEach` hard-waits for the OTP dialog — a missing dialog fails the hook rather than skipping)*
 
 | Exact Test Title (From Code) | Test Type | Target Assertions & Verification Points |
 | :--- | :--- | :--- |
@@ -118,10 +142,10 @@ This file serves as our central, living registry for all automated test suites a
 | should remain on the OTP popup after submitting a wrong OTP | Negative | Asserts the OTP heading stays visible after submitting an incorrect OTP. |
 | should log in successfully and redirect when the correct OTP is entered | Positive | Fetches the real OTP from MongoDB and asserts the page navigates away from `/auth/login` after verification. |
 | should NOT display the validation card when login fails with wrong password | Negative | Asserts the "Just a moment..." validation card never appears after a failed login. |
-| should mark step 1 "Verifying your credentials" as complete with a checkmark | Positive | Asserts a checkmark/success icon appears next to step 1 of the validation card. |
-| should mark step 2 "Preparing this device" as complete with a checkmark | Positive | Asserts a checkmark/success icon appears next to step 2 of the validation card. |
-| should show a spinner on step 3 "Securing your session" while it is in progress | Positive | Asserts a spinner/loader icon appears next to step 3 while it's in progress. |
-| should redirect to dashboard after the validation card dismisses (when OTP is disabled) | Positive | Asserts the validation card disappears and the page navigates away from the login URL, skipped if the OTP dialog appears instead. |
+| should mark step 1 "Verifying your credentials" as complete with a checkmark | Positive | Polls: step 1 shows a checkmark/success icon, OR the card has already progressed past it (OTP dialog shown / off the login page). The step completes faster than a real credential check, so a bare "checkmark visible now" assert would race. |
+| should mark step 2 "Preparing this device" as complete with a checkmark | Positive | Same tolerant poll as step 1, for step 2. |
+| should show a spinner on step 3 "Securing your session" while it is in progress | Positive | Polls: step 3 shows any status icon (spinner or the checkmark it settles on), OR the card has already progressed past it. The card can finish before the spinner is catchable. |
+| should redirect to dashboard after the validation card dismisses (when OTP is disabled) | Positive | Waits out the validation card non-fatally (it can flash faster than an assertion catches it), then asserts no OTP dialog is shown and the page has navigated away from `/auth/login`. Assumes OTP is disabled in the environment. |
 
 ### `Login/functional/LoginHappyPath.spec.ts`
 
@@ -302,18 +326,30 @@ This file serves as our central, living registry for all automated test suites a
 `BusinessTestCases/BankTransfer/functional/BankTransferNegative.spec.ts`
 `BusinessTestCases/BankTransfer/functional/BankTransferOtpRequirement.spec.ts`
 `BusinessTestCases/BankTransfer/functional/BankTransferSession.spec.ts`
+`BusinessTestCases/BankTransfer/functional/BankTransferSystemCashout.spec.ts`
 `BusinessTestCases/BankTransfer/functional/BankTransferTransactionLimits.spec.ts`
 `BusinessTestCases/BankTransfer/functional/BankTransferWalletLimits.spec.ts`
+`BusinessTestCases/BankTransfer/security/BankTransferSecurity.spec.ts`
 `BusinessTestCases/BankTransfer/ui/BankTransferAmountPage.spec.ts`
 `BusinessTestCases/BankTransfer/ui/BankTransferConfirmationPage.spec.ts`
 `BusinessTestCases/BankTransfer/ui/BankTransferOtpPage.spec.ts`
 `BusinessTestCases/BankTransfer/ui/BankTransferLocalization.spec.ts`
 
+*Requirements: EMI-180 (TC-2355–2403), EMI-2050 (TC-3119–3133 — Cashout redesign). Dev facts fixed with the product owner 2026-09-07: destination IBAN is bound at registration (no entry step, and the full number is never revealable — masked `SA##**####` only); amount decimals accepted up to 2 places; a 3rd wrong OTP shows a message and drops the user back to the Amount step (retry needs a fresh flow / idempotency key); wallet & transaction limits and the commission/VAT module are not configured on dev yet.*
+
 ### `BankTransfer/functional/BankTransferHappyPath.spec.ts`
+
+**Full expected-result set for a successful cash-out (per EMI-TC-2355 / 2357 / 2358 / 3124):**
+1. **Success message** shown to the Biller — *automated.*
+2. **Biller wallet balance before vs. after** — decreases by exactly the transferred amount — *automated* (`getBalanceBeforeBankTransfer` → `checkBalanceAfterBankTransfer`).
+3. **Admin wallet balance before vs. after** — increases by the same amount — *NOT automated;* needs Admin Portal access (same gap as the EMI-180 skips).
+4. **Database / running-balance-entry** — `emi_transaction.bank_transactions` status 3→0, two `transaction_log` rows (pending + success), four `running_balance_entry` rows, and the Admin running-balance popup fields — *NOT automated;* no DB access from this suite.
+
+Items 3–4 are tracked here as known coverage gaps so a "green" run is not mistaken for full verification of the money movement.
 
 | Exact Test Title (From Code) | Test Type | Target Assertions & Verification Points |
 | :--- | :--- | :--- |
-| should complete a standard transfer with a custom amount and debit the exact amount | Positive | Completes a 10.00 cashout through OTP, asserts the success modal, and asserts the wallet balance drops by exactly 10.00. |
+| should complete a standard transfer with a custom amount and debit the exact amount | Positive | Completes a 10.00 cashout through OTP; asserts the success modal and that the Biller wallet balance drops by exactly 10.00. (Admin-wallet credit + DB/running-balance rows — see items 3–4 above — not asserted.) |
 | should complete a transfer using a randomly selected predefined amount | Positive | Same full flow using a randomly chosen preset chip; asserts the balance decreases by that preset amount. |
 | should accept a valid amount with 2 decimal places and debit it correctly | Positive | Completes the flow with 15.75 and asserts the exact debit. |
 | should accept a valid amount with 1 decimal place and debit it correctly | Positive | Completes the flow with 20.5 and asserts the exact debit. |
@@ -331,7 +367,9 @@ This file serves as our central, living registry for all automated test suites a
 | should reject or truncate an amount with 3 decimal places | Negative | Asserts a 3-decimal amount is rejected or truncated. |
 | should reject a pasted invalid amount and keep Proceed disabled | Negative | Asserts pasting "abc" leaves the amount field empty and Proceed disabled. |
 | should show the insufficient-funds toast and block the transfer when the amount exceeds the balance | Negative | Enters (balance + 10) and asserts an "insufficient funds" toast appears. |
-| *(skipped)* should fail the transaction when an incorrect OTP is submitted | Negative | `test.skip`'d ("ported as-is from the legacy `BankTransferTests.spec.ts` data set, execute: false"); intended to assert a wrong OTP produces a failed transaction record. |
+| should reject a thousands-separated amount | Negative | Asserts "1,000" is not kept verbatim (the comma is a non-numeric character). |
+| should reject scientific notation in the amount field | Negative | Asserts "1e5" is not kept verbatim (the "e" is a non-numeric character). |
+| should error and return to the Amount step after three incorrect OTP attempts | Negative | **`test.fixme` — known defect.** Expected (EMI-TC-3125/3126): 3× wrong OTP → inline error, flow returns to the Amount step, balance unchanged. Actual on dev is a bug (behaviour pending QA description). |
 
 ### `BankTransfer/functional/BankTransferEdgeCases.spec.ts`
 
@@ -339,6 +377,9 @@ This file serves as our central, living registry for all automated test suites a
 | :--- | :--- | :--- |
 | should override the selected preset amount when the field is edited afterward | Positive | Selects a preset chip, edits the amount field afterward, and asserts the manually entered value ("123") wins. |
 | should fill up to 4 decimal places and lock manual entry when "Use full balance" is toggled on | Positive | Asserts the amount field becomes `readonly` and is auto-filled with the current wallet balance (up to 4 decimal places). |
+| should re-enable manual entry when "Use full balance" is toggled back off | Positive | Toggles the control on then off; asserts the field is no longer `readonly`, accepts "12", and Proceed becomes enabled. |
+| should re-disable Proceed when a selected preset amount is cleared | Negative | Selects a preset (Proceed enabled), clears the field, asserts the field is empty and Proceed is disabled again. |
+| should switch the entered amount when a different preset chip is chosen | Positive | Clicks preset chip #1 then chip #2; asserts the amount input reflects each chip's value in turn. |
 
 ### `BankTransfer/functional/BankTransferSession.spec.ts`
 
@@ -366,12 +407,12 @@ This file serves as our central, living registry for all automated test suites a
 | TC-2397 — does not deduct the percentage commission above the configured maximum value | Negative | *(Skipped, EMI-180.)* |
 
 ### `BankTransfer/functional/BankTransferOtpRequirement.spec.ts`
-*(TC-2402–2403; `test.skip`'d pending an Admin Portal "Configuration Settings → Transaction OTP toggle" automation helper — EMI-180)*
+*(TC-2402–2403. The Admin Portal OTP toggle has no automation; TC-2402 runs against the dev default, TC-2403 self-skips until OTP is turned off in the environment.)*
 
 | Exact Test Title (From Code) | Test Type | Target Assertions & Verification Points |
 | :--- | :--- | :--- |
-| TC-2402 — prompts for OTP when the admin has activated the transaction OTP requirement | Positive | *(Skipped, EMI-180.)* Intended to assert the OTP modal appears and gates the transfer when the admin OTP toggle is on. |
-| TC-2403 — skips OTP when the admin has deactivated the transaction OTP requirement | Positive | *(Skipped, EMI-180.)* Intended to assert the transfer processes immediately with no OTP modal when the toggle is off. |
+| TC-2402 — prompts for OTP when the admin has activated the transaction OTP requirement | Positive | Runs. After the Confirmation summary, asserts the OTP step gates the transfer — 6 OTP boxes visible, Verify button present — then cancels. |
+| TC-2403 — skips OTP when the admin has deactivated the transaction OTP requirement | Positive | Runtime `test.skip` while OTP is still active on the env; when OTP is off it asserts the transfer completes straight from the summary (success modal, balance debited by the amount) with no OTP step. |
 
 ### `BankTransfer/functional/BankTransferTransactionLimits.spec.ts`
 *(TC-2370–2387; `test.skip`'d pending an Admin Portal "Manage Limits → Transaction" automation helper — EMI-180)*
@@ -415,6 +456,18 @@ This file serves as our central, living registry for all automated test suites a
 | TC-2400 — allows a transfer within the wallet limit (repeat scenario) | Positive | *(Skipped, EMI-180.)* |
 | TC-2401 — blocks a transfer exceeding the wallet limit (repeat scenario) | Negative | *(Skipped, EMI-180.)* |
 
+### `BankTransfer/functional/BankTransferSystemCashout.spec.ts`
+*(EMI-2050 TC-3127 / TC-3129–3133 — the Admin Portal "System Cash-Out" surface, not the Biller/Merchant flow. Every test is `test.skip`'d pending Admin Portal automation, kept 1:1 with the source export.)*
+
+| Exact Test Title (From Code) | Test Type | Target Assertions & Verification Points |
+| :--- | :--- | :--- |
+| TC-3127 — user receives an SMS and email confirmation after a successful cash-out | Positive | *(Skipped.)* Intended to assert the shared test mailbox receives a confirmation email carrying amount, reference, and masked IBAN. |
+| TC-3129 — the Admin cash-out page pre-fills the destination IBAN and makes it non-editable | Positive | *(Skipped.)* Intended to assert the system-wallet IBAN is pre-filled and the input is readonly/disabled. |
+| TC-3130 — an invalid configured system IBAN blocks the cash-out with a clear error | Negative | *(Skipped.)* Intended to assert the "destination IBAN is invalid… update the configuration" error. |
+| TC-3131 — the system cash-out executes only after explicit admin confirmation | Positive | *(Skipped.)* Intended to assert nothing moves until the confirmation step is completed. |
+| TC-3132 — finance is emailed a confirmation after a successful system cash-out | Positive | *(Skipped.)* Intended to assert the configured finance contact receives an email with the transaction details. |
+| TC-3133 — a system cash-out is logged with system wallet id, amount, IBAN, and status | Positive | *(Skipped.)* Intended to assert the log entry carries System Wallet ID, Amount, Destination IBAN, and Status ∈ {Pending, Successful, Failed}. |
+
 ### `BankTransfer/ui/BankTransferAmountPage.spec.ts`
 
 | Exact Test Title (From Code) | Test Type | Target Assertions & Verification Points |
@@ -431,6 +484,8 @@ This file serves as our central, living registry for all automated test suites a
 | should keep Proceed disabled while the amount field is empty | Negative | Asserts Proceed is disabled while the amount field is empty. |
 | should display the "Or select amount" label and all 5 preset amount chips | Positive | Asserts exactly 5 preset chips are rendered with the text 500/1000/2000/5000/10000. |
 | should display the Proceed button with its label and arrow icon | Positive | Asserts the Proceed button is visible with its text and an arrow icon. |
+| should always show the IBAN masked with no way for the user to reveal the full number | Negative | Asserts the IBAN renders masked `SA##**####`, no "view full IBAN" control exists (count 0), and the unmasked 22-digit number is absent from the page DOM. |
+| should not let a preset above the available balance start a transfer | Negative | Selects the largest preset; asserts it is disabled or leaves Proceed disabled (or, if the balance can afford it, that Proceed becomes enabled). |
 
 ### `BankTransfer/ui/BankTransferConfirmationPage.spec.ts`
 
@@ -439,6 +494,8 @@ This file serves as our central, living registry for all automated test suites a
 | should display the Transaction Type, Bank, and IBAN rows | Positive | Asserts the Transaction Type, Bank, and IBAN summary rows are non-empty. |
 | should display the Original Amount, commission, VAT, and Total rows | Positive | Asserts the Original Amount, commission, VAT, and Total summary values all parse as numbers (not NaN). |
 | should display the Confirmation heading and subtitle | Positive | Asserts the page title reads "Confirmation" and the subtitle matches "send funds to a saudi iban". |
+| should display the Cancel and Next buttons on the summary | Positive | Asserts the summary shows Cancel + Next only (no separate Back); Next is visible, enabled, and labelled "Next"/"التالي". |
+| should show the summary IBAN in the masked SA** **** format | Positive | Asserts the summary's IBAN row value is masked (`SA##` + `**` + last 4). |
 
 ### `BankTransfer/ui/BankTransferOtpPage.spec.ts`
 
@@ -446,6 +503,10 @@ This file serves as our central, living registry for all automated test suites a
 | :--- | :--- | :--- |
 | should display six OTP input boxes and a running countdown | Positive | Asserts exactly 6 OTP boxes render and the countdown value decreases over a 2-second wait. |
 | should display the Confirmation heading, subtitle, resend link, and Verify button | Positive | Asserts the heading reads "Confirmation", the subtitle matches "a code has been sent to you", and the resend/Verify controls are visible. |
+| should reset the countdown timer when the resend link is clicked | Positive | Waits for the resend link to become enabled, clicks it, and asserts the remaining countdown jumps back above its pre-resend value (poll ≤45s). |
+| should keep the Verify button disabled until all six digits are entered | Negative | Fills only 5 of the 6 OTP boxes and asserts the Verify button stays disabled. |
+| should distribute a pasted six-digit code across the six inputs | Positive | Pastes "123456" into the first box and asserts all six boxes together hold "123456". |
+| should display the OTP recap IBAN and total | Positive | Asserts the OTP-step recap shows the masked IBAN (`SA##**####`) and a numeric total greater than 0. |
 
 ### `BankTransfer/ui/BankTransferLocalization.spec.ts`
 
@@ -456,6 +517,21 @@ This file serves as our central, living registry for all automated test suites a
 | should display the Proceed button label in Arabic | Positive | Asserts the Proceed button text matches the Arabic string "متابعة". |
 | should display the summary Next button label in Arabic after proceeding | Positive | Asserts the summary's Next button text matches "التالي". |
 | should display the summary Cancel button label in Arabic and leave the balance unchanged | Positive | Asserts the summary Cancel button text matches "إلغاء" and clicking it leaves the wallet balance unchanged. |
+
+### `BankTransfer/security/BankTransferSecurity.spec.ts`
+*(Abuse / tamper coverage. Endpoints are not hardcoded — each replay test drives the real UI flow once, records the confirm / OTP-verify request, and replays it mutated via a session-sharing `APIRequestContext`. A test runtime-skips and logs the URLs it saw if the target request can't be found. Pre-OTP tests never submit a valid OTP so nothing is debited.)*
+
+| Exact Test Title (From Code) | Test Type | Target Assertions & Verification Points |
+| :--- | :--- | :--- |
+| should never render the OTP value in the page DOM | Security | Asserts the entered OTP is not present anywhere in `page.content()` at the OTP step. |
+| should not leak the OTP value in any network response body during the flow | Security | Records all JSON/text response bodies through the OTP step and asserts none contains the OTP value. |
+| should not resume a cash-out from a fresh page load mid-OTP (no deep-link into the OTP step) | Security | Re-navigates to the OTP-step URL from a clean load and asserts the OTP boxes are gone and the flow restarts at the Amount step / home. |
+| should defeat a tampered amount replayed on the confirm request | Security | Replays the confirm request with the amount changed to 999999; asserts it is rejected (or the 2xx response does not reflect the tampered value) and the wallet balance is unchanged. |
+| should reject or ignore a tampered destination IBAN on the confirm request | Security | Replays the confirm request with a swapped SA IBAN; asserts rejection or no effect — passes with a note if the payload carries no IBAN (server-bound, EMI-TC-3129). |
+| should reject via the API amounts the client filter blocks (negative / >2dp / over-balance) | Security | POSTs "-10", "10.555", and (balance + 100000) to the captured confirm endpoint; asserts each is rejected server-side. |
+| should reject the original confirm request after the 3-try OTP redirect | Security | Burns 3 wrong OTPs via the UI, then replays the original confirm request; asserts it is no longer honoured and the balance is unchanged. |
+| should reject a replayed, already-consumed OTP verification | Security | *(Gated behind `RUN_BANKTRANSFER_SECURITY_DEBIT=true` — completes a real 10 SAR transfer.)* Replays the consumed OTP-verify request; asserts rejection and no second debit. |
+| should deny the Cashout page to a user without the admin-configured permission | Security | *(Skipped — needs a test account whose roles/groups exclude cash-out.)* Intended to assert no access to the flow plus a permission validation message. |
 
 ## 4. Bill Payment
 **File Reference:** `BusinessTestCases/PayBill/functional/PayBillFlow.spec.ts`
@@ -791,5 +867,18 @@ This file serves as our central, living registry for all automated test suites a
 | BM-12: editing a beneficiary updates its alias in the list | Positive | Asserts the new alias text appears in the list after save. |
 | BM-13: adding a beneficiary with an alias already in use is rejected | Negative | Asserts an "already exists" error toast renders. Skipped without `BENEFICIARY_KNOWN_CRN`. |
 | BM-14: submitting without an Alias or CRN is blocked | Negative | Asserts save is disabled, or a required-field error renders on submit. |
+
+## 13. Transaction Ledger — Initiator Attribution
+**File Reference:** `BusinessTestCases/TransactionLedger/api/TransactionLedgerInitiator.spec.ts`
+*(EMI-5839, status Testing. BE task requiring the transaction ledger's `initiator` field to be populated consistently for pending and successful ledger entries. Financial Operations / ledger-level concern with no Business Portal UI surface — confirmed against `pageElements/Transactions/TransactionSummaryPage.ts`, whose summary panel renders commission/VAT/total but nothing initiator-related. Every test `test.skip`'d pending ledger/DB or Admin Portal access, same rationale as `TransactionOperations/` and `Reconciliation/`, kept 1:1 with `docs/manual-test-cases/Transaction-Operations.md` section F.)*
+
+| Exact Test Title (From Code) | Test Type | Target Assertions & Verification Points |
+| :--- | :--- | :--- |
+| LI-01 / LI-02 (bill payment link, pending / successful) | Positive | *(Skipped, EMI-5839.)* Ledger entry has `initiator` = `"System, MjdPay Profile User"` per the ticket's comment-thread clarification — not stated in the AC text itself. |
+| LI-03 / LI-04 (wallet payment link, pending / successful) | Positive | *(Skipped.)* Same expected initiator value as LI-01/02. |
+| LI-05: initiator is consistent between pending and successful states of the same transaction | Positive | *(Skipped.)* Directly covers AC "Initiator source is consistent across transaction states." |
+| LI-06: initiator field is never null or blank across sampled in-scope transactions | Positive | *(Skipped.)* Data-quality sweep across bill/wallet payment link ledger entries. |
+| LI-07: initiator populated — or documented as unsupported — for flows beyond the two named | Positive | *(Skipped — additionally blocked on AC 4's flow list, which the ticket does not yet provide.)* Not a fixed assertion until engineering enumerates ledger-writing flows; flagged back to the ticket rather than scope-assumed. |
+| LI-08: ledger behavior for failed/cancelled/expired transactions is documented | Negative | *(Skipped — out of scope of the current AC, which only defines pending/successful.)* Kept to surface the gap rather than silently drop coverage. |
 
 <!-- AUTOMATION_REGISTRY_END -->

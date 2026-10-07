@@ -1,6 +1,6 @@
 ﻿import { test, expect } from '@playwright/test';
 import {
-  UAT_OTP_ASSETS,
+  DEV_OTP_ASSETS,
   getOtpFromDb,
   generateEmail,
   VALID_IBAN,
@@ -57,7 +57,7 @@ test.describe('Registration – API Flow', { tag: ['@registration', '@api'], ann
 
   let sessionToken: string;
   let mobileNumber: string;
-  let selectedAsset: typeof UAT_OTP_ASSETS[0];
+  let selectedAsset: typeof DEV_OTP_ASSETS[0];
   let otpLength: number;
   let otpRequired = false;
   let ibanFileId: string;
@@ -68,12 +68,12 @@ test.describe('Registration – API Flow', { tag: ['@registration', '@api'], ann
   const email = generateEmail();
 
   // ── 1. Send OTP ────────────────────────────────────────────────────────────
-  // Iterates UAT_OTP_ASSETS until an unregistered mobile is found.
+  // Iterates DEV_OTP_ASSETS until an unregistered mobile is found.
   // OTP may be disabled by environment config; a 200 response is sufficient.
 
   test('API-01: POST /register/mobile/otp should return 200 for an unregistered mobile', { annotation: [{ type: 'testcase', description: "API-01: Send mobile OTP for an unregistered number" }] }, async ({ request }) => {
     let found = false;
-    for (const asset of UAT_OTP_ASSETS) {
+    for (const asset of DEV_OTP_ASSETS) {
       const mobile = `+966${asset.mobile}`;
       const res = await request.post(`${API_BASE}/emi-profile/api/v1/register/mobile/otp`, {
         data: { mobileNumber: mobile },
@@ -94,7 +94,7 @@ test.describe('Registration – API Flow', { tag: ['@registration', '@api'], ann
         break;
       }
     }
-    expect(found, 'No unregistered mobile found in UAT_OTP_ASSETS').toBe(true);
+    expect(found, 'No unregistered mobile found in DEV_OTP_ASSETS').toBe(true);
   });
 
   // ── 2. Get OTP Settings ────────────────────────────────────────────────────
@@ -140,7 +140,7 @@ test.describe('Registration – API Flow', { tag: ['@registration', '@api'], ann
     test.skip(!otpRequired, 'OTP is disabled in this environment — resend is not applicable');
 
     // Use the last asset in the list to avoid colliding with selectedAsset
-    const resendAsset  = UAT_OTP_ASSETS[UAT_OTP_ASSETS.length - 1];
+    const resendAsset  = DEV_OTP_ASSETS[DEV_OTP_ASSETS.length - 1];
     const freshMobile  = `+966${resendAsset.mobile}`;
 
     await request.post(`${API_BASE}/emi-profile/api/v1/register/mobile/otp`, {
@@ -166,16 +166,16 @@ test.describe('Registration – API Flow', { tag: ['@registration', '@api'], ann
   // This is the identity-establishing step for the full happy-path E2E chain
   // (API-06 onward reuse whichever asset succeeds here). A 409/duplicate
   // response means selectedAsset's CRN was already registered by a prior E2E
-  // run against the shared UAT_OTP_ASSETS pool — a valid, expected outcome,
+  // run against the shared DEV_OTP_ASSETS pool — a valid, expected outcome,
   // not a bug — so we cycle to the next asset (redoing its OTP send/verify)
   // until we find a genuinely unregistered identity or exhaust the pool.
 
   test('API-05: POST /register/profile-registration-type should return 201 for a fresh identity', { annotation: [{ type: 'testcase', description: "API-05: Set the profile registration type" }] }, async ({ request }) => {
-    const startIndex = UAT_OTP_ASSETS.indexOf(selectedAsset);
+    const startIndex = DEV_OTP_ASSETS.indexOf(selectedAsset);
     let res;
     let body: Record<string, unknown> = {};
 
-    for (let i = 0; i < UAT_OTP_ASSETS.length; i++) {
+    for (let i = 0; i < DEV_OTP_ASSETS.length; i++) {
       res = await request.post(
         `${API_BASE}/emi-profile/api/v1/register/profile-registration-type`,
         {
@@ -197,10 +197,10 @@ test.describe('Registration – API Flow', { tag: ['@registration', '@api'], ann
       body = await res.json().catch(() => ({}));
       const alreadyRegistered = res.status() === 409
         || /already\s*(registered|exists)|duplicate/i.test(JSON.stringify(body));
-      if (!alreadyRegistered || i === UAT_OTP_ASSETS.length - 1) break;
+      if (!alreadyRegistered || i === DEV_OTP_ASSETS.length - 1) break;
 
       // Move to the next candidate identity and re-establish its session.
-      selectedAsset = UAT_OTP_ASSETS[(startIndex + i + 1) % UAT_OTP_ASSETS.length];
+      selectedAsset = DEV_OTP_ASSETS[(startIndex + i + 1) % DEV_OTP_ASSETS.length];
       mobileNumber  = `+966${selectedAsset.mobile}`;
 
       const otpRes  = await request.post(`${API_BASE}/emi-profile/api/v1/register/mobile/otp`, {
@@ -225,7 +225,7 @@ test.describe('Registration – API Flow', { tag: ['@registration', '@api'], ann
 
     expect(
       res!.status(),
-      `Exhausted all ${UAT_OTP_ASSETS.length} UAT test identities — all already registered. Last response: ${JSON.stringify(body)}`
+      `Exhausted all ${DEV_OTP_ASSETS.length} UAT test identities — all already registered. Last response: ${JSON.stringify(body)}`
     ).toBe(201);
   });
 
@@ -442,7 +442,7 @@ test.describe('Registration – API Flow', { tag: ['@registration', '@api'], ann
 
   test('API-N2: POST /register/verify/otp with wrong OTP should return 400', async ({ request }) => {
     // Use second-to-last asset (last is reserved for API-04 resend test)
-    const asset2      = UAT_OTP_ASSETS[UAT_OTP_ASSETS.length - 2];
+    const asset2      = DEV_OTP_ASSETS[DEV_OTP_ASSETS.length - 2];
     const freshMobile = `+966${asset2.mobile}`;
 
     await request.post(`${API_BASE}/emi-profile/api/v1/register/mobile/otp`, {
@@ -555,7 +555,7 @@ test.describe('Registration – API Flow', { tag: ['@registration', '@api'], ann
 
   test('API-N12: POST /register/mobile/otp should not require a session token', async ({ request }) => {
     const res = await request.post(`${API_BASE}/emi-profile/api/v1/register/mobile/otp`, {
-      data: { mobileNumber: `+966${UAT_OTP_ASSETS[0].mobile}` },
+      data: { mobileNumber: `+966${DEV_OTP_ASSETS[0].mobile}` },
       headers: { 'Content-Type': 'application/json' },
     });
     expect(res.status()).not.toBe(401);

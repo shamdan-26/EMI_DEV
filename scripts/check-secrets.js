@@ -37,10 +37,15 @@ function addedLines(file) {
 
 // Explicit, per-line escape hatch for known-safe test fixtures (mock tokens,
 // hardcoded test passwords used only in request bodies against non-prod
-// environments) that otherwise match SECRET_PATTERNS. Deliberately opt-in and
-// visible in the diff, rather than loosening the patterns themselves, so real
-// secrets elsewhere still get caught.
+// environments) that otherwise match the generic-assignment pattern below.
+// Deliberately opt-in and visible in the diff, rather than loosening the
+// pattern itself, so real secrets elsewhere still get caught. Scoped to just
+// 'Generic secret assignment' — the only pattern prone to this kind of false
+// positive — rather than skipping every SECRET_PATTERNS check for the line,
+// so a structurally-shaped leak (an AWS key, a private key block, ...)
+// riding along on the same line as an allowlisted mock value still blocks.
 const ALLOWLIST_MARKER = /allowlist-secret/;
+const ALLOWLIST_ELIGIBLE_PATTERNS = new Set(['Generic secret assignment']);
 
 const violations = [];
 
@@ -52,8 +57,9 @@ for (const file of stagedFiles()) {
     }
 
     for (const line of addedLines(file)) {
-        if (ALLOWLIST_MARKER.test(line)) continue;
+        const isAllowlisted = ALLOWLIST_MARKER.test(line);
         for (const { name, regex } of SECRET_PATTERNS) {
+            if (isAllowlisted && ALLOWLIST_ELIGIBLE_PATTERNS.has(name)) continue;
             regex.lastIndex = 0;
             if (regex.test(line)) {
                 violations.push(`${file}: possible ${name} in added line:\n    ${line.slice(0, 160)}`);
